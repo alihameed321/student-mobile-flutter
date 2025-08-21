@@ -8,16 +8,16 @@ abstract class AuthEvent extends Equatable {
 }
 
 class AuthLoginRequested extends AuthEvent {
-  final String email;
+  final String identifier; // Can be email or username
   final String password;
   
   const AuthLoginRequested({
-    required this.email,
+    required this.identifier,
     required this.password,
   });
   
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [identifier, password];
 }
 
 class AuthLogoutRequested extends AuthEvent {

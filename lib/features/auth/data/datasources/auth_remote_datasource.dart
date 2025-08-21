@@ -7,7 +7,7 @@ import '../../../../core/network/dio_client.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserModel> login(String email, String password);
+  Future<UserModel> login(String identifier, String password);
   Future<void> logout();
   Future<UserModel> getCurrentUser();
 }
@@ -18,12 +18,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this.client);
   
   @override
-  Future<UserModel> login(String email, String password) async {
+  Future<UserModel> login(String identifier, String password) async {
     try {
+      // Determine if identifier is email or username
+      final bool isEmail = identifier.contains('@');
+      
       final response = await client.post(
         ApiConstants.loginEndpoint,
         data: {
-          'email': email,
+          if (isEmail) 'email': identifier else 'username': identifier,
           'password': password,
         },
       );
