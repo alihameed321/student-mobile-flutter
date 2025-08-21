@@ -75,6 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckRequested event,
     Emitter<AuthState> emit,
   ) async {
+    print('[AuthBloc] Auth check requested');
     developer.log('Auth check requested', name: 'AuthBloc');
     emit(const AuthLoading());
     
@@ -82,10 +83,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     
     result.fold(
       (failure) {
+        print('[AuthBloc] Auth check failed: ${failure.message}');
         developer.log('Auth check failed: ${failure.message}', name: 'AuthBloc');
         emit(const AuthUnauthenticated());
       },
       (user) {
+        print('[AuthBloc] Auth check successful for user: ${user.email}');
+        print('[AuthBloc] Emitting AuthAuthenticated state');
         developer.log('Auth check successful for user: ${user.email}', name: 'AuthBloc');
         emit(AuthAuthenticated(user));
       },

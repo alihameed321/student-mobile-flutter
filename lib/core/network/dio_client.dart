@@ -49,8 +49,8 @@ class DioClient {
         requestBody: true,
         responseBody: true,
         logPrint: (object) {
-          // Only log in debug mode
-          // print(object);
+          // Enable logging for debugging
+          print('[DIO] $object');
         },
       ),
     );

@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/di/injection_container.dart' as di;
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/login_form.dart';
+import '../../../../main.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
-  
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => di.sl<AuthBloc>(),
-      child: const LoginView(),
-    );
-  }
-}
-
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
   
   @override
   Widget build(BuildContext context) {
@@ -35,9 +23,12 @@ class LoginView extends StatelessWidget {
               ),
             );
           } else if (state is AuthAuthenticated) {
-            // Navigate to home page
-            Navigator.of(context).pushReplacementNamed('/home');
+            // Force navigation to home page
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
           }
+          // Note: Navigation is handled by AuthWrapper in main.dart
         },
         child: SafeArea(
           child: SingleChildScrollView(

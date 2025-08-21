@@ -6,7 +6,7 @@ class ApiConstants {
   static const String loginEndpoint = '/api/auth/login/';
   static const String logoutEndpoint = '/api/auth/logout/';
   static const String refreshTokenEndpoint = '/api/auth/refresh/';
-  static const String userProfileEndpoint = '/api/auth/user/';
+  static const String userProfileEndpoint = '/api/auth/profile/';
   
   // Services endpoints
   static const String servicesEndpoint = '/api/services/';

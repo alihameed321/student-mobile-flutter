@@ -9,25 +9,25 @@ part of 'user_model.dart';
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       id: (json['id'] as num).toInt(),
       email: json['email'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      studentId: json['studentId'] as String?,
-      phone: json['phone'] as String?,
-      isActive: json['isActive'] as bool,
-      isStaff: json['isStaff'] as bool,
-      dateJoined: json['dateJoined'] == null
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String,
+      studentId: json['university_id'] as String?,
+      phone: json['phone_number'] as String?,
+      isActive: json['is_active'] as bool? ?? true,
+      isStaff: json['is_staff_member'] as bool,
+      dateJoined: json['date_joined'] == null
           ? null
-          : DateTime.parse(json['dateJoined'] as String),
+          : DateTime.parse(json['date_joined'] as String),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'id': instance.id,
       'email': instance.email,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'studentId': instance.studentId,
-      'phone': instance.phone,
-      'isActive': instance.isActive,
-      'isStaff': instance.isStaff,
-      'dateJoined': instance.dateJoined?.toIso8601String(),
+      'first_name': instance.firstName,
+      'last_name': instance.lastName,
+      'university_id': instance.studentId,
+      'phone_number': instance.phone,
+      'is_active': instance.isActive,
+      'is_staff_member': instance.isStaff,
+      'date_joined': instance.dateJoined?.toIso8601String(),
     };
