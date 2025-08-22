@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_menu_section.dart';
+import '../widgets/profile_stats_card.dart';
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Custom App Bar
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'My Profile',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // Settings action
+                          },
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const ProfileHeader(),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Stats Cards
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: ProfileStatsCard(),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Menu Sections
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: ProfileMenuSection(),
+              ),
+              
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

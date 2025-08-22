@@ -5,6 +5,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
+import 'features/main/presentation/pages/main_navigation_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,8 +69,8 @@ class AuthWrapper extends StatelessWidget {
             ),
           );
         } else if (state is AuthAuthenticated) {
-          print('[AuthWrapper] Showing home page for user: ${state.user.email}');
-          return const HomePage();
+          print('[AuthWrapper] Showing main navigation page for user: ${state.user.email}');
+          return const MainNavigationPage();
         } else {
           print('[AuthWrapper] Showing login page');
           return const LoginPage();
