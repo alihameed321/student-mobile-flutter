@@ -10,6 +10,7 @@ import 'features/main/presentation/pages/main_navigation_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  print('[Main] App starting, dependency injection initialized');
   runApp(const MyApp());
 }
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('[MyApp] Building app with AuthBloc provider');
     return MaterialApp(
       title: 'Student Services',
       debugShowCheckedModeBanner: false,
@@ -46,7 +48,14 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: BlocProvider(
-        create: (context) => di.sl<AuthBloc>()..add(const AuthCheckRequested()),
+        create: (context) {
+          print('[MyApp] Creating AuthBloc instance');
+          final authBloc = di.sl<AuthBloc>();
+          print('[MyApp] AuthBloc created: ${authBloc.runtimeType}');
+          authBloc.add(const AuthCheckRequested());
+          print('[MyApp] AuthCheckRequested sent');
+          return authBloc;
+        },
         child: const AuthWrapper(),
       ),
     );

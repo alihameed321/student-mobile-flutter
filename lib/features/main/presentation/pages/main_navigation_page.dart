@@ -16,8 +16,21 @@ class MainNavigationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('[MainNavigationPage] Building with NavigationBloc provider');
+    
+    // Debug: Check if AuthBloc is available in this context
+    try {
+      final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
+      print('[MainNavigationPage] AuthBloc found: ${authBloc.runtimeType}');
+    } catch (e) {
+      print('[MainNavigationPage] AuthBloc NOT found: $e');
+    }
+    
     return BlocProvider(
-      create: (context) => NavigationBloc(),
+      create: (context) {
+        print('[MainNavigationPage] Creating NavigationBloc');
+        return NavigationBloc();
+      },
       child: const MainNavigationView(),
     );
   }

@@ -155,21 +155,61 @@ class ProfileMenuSection extends StatelessWidget {
   }
 
   void _showSignOutDialog(BuildContext context) {
+    print('[ProfileMenuSection] _showSignOutDialog called');
+    print('[ProfileMenuSection] Context: ${context.runtimeType}');
+    
+    // Debug: Check if AuthBloc is available in current context
+    try {
+      final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
+      print('[ProfileMenuSection] AuthBloc found: ${authBloc.runtimeType}');
+    } catch (e) {
+      print('[ProfileMenuSection] AuthBloc NOT found in context: $e');
+    }
+    
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
+        print('[ProfileMenuSection] Dialog builder called');
+        print('[ProfileMenuSection] Dialog context: ${dialogContext.runtimeType}');
+        
+        // Debug: Check if AuthBloc is available in dialog context
+        try {
+          final authBloc = BlocProvider.of<AuthBloc>(dialogContext, listen: false);
+          print('[ProfileMenuSection] AuthBloc found in dialog: ${authBloc.runtimeType}');
+        } catch (e) {
+          print('[ProfileMenuSection] AuthBloc NOT found in dialog context: $e');
+        }
+        
         return AlertDialog(
           title: const Text('Sign Out'),
           content: const Text('Are you sure you want to sign out?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(dialogContext).pop(),
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                context.read<AuthBloc>().add(AuthLogoutRequested());
+                print('[ProfileMenuSection] Sign out button pressed');
+                Navigator.of(dialogContext).pop();
+                
+                // Try to access AuthBloc from the original context instead of dialog context
+                try {
+                  print('[ProfileMenuSection] Attempting to access AuthBloc from original context');
+                  BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
+                  print('[ProfileMenuSection] AuthLogoutRequested sent successfully');
+                } catch (e) {
+                  print('[ProfileMenuSection] Failed to access AuthBloc from original context: $e');
+                  
+                  // Try to access from dialog context as fallback
+                  try {
+                    print('[ProfileMenuSection] Attempting to access AuthBloc from dialog context');
+                    BlocProvider.of<AuthBloc>(dialogContext).add(AuthLogoutRequested());
+                    print('[ProfileMenuSection] AuthLogoutRequested sent from dialog context');
+                  } catch (e2) {
+                    print('[ProfileMenuSection] Failed to access AuthBloc from dialog context: $e2');
+                  }
+                }
               },
               child: const Text(
                 'Sign Out',

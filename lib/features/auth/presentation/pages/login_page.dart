@@ -4,7 +4,6 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/login_form.dart';
-import '../../../main/presentation/pages/main_navigation_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -21,11 +20,6 @@ class LoginPage extends StatelessWidget {
                 content: Text(state.message),
                 backgroundColor: Colors.red,
               ),
-            );
-          } else if (state is AuthAuthenticated) {
-            // Force navigation to main navigation page
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MainNavigationPage()),
             );
           }
           // Note: Navigation is handled by AuthWrapper in main.dart
