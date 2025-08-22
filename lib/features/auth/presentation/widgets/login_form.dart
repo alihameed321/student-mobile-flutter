@@ -22,6 +22,10 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     developer.log('LoginForm initialized', name: 'LoginForm');
+    
+    // Set default credentials for development mode
+    _identifierController.text = 'student00';
+    _passwordController.text = 'student123';
   }
   
   @override
@@ -60,23 +64,72 @@ class _LoginFormState extends State<LoginForm> {
                 onChanged: (value) {
                   developer.log('Identifier field changed: ${value.length} characters', name: 'LoginForm');
                 },
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
                 decoration: InputDecoration(
-                  labelText: 'Email or Username',
-                  hintText: 'Enter your email or username',
-                  prefixIcon: const Icon(Icons.person_outlined),
+                  labelText: 'Username or Email',
+                  hintText: 'Enter your username or email',
+                  prefixIcon: Container(
+                    margin: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.person_outline_rounded,
+                      color: Colors.blue.shade600,
+                      size: 20,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.blue.shade600,
                       width: 2,
                     ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.red.shade400,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.red.shade600,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  labelStyle: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 14,
                   ),
                 ),
                 validator: (value) {
@@ -95,7 +148,7 @@ class _LoginFormState extends State<LoginForm> {
                 },
               ),
               
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               
               // Password Field
               TextFormField(
@@ -105,34 +158,90 @@ class _LoginFormState extends State<LoginForm> {
                 onChanged: (value) {
                   developer.log('Password field changed: ${value.length} characters', name: 'LoginForm');
                 },
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Enter your password',
-                  prefixIcon: const Icon(Icons.lock_outlined),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  prefixIcon: Container(
+                    margin: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    onPressed: () {
-                      developer.log('Password visibility toggled: ${!_obscurePassword ? 'hidden' : 'visible'}', name: 'LoginForm');
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
+                    child: Icon(
+                      Icons.lock_outline_rounded,
+                      color: Colors.blue.shade600,
+                      size: 20,
+                    ),
                   ),
+                  suffixIcon: Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    child: IconButton(
+                      icon: Icon(
+                        _obscurePassword 
+                            ? Icons.visibility_outlined 
+                            : Icons.visibility_off_outlined,
+                        color: Colors.grey.shade500,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        developer.log('Password visibility toggled: ${!_obscurePassword ? 'hidden' : 'visible'}', name: 'LoginForm');
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.blue.shade600,
                       width: 2,
                     ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.red.shade400,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.red.shade600,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  labelStyle: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 14,
                   ),
                 ),
                 validator: (value) {
@@ -150,35 +259,69 @@ class _LoginFormState extends State<LoginForm> {
                 },
               ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               
               // Login Button
-              SizedBox(
+              Container(
+                width: double.infinity,
                 height: 56,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: isLoading 
+                        ? [Colors.grey.shade300, Colors.grey.shade400]
+                        : [Colors.blue.shade600, Colors.blue.shade700],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isLoading ? Colors.grey : Colors.blue).withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _onLoginPressed,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    elevation: 2,
+                    elevation: 0,
                   ),
                   child: isLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Signing In...',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          ],
                         )
                       : const Text(
                           'Sign In',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
                           ),
                         ),
                 ),

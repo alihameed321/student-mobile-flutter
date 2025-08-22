@@ -10,83 +10,250 @@ class LoginPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    
     return Scaffold(
-      backgroundColor: Colors.white,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
+                content: Row(
+                  children: [
+                    const Icon(Icons.error_outline, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(state.message)),
+                  ],
+                ),
+                backgroundColor: Colors.red.shade600,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: const EdgeInsets.all(16),
               ),
             );
           }
-          // Note: Navigation is handled by AuthWrapper in main.dart
         },
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 60),
-                
-                // Logo and Title
-                Column(
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      child: const Icon(
-                        Icons.school,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Student Services',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Welcome back! Please sign in to continue.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 48),
-                
-                // Login Form
-                const LoginForm(),
-                
-                const SizedBox(height: 24),
-                
-                // Footer
-                Text(
-                  'Need help? Contact support',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+        child: Container(
+          height: size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.blue.shade50,
+                Colors.indigo.shade50,
+                Colors.purple.shade50,
               ],
+            ),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Logo and Branding
+                      _buildHeader(context),
+                      
+                      const SizedBox(height: 48),
+                      
+                      // Login Card
+                      _buildLoginCard(context),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // Footer
+                      _buildFooter(context),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+  
+  Widget _buildHeader(BuildContext context) {
+    return Column(
+      children: [
+        // Logo with modern design
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.blue.shade600,
+                Colors.indigo.shade600,
+                Colors.purple.shade600,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.shade200.withOpacity(0.5),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: const Icon(
+            Icons.school_rounded,
+            size: 50,
+            color: Colors.white,
+          ),
+        ),
+        
+        const SizedBox(height: 24),
+        
+        // Title with modern typography
+        Text(
+          'Student Services',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            color: Colors.grey.shade800,
+            letterSpacing: -0.5,
+          ),
+        ),
+        
+        const SizedBox(height: 8),
+        
+        Text(
+          'Your gateway to academic excellence',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildLoginCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Welcome Back',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade800,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          
+          const SizedBox(height: 8),
+          
+          Text(
+            'Sign in to access your student portal',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // Login Form
+          const LoginForm(),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildFooter(BuildContext context) {
+    return Column(
+      children: [
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        //   decoration: BoxDecoration(
+        //     color: Colors.blue.shade50,
+        //     borderRadius: BorderRadius.circular(12),
+        //     border: Border.all(color: Colors.blue.shade100),
+        //   ),
+        //   child: Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Icon(
+        //         Icons.info_outline,
+        //         size: 16,
+        //         color: Colors.blue.shade600,
+        //       ),
+        //       const SizedBox(width: 8),
+        //       Text(
+        //         'Development Mode: Auto-filled credentials',
+        //         style: TextStyle(
+        //           fontSize: 12,
+        //           color: Colors.blue.shade700,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        
+        const SizedBox(height: 16),
+        
+        TextButton.icon(
+          onPressed: () {
+            // Support contact functionality
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Contact support at support@university.edu'),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: const EdgeInsets.all(16),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.help_outline,
+            size: 18,
+            color: Colors.grey.shade600,
+          ),
+          label: Text(
+            'Need help? Contact support',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
