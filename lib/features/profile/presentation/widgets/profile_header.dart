@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../../core/constants/api_constants.dart';
+import '../pages/student_details_page.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -105,9 +106,18 @@ class ProfileHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: IconButton(
-                  onPressed: () {
-                    // View detailed profile information
-                  },
+                    onPressed: () {
+                      final authBloc = context.read<AuthBloc>();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider.value(
+                            value: authBloc,
+                            child: const StudentDetailsPage(),
+                          ),
+                        ),
+                      );
+                    },
                   icon: const Icon(
                     Icons.info_outline,
                     color: Colors.white,
