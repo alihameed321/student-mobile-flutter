@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/financial_summary.dart';
+import '../pages/all_transactions_page.dart';
 
 class RecentTransactions extends StatelessWidget {
   final List<RecentTransaction>? transactions;
@@ -39,7 +40,16 @@ class RecentTransactions extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // View all transactions
+                    if (transactions != null && transactions!.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllTransactionsPage(
+                            transactions: transactions!,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: const Text('View All'),
                 ),
