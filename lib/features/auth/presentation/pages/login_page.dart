@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
@@ -85,9 +86,10 @@ class LoginPage extends StatelessWidget {
       children: [
         // Logo with modern design
         Container(
+          margin: EdgeInsets.only(top: 16) ,
           width: 100,
           height: 100,
-          decoration: BoxDecoration(
+          decoration: BoxDecoration(            
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -105,7 +107,7 @@ class LoginPage extends StatelessWidget {
                 offset: const Offset(0, 8),
               ),
             ],
-          ),
+          ),          
           child: const Icon(
             Icons.school_rounded,
             size: 50,
@@ -224,7 +226,7 @@ class LoginPage extends StatelessWidget {
         //   ),
         // ),
         
-        const SizedBox(height: 16),
+        // const SizedBox(height: 16),
         
         TextButton.icon(
           onPressed: () {
