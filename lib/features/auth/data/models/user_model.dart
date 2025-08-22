@@ -32,6 +32,26 @@ class UserModel extends User {
   @JsonKey(name: 'date_joined')
   @override
   final DateTime? dateJoined;
+  
+  @JsonKey(name: 'major')
+  @override
+  final String? major;
+  
+  @JsonKey(name: 'academic_level')
+  @override
+  final String? academicLevel;
+  
+  @JsonKey(name: 'department')
+  @override
+  final String? department;
+  
+  @JsonKey(name: 'profile_picture')
+  @override
+  final String? profilePicture;
+  
+  @JsonKey(name: 'user_type')
+  @override
+  final String? userType;
 
   const UserModel({
     required super.id,
@@ -43,6 +63,11 @@ class UserModel extends User {
     required this.isActive,
     required this.isStaff,
     this.dateJoined,
+    this.major,
+    this.academicLevel,
+    this.department,
+    this.profilePicture,
+    this.userType,
   }) : super(
     firstName: firstName,
     lastName: lastName,
@@ -51,6 +76,12 @@ class UserModel extends User {
     isActive: isActive,
     isStaff: isStaff,
     dateJoined: dateJoined,
+    universityId: studentId,
+    major: major,
+    academicLevel: academicLevel,
+    department: department,
+    profilePicture: profilePicture,
+    userType: userType,
   );
   
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
@@ -68,6 +99,11 @@ class UserModel extends User {
       isActive: user.isActive,
       isStaff: user.isStaff,
       dateJoined: user.dateJoined,
+      major: user.major,
+      academicLevel: user.academicLevel,
+      department: user.department,
+      profilePicture: user.profilePicture,
+      userType: user.userType,
     );
   }
 }

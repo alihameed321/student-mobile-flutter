@@ -10,6 +10,12 @@ class User extends Equatable {
   final bool isActive;
   final bool isStaff;
   final DateTime? dateJoined;
+  final String? universityId;
+  final String? major;
+  final String? academicLevel;
+  final String? department;
+  final String? profilePicture;
+  final String? userType;
   
   const User({
     required this.id,
@@ -21,6 +27,12 @@ class User extends Equatable {
     required this.isActive,
     required this.isStaff,
     this.dateJoined,
+    this.universityId,
+    this.major,
+    this.academicLevel,
+    this.department,
+    this.profilePicture,
+    this.userType,
   });
   
   String get fullName => '$firstName $lastName';
@@ -36,5 +48,11 @@ class User extends Equatable {
     isActive,
     isStaff,
     dateJoined,
+    universityId,
+    major,
+    academicLevel,
+    department,
+    profilePicture,
+    userType,
   ];
 }
