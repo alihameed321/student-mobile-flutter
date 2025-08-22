@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../../domain/entities/financial_summary.dart';
 
 class RecentTransactions extends StatelessWidget {
-  const RecentTransactions({super.key});
+  final List<RecentTransaction>? transactions;
+  
+  const RecentTransactions({super.key, this.transactions});
 
   @override
   Widget build(BuildContext context) {
@@ -42,55 +46,43 @@ class RecentTransactions extends StatelessWidget {
               ],
             ),
           ),
-          _buildTransactionItem(
-            context,
-            title: 'Tuition Payment',
-            subtitle: 'Fall 2024 Semester',
-            amount: '-\$1,500.00',
-            date: 'Jan 15, 2024',
-            type: TransactionType.payment,
-            icon: Icons.school,
-          ),
-          _buildDivider(),
-          _buildTransactionItem(
-            context,
-            title: 'Financial Aid Refund',
-            subtitle: 'Pell Grant Disbursement',
-            amount: '+\$2,000.00',
-            date: 'Jan 10, 2024',
-            type: TransactionType.refund,
-            icon: Icons.account_balance,
-          ),
-          _buildDivider(),
-          _buildTransactionItem(
-            context,
-            title: 'Parking Fee',
-            subtitle: 'Spring Semester Permit',
-            amount: '-\$150.00',
-            date: 'Jan 8, 2024',
-            type: TransactionType.payment,
-            icon: Icons.local_parking,
-          ),
-          _buildDivider(),
-          _buildTransactionItem(
-            context,
-            title: 'Book Store Purchase',
-            subtitle: 'Textbooks & Supplies',
-            amount: '-\$320.50',
-            date: 'Jan 5, 2024',
-            type: TransactionType.payment,
-            icon: Icons.menu_book,
-          ),
-          _buildDivider(),
-          _buildTransactionItem(
-            context,
-            title: 'Lab Fee Refund',
-            subtitle: 'Chemistry Lab - Cancelled',
-            amount: '+\$75.00',
-            date: 'Jan 3, 2024',
-            type: TransactionType.refund,
-            icon: Icons.science,
-          ),
+          if (transactions != null && transactions!.isNotEmpty)
+            ...transactions!.take(5).map((transaction) => [
+              _buildTransactionItem(
+                context,
+                title: '${transaction.feeType} Payment',
+                subtitle: 'Payment ID: ${transaction.paymentId}',
+                amount: '-\$${transaction.amount.toStringAsFixed(2)}',
+                date: DateFormat('MMM dd, yyyy').format(transaction.paymentDate),
+                type: TransactionType.payment,
+                status: transaction.status,
+                icon: _getIconForFeeType(transaction.feeType),
+              ),
+              if (transaction != transactions!.take(5).last) _buildDivider(),
+            ]).expand((x) => x)
+          else
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.receipt_long_outlined,
+                      size: 48,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'No recent transactions',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           const SizedBox(height: 8),
         ],
       ),
@@ -104,10 +96,13 @@ class RecentTransactions extends StatelessWidget {
     required String amount,
     required String date,
     required TransactionType type,
+    required String status,
     required IconData icon,
   }) {
     Color amountColor;
     Color iconBackgroundColor;
+    Color statusColor;
+    String statusText;
     
     switch (type) {
       case TransactionType.payment:
@@ -118,6 +113,28 @@ class RecentTransactions extends StatelessWidget {
         amountColor = Colors.green;
         iconBackgroundColor = Colors.green.withOpacity(0.1);
         break;
+    }
+    
+    switch (status.toLowerCase()) {
+      case 'verified':
+        statusColor = Colors.green;
+        statusText = 'Verified';
+        break;
+      case 'pending':
+        statusColor = Colors.orange;
+        statusText = 'Pending';
+        break;
+      case 'rejected':
+        statusColor = Colors.red;
+        statusText = 'Rejected';
+        break;
+      case 'cancelled':
+        statusColor = Colors.grey;
+        statusText = 'Cancelled';
+        break;
+      default:
+        statusColor = Colors.blue;
+        statusText = status;
     }
 
     return Padding(
@@ -186,14 +203,14 @@ class RecentTransactions extends StatelessWidget {
                   vertical: 2,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'Completed',
+                child: Text(
+                  statusText,
                   style: TextStyle(
                     fontSize: 10,
-                    color: Colors.green,
+                    color: statusColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -212,6 +229,25 @@ class RecentTransactions extends StatelessWidget {
       indent: 68,
       endIndent: 20,
     );
+  }
+
+  IconData _getIconForFeeType(String feeType) {
+    final lowerFeeType = feeType.toLowerCase();
+    if (lowerFeeType.contains('tuition')) {
+      return Icons.school;
+    } else if (lowerFeeType.contains('library')) {
+      return Icons.local_library;
+    } else if (lowerFeeType.contains('parking')) {
+      return Icons.local_parking;
+    } else if (lowerFeeType.contains('lab')) {
+      return Icons.science;
+    } else if (lowerFeeType.contains('registration')) {
+      return Icons.app_registration;
+    } else if (lowerFeeType.contains('activity') || lowerFeeType.contains('student')) {
+      return Icons.groups;
+    } else {
+      return Icons.receipt;
+    }
   }
 }
 

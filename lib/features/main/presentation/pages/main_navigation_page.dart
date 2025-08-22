@@ -6,10 +6,12 @@ import '../bloc/navigation_state.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../financial/presentation/pages/financial_page.dart';
+import '../../../financial/presentation/bloc/financial_bloc.dart';
 import '../../../services/presentation/pages/services_page.dart';
 import '../../../documents/presentation/pages/documents_page.dart';
 import '../../../notifications/presentation/pages/notifications_page.dart';
 import '../widgets/custom_bottom_navigation.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 class MainNavigationPage extends StatelessWidget {
   const MainNavigationPage({super.key});
@@ -26,11 +28,21 @@ class MainNavigationPage extends StatelessWidget {
       print('[MainNavigationPage] AuthBloc NOT found: $e');
     }
     
-    return BlocProvider(
-      create: (context) {
-        print('[MainNavigationPage] Creating NavigationBloc');
-        return NavigationBloc();
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            print('[MainNavigationPage] Creating NavigationBloc');
+            return NavigationBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            print('[MainNavigationPage] Creating FinancialBloc');
+            return di.sl<FinancialBloc>();
+          },
+        ),
+      ],
       child: const MainNavigationView(),
     );
   }

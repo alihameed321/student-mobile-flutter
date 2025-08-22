@@ -18,9 +18,15 @@ class ApiConstants {
   // Notifications endpoints
   static const String notificationsEndpoint = '/api/notifications/';
   
-  // Payments endpoints
-  static const String paymentsEndpoint = '/api/payments/';
-  static const String transactionsEndpoint = '/api/transactions/';
+  // Financial endpoints
+  static const String financialSummaryEndpoint = '/api/financial/summary/';
+  static const String studentFeesEndpoint = '/api/financial/fees/';
+  static const String paymentProvidersEndpoint = '/api/financial/payment-providers/';
+  static const String paymentsEndpoint = '/api/financial/payments/';
+  static const String paymentStatisticsEndpoint = '/api/financial/payments/statistics/';
+  static const String createPaymentEndpoint = '/api/financial/payments/create/';
+  static const String viewReceiptEndpoint = '/api/financial/receipts/';
+  static const String downloadReceiptEndpoint = '/api/financial/receipts/';
   
   // Request timeouts
   static const int connectTimeout = 30000; // 30 seconds

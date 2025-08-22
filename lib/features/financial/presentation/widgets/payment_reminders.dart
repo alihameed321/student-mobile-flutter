@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/financial_summary.dart';
 
 class PaymentReminders extends StatelessWidget {
-  const PaymentReminders({super.key});
+  final FinancialSummary? summary;
+  
+  const PaymentReminders({super.key, this.summary});
 
   @override
   Widget build(BuildContext context) {
@@ -42,32 +45,62 @@ class PaymentReminders extends StatelessWidget {
               ],
             ),
           ),
-          _buildReminderItem(
-            context,
-            title: 'Tuition Fee - Spring 2024',
-            amount: '\$1,200.00',
-            dueDate: 'Due in 5 days',
-            priority: ReminderPriority.high,
-            icon: Icons.school,
-          ),
-          _buildDivider(),
-          _buildReminderItem(
-            context,
-            title: 'Library Fine',
-            amount: '\$25.00',
-            dueDate: 'Due in 2 days',
-            priority: ReminderPriority.medium,
-            icon: Icons.local_library,
-          ),
-          _buildDivider(),
-          _buildReminderItem(
-            context,
-            title: 'Parking Permit Renewal',
-            amount: '\$150.00',
-            dueDate: 'Due in 12 days',
-            priority: ReminderPriority.low,
-            icon: Icons.local_parking,
-          ),
+          if (summary != null && summary!.overdueCount > 0)
+            _buildReminderItem(
+              context,
+              title: 'Overdue Payments',
+              amount: '${summary!.overdueCount} items',
+              dueDate: 'Action required',
+              priority: ReminderPriority.high,
+              icon: Icons.warning,
+            )
+          else if (summary != null && summary!.pendingPayments > 0)
+            _buildReminderItem(
+              context,
+              title: 'Pending Payments',
+              amount: '\$${summary!.pendingPayments.toStringAsFixed(2)}',
+              dueDate: 'Payment due soon',
+              priority: ReminderPriority.medium,
+              icon: Icons.pending,
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      size: 48,
+                      color: Colors.green[400],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'All payments are up to date!',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          if (summary != null && summary!.feeBreakdown.isNotEmpty) ...[
+            if (summary!.overdueCount > 0 || summary!.pendingPayments > 0)
+              _buildDivider(),
+            ...summary!.feeBreakdown.take(2).map((fee) => [
+              _buildReminderItem(
+                context,
+                title: '${fee.feeType} (${fee.count} items)',
+                amount: '\$${fee.remainingAmount.toStringAsFixed(2)} remaining',
+                dueDate: 'Total: \$${fee.totalAmount.toStringAsFixed(2)}',
+                priority: fee.remainingAmount > 0 ? ReminderPriority.low : ReminderPriority.low,
+                icon: _getIconForFeeType(fee.feeType),
+              ),
+              if (fee != summary!.feeBreakdown.take(2).last) _buildDivider(),
+            ]).expand((x) => x),
+          ],
           const SizedBox(height: 8),
         ],
       ),
@@ -199,6 +232,25 @@ class PaymentReminders extends StatelessWidget {
       indent: 68,
       endIndent: 20,
     );
+  }
+
+  IconData _getIconForFeeType(String feeType) {
+    final lowerFeeType = feeType.toLowerCase();
+    if (lowerFeeType.contains('tuition')) {
+      return Icons.school;
+    } else if (lowerFeeType.contains('library')) {
+      return Icons.local_library;
+    } else if (lowerFeeType.contains('parking')) {
+      return Icons.local_parking;
+    } else if (lowerFeeType.contains('lab')) {
+      return Icons.science;
+    } else if (lowerFeeType.contains('registration')) {
+      return Icons.app_registration;
+    } else if (lowerFeeType.contains('activity') || lowerFeeType.contains('student')) {
+      return Icons.groups;
+    } else {
+      return Icons.receipt;
+    }
   }
 }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/financial_summary.dart';
 
 class BalanceCard extends StatelessWidget {
-  const BalanceCard({super.key});
+  final FinancialSummary? summary;
+  
+  const BalanceCard({super.key, this.summary});
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +62,9 @@ class BalanceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            '\$2,450.00',
-            style: TextStyle(
+          Text(
+            '\$${summary?.totalFees.toStringAsFixed(2) ?? '0.00'}',
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 32,
               fontWeight: FontWeight.bold,
@@ -72,17 +75,17 @@ class BalanceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildBalanceItem(
-                  'Tuition Due',
-                  '\$1,200.00',
-                  Icons.school_outlined,
+                  'Pending Payments',
+                  '\$${summary?.pendingPayments.toStringAsFixed(2) ?? '0.00'}',
+                  Icons.pending_outlined,
                   Colors.orange,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildBalanceItem(
-                  'Paid This Month',
-                  '\$850.00',
+                  'Paid This Semester',
+                  '\$${summary?.paidThisSemester.toStringAsFixed(2) ?? '0.00'}',
                   Icons.check_circle_outline,
                   Colors.green,
                 ),
