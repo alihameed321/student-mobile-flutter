@@ -23,13 +23,13 @@ class StudentFeeModel extends StudentFee {
       studentName: json['student_name'] as String? ?? '',
       studentId: json['student_id'] as String? ?? '',
       feeType: FeeTypeModel.fromJson(json['fee_type'] as Map<String, dynamic>? ?? {}),
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
-      amountPaid: (json['amount_paid'] as num?)?.toDouble() ?? 0.0,
-      remainingBalance: (json['remaining_balance'] as num?)?.toDouble() ?? 0.0,
+      amount: double.tryParse(json['amount']?.toString() ?? '0') ?? 0.0,
+      amountPaid: double.tryParse(json['amount_paid']?.toString() ?? '0') ?? 0.0,
+      remainingBalance: double.tryParse(json['remaining_balance']?.toString() ?? '0') ?? 0.0,
       status: json['status'] as String? ?? '',
       dueDate: DateTime.tryParse(json['due_date'] as String? ?? ''),
-      semester: json['semester'] as String? ?? '',
-      academicYear: json['academic_year'] as String? ?? '',
+      semester: json['semester'] as String? ?? 'Current',
+      academicYear: json['academic_year'] as String? ?? '2024-2025',
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? '') ?? DateTime.now(),
     );
@@ -68,7 +68,7 @@ class FeeTypeModel extends FeeType {
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       description: json['description'] as String?,
-      category: json['category'] as String? ?? '',
+      category: json['category'] as String? ?? 'General',
       isActive: json['is_active'] as bool? ?? true,
     );
   }

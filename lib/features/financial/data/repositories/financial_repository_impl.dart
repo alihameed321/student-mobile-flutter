@@ -32,14 +32,21 @@ class FinancialRepositoryImpl implements FinancialRepository {
   @override
   Future<Either<Failure, List<StudentFee>>> getStudentFees(String studentId) async {
     try {
+      print('[FinancialRepository] Fetching student fees for ID: $studentId');
       final feeModels = await _apiService.getStudentFees(studentId);
+      print('[FinancialRepository] Received ${feeModels.length} fee models from API');
       final fees = feeModels.map(_mapFeeModelToEntity).toList();
+      print('[FinancialRepository] Successfully mapped ${fees.length} fees');
       return Right(fees);
-    } on ServerException {
+    } on ServerException catch (e) {
+      print('[FinancialRepository] ServerException: $e');
       return Left(ServerFailure('Failed to fetch student fees'));
-    } on NetworkException {
+    } on NetworkException catch (e) {
+      print('[FinancialRepository] NetworkException: $e');
       return Left(NetworkFailure('No internet connection'));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('[FinancialRepository] Unexpected error: $e');
+      print('[FinancialRepository] Stack trace: $stackTrace');
       return Left(ServerFailure('Unexpected error occurred'));
     }
   }

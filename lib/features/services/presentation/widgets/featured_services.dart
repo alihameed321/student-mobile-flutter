@@ -21,7 +21,7 @@ class FeaturedServices extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SizedBox(
-          height: 160,
+          height: 200,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
@@ -90,6 +90,7 @@ class FeaturedServices extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(12),
@@ -103,7 +104,7 @@ class FeaturedServices extends StatelessWidget {
                 size: 28,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               title,
               style: const TextStyle(
@@ -112,7 +113,7 @@ class FeaturedServices extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               subtitle,
               style: TextStyle(
@@ -120,7 +121,7 @@ class FeaturedServices extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

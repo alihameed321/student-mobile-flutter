@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/financial_summary.dart';
+import '../pages/all_payment_reminders_page.dart';
+import '../bloc/financial_bloc.dart';
 
 class PaymentReminders extends StatelessWidget {
   final FinancialSummary? summary;
@@ -8,6 +11,8 @@ class PaymentReminders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final financialBloc = context.read<FinancialBloc>();
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -38,7 +43,15 @@ class PaymentReminders extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // View all reminders
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider.value(
+                          value: financialBloc,
+                          child: const AllPaymentRemindersPage(),
+                        ),
+                      ),
+                    );
                   },
                   child: const Text('View All'),
                 ),

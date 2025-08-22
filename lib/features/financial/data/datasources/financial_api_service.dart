@@ -39,8 +39,18 @@ class FinancialApiServiceImpl implements FinancialApiService {
     final response = await _dioClient.get(
       ApiConstants.studentFeesEndpoint,
     );
+    print('[FinancialApiService] Response status: ${response.statusCode}');
     final List<dynamic> data = response.data['results'] ?? response.data;
-    return data.map((json) => StudentFeeModel.fromJson(json)).toList();
+    print('[FinancialApiService] Parsing ${data.length} fee items');
+    try {
+      final fees = data.map((json) => StudentFeeModel.fromJson(json)).toList();
+      print('[FinancialApiService] Successfully parsed ${fees.length} fees');
+      return fees;
+    } catch (e, stackTrace) {
+      print('[FinancialApiService] Error parsing fees: $e');
+      print('[FinancialApiService] Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
   @override
