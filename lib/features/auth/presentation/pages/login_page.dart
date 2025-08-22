@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
@@ -86,10 +85,9 @@ class LoginPage extends StatelessWidget {
       children: [
         // Logo with modern design
         Container(
-          margin: EdgeInsets.only(top: 16) ,
           width: 100,
           height: 100,
-          decoration: BoxDecoration(            
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -107,7 +105,7 @@ class LoginPage extends StatelessWidget {
                 offset: const Offset(0, 8),
               ),
             ],
-          ),          
+          ),
           child: const Icon(
             Icons.school_rounded,
             size: 50,
@@ -198,35 +196,35 @@ class LoginPage extends StatelessWidget {
   Widget _buildFooter(BuildContext context) {
     return Column(
       children: [
-        // Container(
-        //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        //   decoration: BoxDecoration(
-        //     color: Colors.blue.shade50,
-        //     borderRadius: BorderRadius.circular(12),
-        //     border: Border.all(color: Colors.blue.shade100),
-        //   ),
-        //   child: Row(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       Icon(
-        //         Icons.info_outline,
-        //         size: 16,
-        //         color: Colors.blue.shade600,
-        //       ),
-        //       const SizedBox(width: 8),
-        //       Text(
-        //         'Development Mode: Auto-filled credentials',
-        //         style: TextStyle(
-        //           fontSize: 12,
-        //           color: Colors.blue.shade700,
-        //           fontWeight: FontWeight.w500,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.blue.shade100),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 16,
+                color: Colors.blue.shade600,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Development Mode: Auto-filled credentials',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
         
-        // const SizedBox(height: 16),
+        const SizedBox(height: 16),
         
         TextButton.icon(
           onPressed: () {
