@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/financial_summary.dart';
+import '../../domain/entities/student_fee.dart';
 import '../pages/all_payment_reminders_page.dart';
 import '../bloc/financial_bloc.dart';
 
@@ -8,6 +9,43 @@ class PaymentReminders extends StatelessWidget {
   final FinancialSummary? summary;
   
   const PaymentReminders({super.key, this.summary});
+  
+  // Convert FeeBreakdown to StudentFee objects for the AllPaymentRemindersPage
+  List<StudentFee> _convertToStudentFees(FinancialSummary summary) {
+    return summary.feeBreakdown.map((breakdown) {
+      // Determine status based on remaining amount
+      String status;
+      if (breakdown.remainingAmount <= 0) {
+        status = 'paid';
+      } else if (breakdown.paidAmount > 0) {
+        status = 'partially_paid';
+      } else {
+        status = 'pending';
+      }
+      
+      return StudentFee(
+        id: breakdown.feeType.hashCode, // Use hashCode as a simple ID
+        studentName: 'Current Student', // Placeholder
+        studentId: '1', // Placeholder
+        feeType: FeeType(
+           id: breakdown.feeType.hashCode,
+           name: breakdown.feeType,
+           description: '${breakdown.feeType} fee',
+           category: 'Academic',
+           isActive: true,
+         ),
+        amount: breakdown.totalAmount,
+        amountPaid: breakdown.paidAmount,
+        remainingBalance: breakdown.remainingAmount,
+        status: status,
+        dueDate: breakdown.remainingAmount > 0 ? DateTime.now().add(const Duration(days: 30)) : null,
+        semester: 'Current Semester',
+        academicYear: DateTime.now().year.toString(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +81,18 @@ class PaymentReminders extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
+                    // Convert summary data to StudentFee objects if available
+                    List<StudentFee>? studentFees;
+                    if (summary != null) {
+                      studentFees = _convertToStudentFees(summary!);
+                    }
+                    
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
                           value: financialBloc,
-                          child: const AllPaymentRemindersPage(),
+                          child: AllPaymentRemindersPage(studentFees: studentFees),
                         ),
                       ),
                     );

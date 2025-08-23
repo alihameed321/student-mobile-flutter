@@ -5,7 +5,9 @@ import '../../domain/entities/student_fee.dart';
 import '../../domain/entities/financial_summary.dart';
 
 class AllPaymentRemindersPage extends StatefulWidget {
-  const AllPaymentRemindersPage({super.key});
+  final List<StudentFee>? studentFees;
+  
+  const AllPaymentRemindersPage({super.key, this.studentFees});
 
   @override
   State<AllPaymentRemindersPage> createState() => _AllPaymentRemindersPageState();
@@ -17,9 +19,11 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
   @override
   void initState() {
     super.initState();
-    // Load student fees when page opens
-    // TODO: Get actual student ID from authentication or navigation
-    context.read<FinancialBloc>().add(LoadStudentFees(studentId: '1'));
+    // Only load student fees if not provided as parameter
+    if (widget.studentFees == null) {
+      // TODO: Get actual student ID from authentication or navigation
+      context.read<FinancialBloc>().add(LoadStudentFees(studentId: '1'));
+    }
   }
 
   @override
@@ -52,6 +56,25 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       body: BlocBuilder<FinancialBloc, FinancialState>(
         builder: (context, state) {
           print('[AllPaymentRemindersPage] Current state: ${state.runtimeType}');
+          
+          // Use provided studentFees if available, otherwise rely on BLoC state
+          if (widget.studentFees != null) {
+            final fees = widget.studentFees!;
+            print('[AllPaymentRemindersPage] Using provided studentFees with ${fees.length} fees');
+            
+            return Column(
+              children: [
+                // Filter tabs
+                _buildFilterTabs(),
+                // Fees list
+                Expanded(
+                   child: fees.isEmpty
+                       ? _buildEmptyState()
+                       : _buildStudentFeesList(fees),
+                 ),
+              ],
+            );
+          }
           
           if (state is FinancialLoading) {
             print('[AllPaymentRemindersPage] Showing loading indicator');
