@@ -14,6 +14,7 @@ class StudentFee extends Equatable {
   final String academicYear;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int? daysPastDue;
 
   const StudentFee({
     required this.id,
@@ -29,6 +30,7 @@ class StudentFee extends Equatable {
     required this.academicYear,
     required this.createdAt,
     required this.updatedAt,
+    this.daysPastDue,
   });
 
   bool get isOverdue {
@@ -55,6 +57,7 @@ class StudentFee extends Equatable {
         academicYear,
         createdAt,
         updatedAt,
+        daysPastDue,
       ];
 }
 

@@ -82,6 +82,13 @@ class CreatePaymentEvent extends FinancialEvent {
       ];
 }
 
+class LoadOutstandingFees extends FinancialEvent {
+  const LoadOutstandingFees();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class LoadPaymentProviders extends FinancialEvent {
   const LoadPaymentProviders();
 

@@ -31,21 +31,50 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
   void _navigateToPaymentPage(BuildContext context, StudentFee fee) async {
     final financialBloc = context.read<FinancialBloc>();
     
-    // Load payment providers from API
-    financialBloc.add(const LoadPaymentProviders());
+    // Load fresh outstanding fees first to get real fee IDs
+    financialBloc.add(const LoadOutstandingFees());
     
-    // Wait for payment providers to load
+    // Wait for outstanding fees to load
     await for (final state in financialBloc.stream) {
-      if (state is PaymentProvidersLoaded) {
-        final paymentProviders = state.providers;
-        await _navigateWithProviders(context, fee, financialBloc, paymentProviders);
+      if (state is OutstandingFeesLoaded) {
+        final outstandingFees = state.fees;
+        
+        // Find the corresponding real fee by matching fee type and amount
+        final realFee = outstandingFees.firstWhere(
+          (realFee) => realFee.feeType.name == fee.feeType.name && 
+                      realFee.remainingBalance == fee.remainingBalance,
+          orElse: () => outstandingFees.isNotEmpty ? outstandingFees.first : fee,
+        );
+        
+        // Load payment providers from API
+        financialBloc.add(const LoadPaymentProviders());
+        
+        // Wait for payment providers to load
+        await for (final providerState in financialBloc.stream) {
+          if (providerState is PaymentProvidersLoaded) {
+            final paymentProviders = providerState.providers;
+            await _navigateWithProviders(context, realFee, financialBloc, paymentProviders);
+            break;
+          } else if (providerState is FinancialError) {
+            // Show error message
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to load payment providers: ${providerState.message}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            break;
+          }
+        }
         break;
       } else if (state is FinancialError) {
         // Show error message
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to load payment providers: ${state.message}'),
+              content: Text('Failed to load outstanding fees: ${state.message}'),
               backgroundColor: Colors.red,
             ),
           );

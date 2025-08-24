@@ -81,18 +81,13 @@ class PaymentReminders extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Convert summary data to StudentFee objects if available
-                    List<StudentFee>? studentFees;
-                    if (summary != null) {
-                      studentFees = _convertToStudentFees(summary!);
-                    }
-                    
+                    // Don't pass synthetic fee data, let AllPaymentRemindersPage load real fees
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
                           value: financialBloc,
-                          child: AllPaymentRemindersPage(studentFees: studentFees),
+                          child: const AllPaymentRemindersPage(), // Remove studentFees parameter
                         ),
                       ),
                     );

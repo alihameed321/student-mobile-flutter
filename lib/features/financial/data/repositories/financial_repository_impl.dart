@@ -9,6 +9,7 @@ import '../datasources/financial_api_service.dart';
 import '../models/financial_summary_model.dart';
 import '../models/student_fee_model.dart';
 import '../models/payment_model.dart';
+import '../models/payment_statistics_model.dart' as stats;
 
 class FinancialRepositoryImpl implements FinancialRepository {
   final FinancialApiService _apiService;
@@ -33,7 +34,23 @@ class FinancialRepositoryImpl implements FinancialRepository {
   Future<Either<Failure, List<StudentFee>>> getStudentFees(String studentId) async {
     try {
       print('[FinancialRepository] Fetching student fees for ID: $studentId');
-      final feeModels = await _apiService.getStudentFees(studentId);
+      final response = await _apiService.getStudentFees(
+        status: null,
+        feeType: null,
+        page: 1,
+        pageSize: 50,
+      );
+      print('[FinancialRepository] Raw response: $response');
+      print('[FinancialRepository] Response type: ${response.runtimeType}');
+      print('[FinancialRepository] Response keys: ${response.keys}');
+      final results = response['results'];
+      if (results == null) {
+        print('[FinancialRepository] Results field is null in response');
+        return Left(ServerFailure('Invalid response format'));
+      }
+      final feeModels = (results as List)
+          .map((json) => StudentFeeModel.fromJson(json))
+          .toList();
       print('[FinancialRepository] Received ${feeModels.length} fee models from API');
       final fees = feeModels.map(_mapFeeModelToEntity).toList();
       print('[FinancialRepository] Successfully mapped ${fees.length} fees');
@@ -56,13 +73,8 @@ class FinancialRepositoryImpl implements FinancialRepository {
   @override
   Future<Either<Failure, List<StudentFee>>> getOutstandingFees() async {
     try {
-      // Get student ID from somewhere - this needs to be passed as parameter
-      // For now, using a placeholder - this method signature needs to be updated
-      final feeModels = await _apiService.getStudentFees('student_id_placeholder');
-      final fees = feeModels
-          .where((fee) => fee.status == 'pending' || fee.status == 'overdue')
-          .map(_mapFeeModelToEntity)
-          .toList();
+      final feeModels = await _apiService.getOutstandingFees();
+      final fees = feeModels.map(_mapFeeModelToEntity).toList();
       return Right(fees);
     } on ServerException {
       return Left(ServerFailure('Failed to fetch outstanding fees'));
@@ -91,7 +103,13 @@ class FinancialRepositoryImpl implements FinancialRepository {
   @override
   Future<Either<Failure, List<Payment>>> getPayments(String studentId) async {
     try {
-      final paymentModels = await _apiService.getPayments(studentId);
+      final response = await _apiService.getPayments(
+        page: 1,
+        pageSize: 50,
+      );
+      final paymentModels = (response['payments'] as List)
+          .map((json) => PaymentModel.fromJson(json))
+          .toList();
       final payments = paymentModels.map(_mapPaymentModelToEntity).toList();
       return Right(payments);
     } on ServerException {
@@ -117,16 +135,47 @@ class FinancialRepositoryImpl implements FinancialRepository {
     String? transferNotes,
   }) async {
     try {
-      final paymentModel = await _apiService.createPayment(
-        studentId: studentId,
-        feeIds: feeIds,
+      // Get the actual fee amounts from the outstanding fees
+      final outstandingFeesResult = await getOutstandingFees();
+      final Map<String, double> feeAmountMap = {};
+      
+      outstandingFeesResult.fold(
+        (failure) => throw Exception('Failed to get fee amounts'),
+        (fees) {
+          for (final fee in fees) {
+            feeAmountMap[fee.id.toString()] = fee.remainingBalance;
+          }
+        },
+      );
+      
+      // Convert feeIds to the format expected by the API with actual amounts
+      final fees = feeIds.map((id) => {
+        'id': id,
+        'amount': feeAmountMap[id] ?? (amount / feeIds.length), // Use actual fee amount or fallback to even distribution
+      }).toList();
+      
+      // Calculate the correct total amount from the actual fee amounts
+      double calculatedTotal = 0.0;
+      for (final fee in fees) {
+        calculatedTotal += (fee['amount'] as double);
+      }
+      
+      final response = await _apiService.createPayment(
+        fees: fees,
         paymentProviderId: paymentProviderId,
-        amount: amount,
+        totalAmount: calculatedTotal,
         transactionReference: transactionReference,
         senderName: senderName,
         senderPhone: senderPhone,
         transferNotes: transferNotes,
       );
+      
+      // The API returns 'payments' array, get the first payment
+      final payments = response['payments'] as List;
+      if (payments.isEmpty) {
+        return Left(ServerFailure('No payment data returned'));
+      }
+      final paymentModel = PaymentModel.fromJson(payments[0]);
       return Right(_mapPaymentModelToEntity(paymentModel));
     } on ServerException {
       return Left(ServerFailure('Failed to create payment'));
@@ -140,7 +189,8 @@ class FinancialRepositoryImpl implements FinancialRepository {
   @override
   Future<Either<Failure, PaymentStatistics>> getPaymentStatistics(String studentId) async {
     try {
-      final statsModel = await _apiService.getPaymentStatistics(studentId);
+      final response = await _apiService.getPaymentStatistics();
+      final statsModel = PaymentStatisticsModel.fromJson(response);
       return Right(_mapStatsModelToEntity(statsModel));
     } on ServerException {
       return Left(ServerFailure('Failed to fetch payment statistics'));
@@ -187,6 +237,10 @@ class FinancialRepositoryImpl implements FinancialRepository {
       pendingPayments: model.pendingPayments,
       paidThisSemester: model.paidThisSemester,
       overdueCount: model.overdueCount,
+      overdueAmount: model.overdueAmount,
+      pendingCount: model.pendingCount,
+      partialCount: model.partialCount,
+      paymentStatistics: model.paymentStatistics,
       recentTransactions: model.recentTransactions
           .map((t) => RecentTransaction(
                 paymentId: t.paymentId,
@@ -231,6 +285,7 @@ class FinancialRepositoryImpl implements FinancialRepository {
       academicYear: model.academicYear,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
+      daysPastDue: model.daysPastDue,
     );
   }
 

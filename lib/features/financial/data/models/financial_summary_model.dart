@@ -6,6 +6,10 @@ class FinancialSummaryModel extends FinancialSummary {
     required super.pendingPayments,
     required super.paidThisSemester,
     required super.overdueCount,
+    required super.overdueAmount,
+    required super.pendingCount,
+    required super.partialCount,
+    required super.paymentStatistics,
     required super.recentTransactions,
     required super.feeBreakdown,
   });
@@ -75,6 +79,10 @@ class FinancialSummaryModel extends FinancialSummary {
          paidThisSemester: parseDouble(json['paid_this_semester']),
          pendingPayments: parseDouble(json['pending_payments']),
          overdueCount: parseInt(json['overdue_count']),
+         overdueAmount: parseDouble(json['overdue_amount']),
+         pendingCount: parseInt(json['pending_count']),
+         partialCount: parseInt(json['partial_count']),
+         paymentStatistics: json['payment_statistics'] as Map<String, dynamic>? ?? {},
          recentTransactions: recentTransactions,
          feeBreakdown: feeBreakdown,
        );
@@ -99,6 +107,10 @@ class FinancialSummaryModel extends FinancialSummary {
       'fee_breakdown': feeBreakdown
           .map((e) => (e as FeeBreakdownModel).toJson())
           .toList(),
+      'overdue_amount': overdueAmount,
+      'pending_count': pendingCount,
+      'partial_count': partialCount,
+      'payment_statistics': paymentStatistics,
     };
   }
 }

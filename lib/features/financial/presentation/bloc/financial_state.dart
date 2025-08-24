@@ -42,6 +42,15 @@ class FeesLoaded extends FinancialState {
   List<Object?> get props => [fees];
 }
 
+class OutstandingFeesLoaded extends FinancialState {
+  final List<StudentFee> fees;
+
+  const OutstandingFeesLoaded(this.fees);
+
+  @override
+  List<Object?> get props => [fees];
+}
+
 // Payments States
 class PaymentsLoading extends FinancialState {}
 

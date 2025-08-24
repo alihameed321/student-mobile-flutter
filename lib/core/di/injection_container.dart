@@ -13,6 +13,7 @@ import '../../features/financial/data/repositories/financial_repository_impl.dar
 import '../../features/financial/domain/repositories/financial_repository.dart';
 import '../../features/financial/domain/usecases/get_financial_summary.dart';
 import '../../features/financial/domain/usecases/get_student_fees.dart';
+import '../../features/financial/domain/usecases/get_outstanding_fees.dart';
 import '../../features/financial/domain/usecases/create_payment.dart';
 import '../../features/financial/domain/usecases/get_payments.dart';
 import '../../features/financial/domain/usecases/get_payment_providers.dart';
@@ -50,6 +51,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => GetFinancialSummary(sl()));
   sl.registerLazySingleton(() => GetStudentFees(sl()));
+  sl.registerLazySingleton(() => GetOutstandingFees(sl()));
   sl.registerLazySingleton(() => CreatePayment(sl()));
   sl.registerLazySingleton(() => GetPayments(sl()));
   sl.registerLazySingleton(() => GetPaymentProviders(sl()));
@@ -63,6 +65,7 @@ Future<void> init() async {
   sl.registerFactory(() => FinancialBloc(
     getFinancialSummary: sl(),
     getStudentFees: sl(),
+    getOutstandingFees: sl(),
     createPayment: sl(),
     getPayments: sl(),
     getPaymentProviders: sl(),

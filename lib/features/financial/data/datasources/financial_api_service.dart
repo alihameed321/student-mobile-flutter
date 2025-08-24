@@ -7,15 +7,23 @@ import '../models/payment_model.dart';
 
 abstract class FinancialApiService {
   Future<FinancialSummaryModel> getFinancialSummary(String studentId);
-  Future<List<StudentFeeModel>> getStudentFees(String studentId);
+  Future<Map<String, dynamic>> getStudentFees({
+    String? status,
+    String? feeType,
+    bool? outstanding,
+    String? semester,
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  });
+  Future<List<StudentFeeModel>> getOutstandingFees();
   Future<List<PaymentProviderModel>> getPaymentProviders();
-  Future<List<PaymentModel>> getPayments(String studentId);
-  Future<PaymentStatisticsModel> getPaymentStatistics(String studentId);
-  Future<PaymentModel> createPayment({
-    required String studentId,
-    required List<String> feeIds,
+  Future<Map<String, dynamic>> getPayments({int page = 1, int pageSize = 20});
+  Future<Map<String, dynamic>> getPaymentStatistics();
+  Future<Map<String, dynamic>> createPayment({
+    required List<Map<String, dynamic>> fees,
     required String paymentProviderId,
-    required double amount,
+    required double totalAmount,
     String? transactionReference,
     String? senderName,
     String? senderPhone,
@@ -39,22 +47,43 @@ class FinancialApiServiceImpl implements FinancialApiService {
   }
 
   @override
-  Future<List<StudentFeeModel>> getStudentFees(String studentId) async {
+  Future<Map<String, dynamic>> getStudentFees({
+    String? status,
+    String? feeType,
+    bool? outstanding,
+    String? semester,
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    final queryParams = <String, dynamic>{
+      'page': page,
+      'page_size': pageSize,
+    };
+    
+    if (status != null) queryParams['status'] = status;
+    if (feeType != null) queryParams['fee_type'] = feeType;
+    if (outstanding != null) queryParams['outstanding'] = outstanding;
+    if (semester != null) queryParams['semester'] = semester;
+    if (search != null) queryParams['search'] = search;
+    
     final response = await _dioClient.get(
       ApiConstants.studentFeesEndpoint,
+      queryParameters: queryParams,
     );
-    print('[FinancialApiService] Response status: ${response.statusCode}');
-    final List<dynamic> data = response.data['results'] ?? response.data;
-    print('[FinancialApiService] Parsing ${data.length} fee items');
-    try {
-      final fees = data.map((json) => StudentFeeModel.fromJson(json)).toList();
-      print('[FinancialApiService] Successfully parsed ${fees.length} fees');
-      return fees;
-    } catch (e, stackTrace) {
-      print('[FinancialApiService] Error parsing fees: $e');
-      print('[FinancialApiService] Stack trace: $stackTrace');
-      rethrow;
-    }
+    
+    print('[FinancialApiService] Student fees response: ${response.statusCode}');
+    return response.data;
+  }
+
+  @override
+  Future<List<StudentFeeModel>> getOutstandingFees() async {
+    final response = await _dioClient.get(
+      '${ApiConstants.studentFeesEndpoint}outstanding/',
+    );
+    
+    final List<dynamic> data = response.data['outstanding_fees'] ?? [];
+    return data.map((json) => StudentFeeModel.fromJson(json)).toList();
   }
 
   @override
@@ -67,38 +96,49 @@ class FinancialApiServiceImpl implements FinancialApiService {
   }
 
   @override
-  Future<List<PaymentModel>> getPayments(String studentId) async {
+  Future<Map<String, dynamic>> getPayments({int page = 1, int pageSize = 20}) async {
     final response = await _dioClient.get(
       ApiConstants.paymentsEndpoint,
+      queryParameters: {
+        'page': page,
+        'page_size': pageSize,
+      },
     );
-    final List<dynamic> data = response.data['results'] ?? response.data;
-    return data.map((json) => PaymentModel.fromJson(json)).toList();
+    
+    print('[FinancialApiService] Payments response: ${response.statusCode}');
+    return response.data;
   }
 
   @override
-  Future<PaymentStatisticsModel> getPaymentStatistics(String studentId) async {
+  Future<Map<String, dynamic>> getPaymentStatistics() async {
     final response = await _dioClient.get(
       ApiConstants.paymentStatisticsEndpoint,
     );
-    return PaymentStatisticsModel.fromJson(response.data);
+    
+    print('[FinancialApiService] Payment statistics response: ${response.statusCode}');
+    return response.data;
   }
 
   @override
-  Future<PaymentModel> createPayment({
-    required String studentId,
-    required List<String> feeIds,
+  Future<Map<String, dynamic>> createPayment({
+    required List<Map<String, dynamic>> fees,
     required String paymentProviderId,
-    required double amount,
+    required double totalAmount,
     String? transactionReference,
     String? senderName,
     String? senderPhone,
     String? transferNotes,
   }) async {
+    print('=== PAYMENT CREATION DEBUG ===');
+    print('Fees: $fees');
+    print('Payment Provider ID: $paymentProviderId');
+    print('Total Amount: $totalAmount');
+    print('Transaction Reference: $transactionReference');
+    
     final data = {
-      'student_id': studentId,
-      'fee_ids': feeIds,
+      'fees': fees,
       'payment_provider_id': paymentProviderId,
-      'amount': amount,
+      'total_amount': totalAmount.toStringAsFixed(2),
     };
     
     // Add optional parameters if provided
@@ -115,11 +155,20 @@ class FinancialApiServiceImpl implements FinancialApiService {
       data['transfer_notes'] = transferNotes;
     }
     
-    final response = await _dioClient.post(
-      ApiConstants.createPaymentEndpoint,
-      data: data,
-    );
-    return PaymentModel.fromJson(response.data);
+    print('Final request data: $data');
+    print('Endpoint: ${ApiConstants.createPaymentEndpoint}');
+    
+    try {
+      final response = await _dioClient.post(
+        ApiConstants.createPaymentEndpoint,
+        data: data,
+      );
+      print('Payment creation successful: ${response.data}');
+      return response.data;
+    } catch (e) {
+      print('Payment creation failed: $e');
+      rethrow;
+    }
   }
 
   @override

@@ -5,6 +5,10 @@ class FinancialSummary extends Equatable {
   final double pendingPayments;
   final double paidThisSemester;
   final int overdueCount;
+  final double overdueAmount;
+  final int pendingCount;
+  final int partialCount;
+  final Map<String, dynamic> paymentStatistics;
   final List<RecentTransaction> recentTransactions;
   final List<FeeBreakdown> feeBreakdown;
 
@@ -13,6 +17,10 @@ class FinancialSummary extends Equatable {
     required this.pendingPayments,
     required this.paidThisSemester,
     required this.overdueCount,
+    required this.overdueAmount,
+    required this.pendingCount,
+    required this.partialCount,
+    required this.paymentStatistics,
     required this.recentTransactions,
     required this.feeBreakdown,
   });
@@ -23,6 +31,10 @@ class FinancialSummary extends Equatable {
         pendingPayments,
         paidThisSemester,
         overdueCount,
+        overdueAmount,
+        pendingCount,
+        partialCount,
+        paymentStatistics,
         recentTransactions,
         feeBreakdown,
       ];

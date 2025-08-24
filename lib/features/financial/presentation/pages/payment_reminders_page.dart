@@ -175,43 +175,63 @@ class PaymentRemindersPage extends StatelessWidget {
   }
 
   void _navigateToPaymentPage(BuildContext context, PaymentReminderItem reminder) async {
-    // Get current financial state to access student fees and payment providers
     final financialBloc = context.read<FinancialBloc>();
-    final currentState = financialBloc.state;
     
-    if (currentState is FinancialSummaryLoaded) {
-      // Convert fee breakdown to student fees for payment
-      final studentFees = _convertToStudentFeesForPayment(currentState.summary);
-      
-      // Load payment providers from API
-      financialBloc.add(const LoadPaymentProviders());
-      
-      // Wait for payment providers to load
-      await for (final state in financialBloc.stream) {
-        if (state is PaymentProvidersLoaded) {
-          final paymentProviders = state.providers;
-          await _navigateWithProviders(context, studentFees, financialBloc, paymentProviders);
-          break;
-        } else if (state is FinancialError) {
-          // Show error message
+    // Load fresh outstanding fees first to get real fee IDs
+    financialBloc.add(const LoadOutstandingFees());
+    
+    // Wait for outstanding fees to load
+    await for (final state in financialBloc.stream) {
+      if (state is OutstandingFeesLoaded) {
+        final outstandingFees = state.fees;
+        
+        if (outstandingFees.isEmpty) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to load payment providers: ${state.message}'),
-                backgroundColor: Colors.red,
+              const SnackBar(
+                content: Text('No outstanding fees to pay'),
+                backgroundColor: Colors.orange,
               ),
             );
           }
           break;
         }
+        
+        // Load payment providers from API
+        financialBloc.add(const LoadPaymentProviders());
+        
+        // Wait for payment providers to load
+        await for (final providerState in financialBloc.stream) {
+          if (providerState is PaymentProvidersLoaded) {
+            final paymentProviders = providerState.providers;
+            await _navigateWithProviders(context, outstandingFees, financialBloc, paymentProviders);
+            break;
+          } else if (providerState is FinancialError) {
+            // Show error message
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to load payment providers: ${providerState.message}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            break;
+          }
+        }
+        break;
+      } else if (state is FinancialError) {
+        // Show error message
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to load outstanding fees: ${state.message}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        break;
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Unable to load payment information. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
   }
   
@@ -247,7 +267,7 @@ class PaymentRemindersPage extends StatelessWidget {
       if (breakdown.remainingAmount <= 0) {
         status = 'paid';
       } else if (breakdown.paidAmount > 0) {
-        status = 'partially_paid';
+        status = 'partial';
       } else {
         status = 'pending';
       }

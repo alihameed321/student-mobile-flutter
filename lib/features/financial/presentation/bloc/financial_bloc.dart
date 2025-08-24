@@ -5,6 +5,7 @@ import '../../domain/entities/student_fee.dart';
 import '../../domain/entities/payment.dart';
 import '../../domain/usecases/get_financial_summary.dart';
 import '../../domain/usecases/get_student_fees.dart';
+import '../../domain/usecases/get_outstanding_fees.dart';
 import '../../domain/usecases/get_payments.dart';
 import '../../domain/usecases/get_payment_providers.dart';
 import '../../domain/usecases/create_payment.dart';
@@ -15,6 +16,7 @@ part 'financial_state.dart';
 class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
   final GetFinancialSummary getFinancialSummary;
   final GetStudentFees getStudentFees;
+  final GetOutstandingFees getOutstandingFees;
   final GetPayments getPayments;
   final GetPaymentProviders getPaymentProviders;
   final CreatePayment createPayment;
@@ -22,12 +24,14 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
   FinancialBloc({
     required this.getFinancialSummary,
     required this.getStudentFees,
+    required this.getOutstandingFees,
     required this.getPayments,
     required this.getPaymentProviders,
     required this.createPayment,
   }) : super(FinancialInitial()) {
     on<LoadFinancialSummary>(_onLoadFinancialSummary);
     on<LoadStudentFees>(_onLoadStudentFees);
+    on<LoadOutstandingFees>(_onLoadOutstandingFees);
     on<LoadPayments>(_onLoadPayments);
     on<LoadPaymentProviders>(_onLoadPaymentProviders);
     on<CreatePaymentEvent>(_onCreatePayment);
@@ -76,6 +80,20 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
     );
   }
 
+  Future<void> _onLoadOutstandingFees(
+    LoadOutstandingFees event,
+    Emitter<FinancialState> emit,
+  ) async {
+    emit(FeesLoading());
+    
+    final result = await getOutstandingFees();
+    
+    result.fold(
+      (failure) => emit(FinancialError(failure.message)),
+      (fees) => emit(OutstandingFeesLoaded(fees)),
+    );
+  }
+
   Future<void> _onLoadPayments(
     LoadPayments event,
     Emitter<FinancialState> emit,
@@ -98,6 +116,13 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
     CreatePaymentEvent event,
     Emitter<FinancialState> emit,
   ) async {
+    print('=== FINANCIAL BLOC: CREATE PAYMENT EVENT ===');
+    print('Student ID: ${event.studentId}');
+    print('Fee IDs: ${event.feeIds}');
+    print('Payment Provider ID: ${event.paymentProviderId}');
+    print('Amount: ${event.amount}');
+    print('Transaction Reference: ${event.transactionReference}');
+    
     emit(PaymentCreating());
     
     final result = await createPayment(
@@ -112,8 +137,14 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
     );
     
     result.fold(
-      (failure) => emit(FinancialError(failure.message)),
-      (payment) => emit(PaymentCreated(payment)),
+      (failure) {
+        print('Payment creation failed in bloc: ${failure.message}');
+        emit(FinancialError(failure.message));
+      },
+      (payment) {
+        print('Payment creation successful in bloc: ${payment.id}');
+        emit(PaymentCreated(payment));
+      },
     );
   }
 

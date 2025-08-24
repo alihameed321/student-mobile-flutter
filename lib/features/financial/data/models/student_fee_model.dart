@@ -1,6 +1,9 @@
 import '../../domain/entities/student_fee.dart';
 
 class StudentFeeModel extends StudentFee {
+  final bool isOverdue;
+  final int? daysPastDue;
+  
   const StudentFeeModel({
     required super.id,
     required super.studentName,
@@ -15,6 +18,8 @@ class StudentFeeModel extends StudentFee {
     required super.academicYear,
     required super.createdAt,
     required super.updatedAt,
+    this.isOverdue = false,
+    this.daysPastDue,
   });
 
   factory StudentFeeModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +37,8 @@ class StudentFeeModel extends StudentFee {
       academicYear: json['academic_year'] as String? ?? '2024-2025',
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? '') ?? DateTime.now(),
+      isOverdue: json['is_overdue'] as bool? ?? false,
+      daysPastDue: json['days_past_due'] as int?,
     );
   }
 
@@ -50,6 +57,8 @@ class StudentFeeModel extends StudentFee {
       'academic_year': academicYear,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'is_overdue': isOverdue,
+      'days_past_due': daysPastDue,
     };
   }
 }
