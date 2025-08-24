@@ -54,6 +54,16 @@ class PaymentsLoaded extends FinancialState {
   List<Object?> get props => [payments];
 }
 
+// Payment Providers States
+class PaymentProvidersLoaded extends FinancialState {
+  final List<PaymentProvider> providers;
+
+  const PaymentProvidersLoaded(this.providers);
+
+  @override
+  List<Object?> get props => [providers];
+}
+
 // Payment Creation States
 class PaymentCreating extends FinancialState {}
 

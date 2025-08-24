@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/financial_bloc.dart';
 import '../../domain/entities/student_fee.dart';
 import '../../domain/entities/financial_summary.dart';
+import '../../domain/entities/payment.dart';
+import 'payment_page.dart';
 
 class AllPaymentRemindersPage extends StatefulWidget {
   final List<StudentFee>? studentFees;
@@ -23,6 +25,59 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
     if (widget.studentFees == null) {
       // TODO: Get actual student ID from authentication or navigation
       context.read<FinancialBloc>().add(LoadStudentFees(studentId: '1'));
+    }
+  }
+
+  void _navigateToPaymentPage(BuildContext context, StudentFee fee) async {
+    final financialBloc = context.read<FinancialBloc>();
+    
+    // Load payment providers from API
+    financialBloc.add(const LoadPaymentProviders());
+    
+    // Wait for payment providers to load
+    await for (final state in financialBloc.stream) {
+      if (state is PaymentProvidersLoaded) {
+        final paymentProviders = state.providers;
+        await _navigateWithProviders(context, fee, financialBloc, paymentProviders);
+        break;
+      } else if (state is FinancialError) {
+        // Show error message
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to load payment providers: ${state.message}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        break;
+      }
+    }
+  }
+  
+  Future<void> _navigateWithProviders(
+    BuildContext context, 
+    StudentFee fee, 
+    FinancialBloc financialBloc, 
+    List<PaymentProvider> paymentProviders
+  ) async {
+    
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: financialBloc,
+          child: PaymentPage(
+            availableFees: [fee], // Pass the selected fee
+            paymentProviders: paymentProviders,
+            studentId: '1', // This should come from user session
+          ),
+        ),
+      ),
+    );
+    
+    if (result == true) {
+      // Refresh financial data after successful payment
+      financialBloc.add(LoadStudentFees(studentId: '1'));
     }
   }
 
@@ -401,22 +456,25 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
               ),
             ),
             if (!isPaid)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: priorityColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: priorityColor.withOpacity(0.3),
-                    width: 1,
+              GestureDetector(
+                onTap: () => _navigateToPaymentPage(context, fee),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: priorityColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: priorityColor.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Pay Now',
-                  style: TextStyle(
-                    color: priorityColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  child: Text(
+                    'Pay Now',
+                    style: TextStyle(
+                      color: priorityColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

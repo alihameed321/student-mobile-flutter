@@ -25,6 +25,8 @@ class _FinancialPageState extends State<FinancialPage> {
 
   @override
   Widget build(BuildContext context) {
+    final financialBloc = context.read<FinancialBloc>();
+    
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
@@ -43,7 +45,7 @@ class _FinancialPageState extends State<FinancialPage> {
             return RefreshIndicator(
               onRefresh: () async {
                 // TODO: Get actual student ID from authentication/user context
-                context.read<FinancialBloc>().add(RefreshFinancialData('student_id_placeholder'));
+                financialBloc.add(RefreshFinancialData('student_id_placeholder'));
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),

@@ -16,6 +16,10 @@ abstract class FinancialApiService {
     required List<String> feeIds,
     required String paymentProviderId,
     required double amount,
+    String? transactionReference,
+    String? senderName,
+    String? senderPhone,
+    String? transferNotes,
   });
   Future<String> viewReceipt(String paymentId);
   Future<Response> downloadReceipt(String paymentId);
@@ -85,15 +89,35 @@ class FinancialApiServiceImpl implements FinancialApiService {
     required List<String> feeIds,
     required String paymentProviderId,
     required double amount,
+    String? transactionReference,
+    String? senderName,
+    String? senderPhone,
+    String? transferNotes,
   }) async {
+    final data = {
+      'student_id': studentId,
+      'fee_ids': feeIds,
+      'payment_provider_id': paymentProviderId,
+      'amount': amount,
+    };
+    
+    // Add optional parameters if provided
+    if (transactionReference != null && transactionReference.isNotEmpty) {
+      data['transaction_reference'] = transactionReference;
+    }
+    if (senderName != null && senderName.isNotEmpty) {
+      data['sender_name'] = senderName;
+    }
+    if (senderPhone != null && senderPhone.isNotEmpty) {
+      data['sender_phone'] = senderPhone;
+    }
+    if (transferNotes != null && transferNotes.isNotEmpty) {
+      data['transfer_notes'] = transferNotes;
+    }
+    
     final response = await _dioClient.post(
       ApiConstants.createPaymentEndpoint,
-      data: {
-        'student_id': studentId,
-        'fee_ids': feeIds,
-        'payment_provider_id': paymentProviderId,
-        'amount': amount,
-      },
+      data: data,
     );
     return PaymentModel.fromJson(response.data);
   }

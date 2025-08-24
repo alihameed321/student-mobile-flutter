@@ -6,6 +6,7 @@ import '../../domain/entities/payment.dart';
 import '../../domain/usecases/get_financial_summary.dart';
 import '../../domain/usecases/get_student_fees.dart';
 import '../../domain/usecases/get_payments.dart';
+import '../../domain/usecases/get_payment_providers.dart';
 import '../../domain/usecases/create_payment.dart';
 
 part 'financial_event.dart';
@@ -15,17 +16,20 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
   final GetFinancialSummary getFinancialSummary;
   final GetStudentFees getStudentFees;
   final GetPayments getPayments;
+  final GetPaymentProviders getPaymentProviders;
   final CreatePayment createPayment;
 
   FinancialBloc({
     required this.getFinancialSummary,
     required this.getStudentFees,
     required this.getPayments,
+    required this.getPaymentProviders,
     required this.createPayment,
   }) : super(FinancialInitial()) {
     on<LoadFinancialSummary>(_onLoadFinancialSummary);
     on<LoadStudentFees>(_onLoadStudentFees);
     on<LoadPayments>(_onLoadPayments);
+    on<LoadPaymentProviders>(_onLoadPaymentProviders);
     on<CreatePaymentEvent>(_onCreatePayment);
     on<RefreshFinancialData>(_onRefreshFinancialData);
   }
@@ -101,11 +105,36 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
       feeIds: event.feeIds,
       paymentProviderId: event.paymentProviderId,
       amount: event.amount,
+      transactionReference: event.transactionReference,
+      senderName: event.senderName,
+      senderPhone: event.senderPhone,
+      transferNotes: event.transferNotes,
     );
     
     result.fold(
       (failure) => emit(FinancialError(failure.message)),
       (payment) => emit(PaymentCreated(payment)),
+    );
+  }
+
+  Future<void> _onLoadPaymentProviders(
+    LoadPaymentProviders event,
+    Emitter<FinancialState> emit,
+  ) async {
+    print('FinancialBloc: Loading payment providers');
+    emit(FinancialLoading());
+    
+    final result = await getPaymentProviders();
+    
+    result.fold(
+      (failure) {
+        print('FinancialBloc: Error loading payment providers: ${failure.message}');
+        emit(FinancialError(failure.message));
+      },
+      (providers) {
+        print('FinancialBloc: Successfully loaded ${providers.length} payment providers');
+        emit(PaymentProvidersLoaded(providers));
+      },
     );
   }
 

@@ -53,12 +53,20 @@ class CreatePaymentEvent extends FinancialEvent {
   final List<String> feeIds;
   final String paymentProviderId;
   final double amount;
+  final String? transactionReference;
+  final String? senderName;
+  final String? senderPhone;
+  final String? transferNotes;
 
   const CreatePaymentEvent({
     required this.studentId,
     required this.feeIds,
     required this.paymentProviderId,
     required this.amount,
+    this.transactionReference,
+    this.senderName,
+    this.senderPhone,
+    this.transferNotes,
   });
 
   @override
@@ -67,7 +75,18 @@ class CreatePaymentEvent extends FinancialEvent {
         feeIds,
         paymentProviderId,
         amount,
+        transactionReference,
+        senderName,
+        senderPhone,
+        transferNotes,
       ];
+}
+
+class LoadPaymentProviders extends FinancialEvent {
+  const LoadPaymentProviders();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class RefreshFinancialData extends FinancialEvent {

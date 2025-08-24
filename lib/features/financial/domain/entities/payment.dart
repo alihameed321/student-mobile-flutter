@@ -63,6 +63,11 @@ class PaymentProvider extends Equatable {
   final String type;
   final bool isActive;
   final String? instructions;
+  final String? logo;
+  final String? universityAccountName;
+  final String? universityAccountNumber;
+  final String? universityPhone;
+  final String? additionalInfo;
 
   const PaymentProvider({
     required this.id,
@@ -70,6 +75,11 @@ class PaymentProvider extends Equatable {
     required this.type,
     required this.isActive,
     this.instructions,
+    this.logo,
+    this.universityAccountName,
+    this.universityAccountNumber,
+    this.universityPhone,
+    this.additionalInfo,
   });
 
   @override
@@ -79,6 +89,11 @@ class PaymentProvider extends Equatable {
         type,
         isActive,
         instructions,
+        logo,
+        universityAccountName,
+        universityAccountNumber,
+        universityPhone,
+        additionalInfo,
       ];
 }
 

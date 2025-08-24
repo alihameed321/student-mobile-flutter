@@ -111,6 +111,10 @@ class FinancialRepositoryImpl implements FinancialRepository {
     required List<String> feeIds,
     required String paymentProviderId,
     required double amount,
+    String? transactionReference,
+    String? senderName,
+    String? senderPhone,
+    String? transferNotes,
   }) async {
     try {
       final paymentModel = await _apiService.createPayment(
@@ -118,6 +122,10 @@ class FinancialRepositoryImpl implements FinancialRepository {
         feeIds: feeIds,
         paymentProviderId: paymentProviderId,
         amount: amount,
+        transactionReference: transactionReference,
+        senderName: senderName,
+        senderPhone: senderPhone,
+        transferNotes: transferNotes,
       );
       return Right(_mapPaymentModelToEntity(paymentModel));
     } on ServerException {
@@ -233,6 +241,11 @@ class FinancialRepositoryImpl implements FinancialRepository {
       type: model.type,
       isActive: model.isActive,
       instructions: model.instructions,
+      logo: model.logo,
+      universityAccountName: model.universityAccountName,
+      universityAccountNumber: model.universityAccountNumber,
+      universityPhone: model.universityPhone,
+      additionalInfo: model.additionalInfo,
     );
   }
 
@@ -249,6 +262,11 @@ class FinancialRepositoryImpl implements FinancialRepository {
         type: model.paymentProvider.type,
         isActive: model.paymentProvider.isActive,
         instructions: model.paymentProvider.instructions,
+        logo: model.paymentProvider.logo,
+        universityAccountName: model.paymentProvider.universityAccountName,
+        universityAccountNumber: model.paymentProvider.universityAccountNumber,
+        universityPhone: model.paymentProvider.universityPhone,
+        additionalInfo: model.paymentProvider.additionalInfo,
       ),
       status: model.status,
       transactionReference: model.transactionReference,

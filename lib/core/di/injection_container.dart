@@ -15,6 +15,7 @@ import '../../features/financial/domain/usecases/get_financial_summary.dart';
 import '../../features/financial/domain/usecases/get_student_fees.dart';
 import '../../features/financial/domain/usecases/create_payment.dart';
 import '../../features/financial/domain/usecases/get_payments.dart';
+import '../../features/financial/domain/usecases/get_payment_providers.dart';
 import '../../features/financial/presentation/bloc/financial_bloc.dart';
 
 final sl = GetIt.instance;
@@ -51,6 +52,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetStudentFees(sl()));
   sl.registerLazySingleton(() => CreatePayment(sl()));
   sl.registerLazySingleton(() => GetPayments(sl()));
+  sl.registerLazySingleton(() => GetPaymentProviders(sl()));
   
   // Blocs
   sl.registerFactory(() => AuthBloc(
@@ -63,5 +65,6 @@ Future<void> init() async {
     getStudentFees: sl(),
     createPayment: sl(),
     getPayments: sl(),
+    getPaymentProviders: sl(),
   ));
 }

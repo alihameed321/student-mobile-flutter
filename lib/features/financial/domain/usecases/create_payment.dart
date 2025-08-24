@@ -13,12 +13,20 @@ class CreatePayment {
     required List<String> feeIds,
     required String paymentProviderId,
     required double amount,
+    String? transactionReference,
+    String? senderName,
+    String? senderPhone,
+    String? transferNotes,
   }) async {
     return await repository.createPayment(
       studentId: studentId,
       feeIds: feeIds,
       paymentProviderId: paymentProviderId,
       amount: amount,
+      transactionReference: transactionReference,
+      senderName: senderName,
+      senderPhone: senderPhone,
+      transferNotes: transferNotes,
     );
   }
 }

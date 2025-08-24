@@ -30,6 +30,10 @@ abstract class FinancialRepository {
     required List<String> feeIds,
     required String paymentProviderId,
     required double amount,
+    String? transactionReference,
+    String? senderName,
+    String? senderPhone,
+    String? transferNotes,
   });
 
   /// Get payment statistics for the student

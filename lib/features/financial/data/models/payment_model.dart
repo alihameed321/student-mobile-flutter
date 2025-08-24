@@ -68,15 +68,25 @@ class PaymentProviderModel extends PaymentProvider {
     required super.type,
     required super.isActive,
     super.instructions,
+    super.logo,
+    super.universityAccountName,
+    super.universityAccountNumber,
+    super.universityPhone,
+    super.additionalInfo,
   });
 
   factory PaymentProviderModel.fromJson(Map<String, dynamic> json) {
     return PaymentProviderModel(
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
-      type: json['type'] as String? ?? '',
+      type: json['description'] as String? ?? '', // Backend uses 'description' field
       isActive: json['is_active'] as bool? ?? true,
       instructions: json['instructions'] as String?,
+      logo: json['logo'] as String?,
+      universityAccountName: json['university_account_name'] as String?,
+      universityAccountNumber: json['university_account_number'] as String?,
+      universityPhone: json['university_phone'] as String?,
+      additionalInfo: json['additional_info'] as String?,
     );
   }
 
@@ -84,9 +94,14 @@ class PaymentProviderModel extends PaymentProvider {
     return {
       'id': id,
       'name': name,
-      'type': type,
+      'description': type,
       'is_active': isActive,
       'instructions': instructions,
+      'logo': logo,
+      'university_account_name': universityAccountName,
+      'university_account_number': universityAccountNumber,
+      'university_phone': universityPhone,
+      'additional_info': additionalInfo,
     };
   }
 }
