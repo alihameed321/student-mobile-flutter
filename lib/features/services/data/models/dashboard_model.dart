@@ -20,12 +20,14 @@ class DashboardStatsModel extends DashboardStats {
 
   factory DashboardStatsModel.fromJson(Map<String, dynamic> json) {
     final stats = json['statistics'] as Map<String, dynamic>? ?? {};
-    final recentActivities = json['recent_activities'] as Map<String, dynamic>? ?? {};
-    
+    final recentActivities =
+        json['recent_activities'] as Map<String, dynamic>? ?? {};
+
     return DashboardStatsModel(
       totalServiceRequests: stats['total_requests'] as int? ?? 0,
       pendingServiceRequests: stats['pending_requests'] as int? ?? 0,
-      completedServiceRequests: (stats['total_requests'] as int? ?? 0) - (stats['pending_requests'] as int? ?? 0),
+      completedServiceRequests: (stats['total_requests'] as int? ?? 0) -
+          (stats['pending_requests'] as int? ?? 0),
       totalDocuments: stats['new_documents'] as int? ?? 0,
       verifiedDocuments: stats['new_documents'] as int? ?? 0,
       totalSupportTickets: stats['open_tickets'] as int? ?? 0,
@@ -74,7 +76,8 @@ class DashboardStatsModel extends DashboardStats {
             .map((item) => (item as SupportTicketModel).toJson())
             .toList(),
       },
-      'user_info': userInfo != null ? (userInfo as UserInfoModel).toJson() : null,
+      'user_info':
+          userInfo != null ? (userInfo as UserInfoModel).toJson() : null,
       'quick_actions': quickActions
           ?.map((item) => (item as QuickActionModel).toJson())
           .toList(),
@@ -137,7 +140,9 @@ class QuickActionModel extends QuickAction {
   factory QuickActionModel.fromBackendJson(Map<String, dynamic> json) {
     return QuickActionModel(
       title: json['title'] as String? ?? 'Quick Action',
-      description: json['description'] as String? ?? json['action'] as String? ?? 'No description',
+      description: json['description'] as String? ??
+          json['action'] as String? ??
+          'No description',
       endpoint: json['endpoint'] as String? ?? '',
       icon: json['icon'] as String? ?? 'default',
       color: json['color'] as String?,

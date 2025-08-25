@@ -4,7 +4,16 @@ import '../pages/service_requests_page.dart';
 import '../bloc/service_request/service_request_bloc.dart';
 
 class ServicesHeader extends StatelessWidget {
-  const ServicesHeader({super.key});
+  final TextEditingController? searchController;
+  final Function(String)? onSearchChanged;
+  final VoidCallback? onClearSearch;
+
+  const ServicesHeader({
+    super.key,
+    this.searchController,
+    this.onSearchChanged,
+    this.onClearSearch,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,73 +56,143 @@ class ServicesHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
+              Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        final serviceRequestBloc = context.read<ServiceRequestBloc>();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider.value(
-                              value: serviceRequestBloc,
-                              child: const ServiceRequestsPage(),
+                  Row(
+                    children: [
+                      // My Requests Button with Label
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              final serviceRequestBloc = context.read<ServiceRequestBloc>();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider.value(
+                                    value: serviceRequestBloc,
+                                    child: const ServiceRequestsPage(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.assignment_outlined,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'My Requests',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.assignment,
-                        color: Colors.white,
+                        ),
                       ),
-                      tooltip: 'My Requests',
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        // Search services
-                      },
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          // Search Bar
+          // Enhanced Search Bar
           Container(
+            margin: const EdgeInsets.only(top: 20),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
             child: TextField(
-              style: const TextStyle(color: Colors.white),
+              controller: searchController,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[800],
+                fontWeight: FontWeight.w500,
+              ),
               decoration: InputDecoration(
-                hintText: 'Search services...',
+                hintText: 'Search for services, documents, or help...',
                 hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.grey[400],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
                 ),
+                prefixIcon: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Icon(
+                    Icons.search_rounded,
+                    color: Colors.grey[400],
+                    size: 22,
+                  ),
+                ),
+                suffixIcon: searchController?.text.isNotEmpty == true
+                    ? IconButton(
+                        onPressed: onClearSearch,
+                        icon: Icon(
+                          Icons.clear_rounded,
+                          color: Colors.grey[500],
+                          size: 20,
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Ctrl+K',
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
                 border: InputBorder.none,
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white.withOpacity(0.7),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 4,
                 ),
               ),
+              onChanged: onSearchChanged,
             ),
           ),
         ],

@@ -2,16 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart' as di;
 import '../widgets/services_header.dart';
-import '../widgets/featured_services.dart';
+
 import '../widgets/services_grid.dart';
-import '../widgets/quick_access.dart';
+
 import '../bloc/dashboard/dashboard_bloc.dart';
 import '../bloc/service_request/service_request_bloc.dart';
 import '../widgets/dashboard_stats_widget.dart';
 import '../widgets/recent_activities_widget.dart';
 
-class ServicesPage extends StatelessWidget {
+class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});
+
+  @override
+  State<ServicesPage> createState() => _ServicesPageState();
+}
+
+class _ServicesPageState extends State<ServicesPage> {
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
+    });
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() {
+      _searchQuery = '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +70,11 @@ class ServicesPage extends StatelessWidget {
                 child: Column(
                   children: [
                     // Header
-                    const ServicesHeader(),
+                    ServicesHeader(
+                      searchController: _searchController,
+                      onSearchChanged: _onSearchChanged,
+                      onClearSearch: _clearSearch,
+                    ),
 
                     const SizedBox(height: 20),
 
@@ -84,14 +115,6 @@ class ServicesPage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // Quick Access
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: QuickAccess(),
-                    ),
-
-                    const SizedBox(height: 20),
-
                     // Recent Activities
                     if (state is DashboardLoaded &&
                         state.dashboardStats.hasRecentActivity)
@@ -103,18 +126,10 @@ class ServicesPage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // Featured Services
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: FeaturedServices(),
-                    ),
-
-                    const SizedBox(height: 20),
-
                     // Services Grid
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: ServicesGrid(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ServicesGrid(searchQuery: _searchQuery),
                     ),
 
                     const SizedBox(height: 20),

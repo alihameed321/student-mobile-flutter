@@ -21,194 +21,216 @@ class DashboardStatsWidget extends StatelessWidget {
             color: Colors.grey[800],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         
-        // Service Requests Stats
-        _buildStatsSection(
-          context,
-          'Service Requests',
-          [
-            _StatItem(
-              label: 'Total',
-              value: dashboardStats.totalServiceRequests.toString(),
-              color: Colors.blue,
-              icon: Icons.assignment,
+        // Main Stats Grid
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.1,
+          children: [
+            _buildModernStatCard(
+              context,
+              'Service Requests',
+              dashboardStats.totalServiceRequests.toString(),
+              Icons.assignment_outlined,
+              [const Color(0xFF667EEA), const Color(0xFF764BA2)],
+              '${dashboardStats.pendingServiceRequests} pending',
             ),
-            _StatItem(
-              label: 'Pending',
-              value: dashboardStats.pendingServiceRequests.toString(),
-              color: Colors.orange,
-              icon: Icons.pending,
+            _buildModernStatCard(
+              context,
+              'Documents',
+              dashboardStats.totalDocuments.toString(),
+              Icons.description_outlined,
+              [const Color(0xFF11998E), const Color(0xFF38EF7D)],
+              '${dashboardStats.verifiedDocuments} verified',
             ),
-            _StatItem(
-              label: 'Completed',
-              value: dashboardStats.completedServiceRequests.toString(),
-              color: Colors.green,
-              icon: Icons.check_circle,
+            _buildModernStatCard(
+              context,
+              'Support Tickets',
+              dashboardStats.totalSupportTickets.toString(),
+              Icons.support_agent_outlined,
+              [const Color(0xFFFF6B6B), const Color(0xFFFFE66D)],
+              '${dashboardStats.openSupportTickets} open',
             ),
+            if (dashboardStats.totalServiceRequests > 0)
+              _buildModernStatCard(
+                context,
+                'Completion Rate',
+                '${(dashboardStats.serviceRequestCompletionRate * 100).toStringAsFixed(1)}%',
+                Icons.trending_up_outlined,
+                [const Color(0xFF4ECDC4), const Color(0xFF44A08D)],
+                'Overall progress',
+              ),
           ],
         ),
         
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         
-        // Documents Stats
-        _buildStatsSection(
-          context,
-          'Documents',
-          [
-            _StatItem(
-              label: 'Total',
-              value: dashboardStats.totalDocuments.toString(),
-              color: Colors.purple,
-              icon: Icons.description,
-            ),
-            _StatItem(
-              label: 'Verified',
-              value: dashboardStats.verifiedDocuments.toString(),
-              color: Colors.green,
-              icon: Icons.verified,
-            ),
-          ],
-        ),
-        
-        const SizedBox(height: 16),
-        
-        // Support Tickets Stats
-        _buildStatsSection(
-          context,
-          'Support Tickets',
-          [
-            _StatItem(
-              label: 'Total',
-              value: dashboardStats.totalSupportTickets.toString(),
-              color: Colors.red,
-              icon: Icons.support,
-            ),
-            _StatItem(
-              label: 'Open',
-              value: dashboardStats.openSupportTickets.toString(),
-              color: Colors.orange,
-              icon: Icons.help_outline,
-            ),
-          ],
-        ),
-        
-        // Completion Rate
-        if (dashboardStats.totalServiceRequests > 0) ...[
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.trending_up,
-                    color: Colors.green[600],
-                    size: 24,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Completion Rate',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${(dashboardStats.serviceRequestCompletionRate * 100).toStringAsFixed(1)}%',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.green[600],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        // Quick Stats Row
+        Row(
+          children: [
+            Expanded(
+              child: _buildQuickStat(
+                context,
+                'Completed',
+                dashboardStats.completedServiceRequests.toString(),
+                Icons.check_circle_outline,
+                Colors.green,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickStat(
+                context,
+                'Pending',
+                dashboardStats.pendingServiceRequests.toString(),
+                Icons.schedule_outlined,
+                Colors.orange,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
 
-  Widget _buildStatsSection(
+  Widget _buildModernStatCard(
     BuildContext context,
     String title,
-    List<_StatItem> items,
+    String value,
+    IconData icon,
+    List<Color> gradientColors,
+    String subtitle,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Colors.grey[700],
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: items.map((item) => Expanded(
-            child: _buildStatCard(context, item),
-          )).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCard(BuildContext context, _StatItem item) {
     return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Icon(
-                item.icon,
-                color: item.color,
-                size: 24,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                item.value,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: item.color,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                item.label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: gradientColors[0].withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  icon,
+                  color: Colors.white.withOpacity(0.8),
+                  size: 24,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-class _StatItem {
-  final String label;
-  final String value;
-  final Color color;
-  final IconData icon;
-
-  _StatItem({
-    required this.label,
-    required this.value,
-    required this.color,
-    required this.icon,
-  });
+  Widget _buildQuickStat(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

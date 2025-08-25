@@ -133,7 +133,9 @@ class StudentPortalApiServiceImpl implements StudentPortalApiService {
       final response = await _dioClient.post(
         ApiConstants.getCancelServiceRequestEndpoint(id),
       );
-      return ServiceRequestModel.fromJson(response.data);
+      // The backend returns {success: true, message: '...', data: {...}}
+      // We need to access the nested 'data' field
+      return ServiceRequestModel.fromJson(response.data['data']);
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
