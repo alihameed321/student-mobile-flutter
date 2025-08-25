@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/service_request_form_page.dart';
 
 class ServicesGrid extends StatelessWidget {
   const ServicesGrid({super.key});
@@ -33,84 +34,84 @@ class ServicesGrid extends StatelessWidget {
               title: 'Academic Advising',
               icon: Icons.school_outlined,
               color: Colors.blue,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Academic Advising'),
             ),
             _buildServiceCard(
               context,
               title: 'Student Health',
               icon: Icons.local_hospital_outlined,
               color: Colors.red,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Student Health'),
             ),
             _buildServiceCard(
               context,
               title: 'IT Support',
               icon: Icons.computer_outlined,
               color: Colors.green,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'IT Support'),
             ),
             _buildServiceCard(
               context,
               title: 'Campus Housing',
               icon: Icons.home_outlined,
               color: Colors.orange,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Campus Housing'),
             ),
             _buildServiceCard(
               context,
               title: 'Transportation',
               icon: Icons.directions_bus_outlined,
               color: Colors.purple,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Transportation'),
             ),
             _buildServiceCard(
               context,
               title: 'Dining Services',
               icon: Icons.restaurant_outlined,
               color: Colors.teal,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Dining Services'),
             ),
             _buildServiceCard(
               context,
               title: 'Recreation Center',
               icon: Icons.fitness_center_outlined,
               color: Colors.indigo,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Recreation Center'),
             ),
             _buildServiceCard(
               context,
               title: 'Student Activities',
               icon: Icons.celebration_outlined,
               color: Colors.pink,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Student Activities'),
             ),
             _buildServiceCard(
               context,
               title: 'Counseling Services',
               icon: Icons.psychology_outlined,
               color: Colors.cyan,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Counseling Services'),
             ),
             _buildServiceCard(
               context,
               title: 'International Office',
               icon: Icons.public_outlined,
               color: Colors.amber,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'International Office'),
             ),
             _buildServiceCard(
               context,
               title: 'Disability Services',
               icon: Icons.accessibility_outlined,
               color: Colors.deepOrange,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Disability Services'),
             ),
             _buildServiceCard(
               context,
               title: 'Alumni Relations',
               icon: Icons.groups_outlined,
               color: Colors.brown,
-              onTap: () {},
+              onTap: () => _navigateToServiceRequest(context, 'Alumni Relations'),
             ),
           ],
         ),
@@ -166,6 +167,16 @@ class ServicesGrid extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToServiceRequest(BuildContext context, String serviceType) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ServiceRequestFormPage(
+          serviceType: serviceType,
         ),
       ),
     );

@@ -1,59 +1,128 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection_container.dart' as di;
 import '../widgets/services_header.dart';
 import '../widgets/featured_services.dart';
 import '../widgets/services_grid.dart';
 import '../widgets/quick_access.dart';
+import '../bloc/dashboard/dashboard_bloc.dart';
+import '../bloc/service_request/service_request_bloc.dart';
+import '../widgets/dashboard_stats_widget.dart';
+import '../widgets/recent_activities_widget.dart';
 
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            // Refresh services data
-            await Future.delayed(const Duration(seconds: 1));
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                // Header
-                const ServicesHeader(),
-                
-                const SizedBox(height: 20),
-                
-                // Quick Access
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: QuickAccess(),
-                ),
-                
-                const SizedBox(height: 20),
-                
-                // Featured Services
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: FeaturedServices(),
-                ),
-                
-                const SizedBox(height: 20),
-                
-                // Services Grid
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: ServicesGrid(),
-                ),
-                
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DashboardBloc>(
+          create: (context) =>
+              di.sl<DashboardBloc>()..add(const LoadDashboardStats()),
         ),
-      ),
+        BlocProvider<ServiceRequestBloc>(
+          create: (context) => di.sl<ServiceRequestBloc>(),
+        ),
+      ],
+      child: Scaffold(
+          backgroundColor: Colors.grey[50],
+          body: SafeArea(child: BlocBuilder<DashboardBloc, DashboardState>(
+              builder: (context, state) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context
+                    .read<DashboardBloc>()
+                    .add(const RefreshDashboardStats());
+                context
+                    .read<ServiceRequestBloc>()
+                    .add(const RefreshServiceRequests());
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    // Header
+                    const ServicesHeader(),
+
+                    const SizedBox(height: 20),
+
+                    // Dashboard Stats
+                    if (state is DashboardLoaded)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: DashboardStatsWidget(
+                            dashboardStats: state.dashboardStats),
+                      )
+                    else if (state is DashboardLoading)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    else if (state is DashboardError)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Card(
+                          color: Colors.red[50],
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                Icon(Icons.error, color: Colors.red[700]),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Failed to load dashboard: ${state.message}',
+                                    style: TextStyle(color: Colors.red[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(height: 20),
+
+                    // Quick Access
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: QuickAccess(),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Recent Activities
+                    if (state is DashboardLoaded &&
+                        state.dashboardStats.hasRecentActivity)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RecentActivitiesWidget(
+                            dashboardStats: state.dashboardStats),
+                      ),
+
+                    const SizedBox(height: 20),
+
+                    // Featured Services
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: FeaturedServices(),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Services Grid
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: ServicesGrid(),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          }))),
     );
   }
 }

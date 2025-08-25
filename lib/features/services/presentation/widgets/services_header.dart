@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/service_requests_page.dart';
 
 class ServicesHeader extends StatelessWidget {
   const ServicesHeader({super.key});
@@ -40,20 +41,45 @@ class ServicesHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    // Search services
-                  },
-                  icon: const Icon(
-                    Icons.search,
-                    color: Colors.white,
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ServiceRequestsPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.assignment,
+                        color: Colors.white,
+                      ),
+                      tooltip: 'My Requests',
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        // Search services
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
