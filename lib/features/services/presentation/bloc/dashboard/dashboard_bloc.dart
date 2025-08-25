@@ -21,13 +21,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     LoadDashboardStats event,
     Emitter<DashboardState> emit,
   ) async {
+    emit(DashboardLoading());
     try {
-      if (state is! DashboardLoaded || event.isRefresh) {
-        emit(DashboardLoading());
-      }
-
-      final dashboardStats = await getDashboardStats();
-      emit(DashboardLoaded(dashboardStats));
+      final stats = await getDashboardStats();
+      emit(DashboardLoaded(stats));
     } catch (e) {
       emit(DashboardError(e.toString()));
     }

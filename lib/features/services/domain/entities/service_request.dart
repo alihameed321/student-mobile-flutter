@@ -2,49 +2,60 @@ import 'package:equatable/equatable.dart';
 
 class ServiceRequest extends Equatable {
   final int id;
+  final String student; // Student username or ID
   final String requestType;
-  final String status;
+  final String title;
   final String description;
+  final String status;
+  final String priority;
   final DateTime createdAt;
   final DateTime? updatedAt;
-  final DateTime? completedAt;
-  final String? staffNotes;
-  final String? priority;
-  final DateTime? estimatedCompletionDate;
+  final String? processedBy; // Staff member who processed the request
+  final String? processingNotes;
+  final DateTime? dueDate;
+  final List<String> attachments;
 
   const ServiceRequest({
     required this.id,
+    required this.student,
     required this.requestType,
-    required this.status,
+    required this.title,
     required this.description,
+    required this.status,
+    required this.priority,
     required this.createdAt,
     this.updatedAt,
-    this.completedAt,
-    this.staffNotes,
-    this.priority,
-    this.estimatedCompletionDate,
+    this.processedBy,
+    this.processingNotes,
+    this.dueDate,
+    this.attachments = const [],
   });
 
   @override
   List<Object?> get props => [
         id,
+        student,
         requestType,
-        status,
+        title,
         description,
+        status,
+        priority,
         createdAt,
         updatedAt,
-        completedAt,
-        staffNotes,
-        priority,
-        estimatedCompletionDate,
+        processedBy,
+        processingNotes,
+        dueDate,
+        attachments,
       ];
 
   // Helper methods for status checking
   bool get isPending => status.toLowerCase() == 'pending';
-  bool get isInProgress => status.toLowerCase() == 'in_progress';
+  bool get isInReview => status.toLowerCase() == 'in_review';
+  bool get isApproved => status.toLowerCase() == 'approved';
+  bool get isRejected => status.toLowerCase() == 'rejected';
   bool get isCompleted => status.toLowerCase() == 'completed';
-  bool get isCancelled => status.toLowerCase() == 'cancelled';
-  bool get canBeCancelled => isPending || isInProgress;
+  bool get needsMoreInfo => status.toLowerCase() == 'more_info_needed';
+  bool get canBeCancelled => isPending || isInReview || needsMoreInfo;
 
   // Helper methods for priority
   bool get isHighPriority => priority?.toLowerCase() == 'high';
@@ -56,14 +67,58 @@ class ServiceRequest extends Equatable {
     switch (status.toLowerCase()) {
       case 'pending':
         return 'orange';
-      case 'in_progress':
+      case 'in_review':
         return 'blue';
+      case 'approved':
+        return 'green';
+      case 'rejected':
+        return 'red';
       case 'completed':
         return 'green';
-      case 'cancelled':
-        return 'red';
+      case 'more_info_needed':
+        return 'amber';
       default:
         return 'grey';
+    }
+  }
+
+  // Get status display text
+  String get statusDisplayText {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'Pending Review';
+      case 'in_review':
+        return 'In Review';
+      case 'approved':
+        return 'Approved';
+      case 'rejected':
+        return 'Rejected';
+      case 'completed':
+        return 'Completed';
+      case 'more_info_needed':
+        return 'More Information Needed';
+      default:
+        return status;
+    }
+  }
+
+  // Get request type display text
+  String get requestTypeDisplayText {
+    switch (requestType.toLowerCase()) {
+      case 'enrollment_certificate':
+        return 'Enrollment Certificate';
+      case 'schedule_modification':
+        return 'Schedule Modification';
+      case 'semester_postponement':
+        return 'Semester Postponement';
+      case 'transcript':
+        return 'Official Transcript';
+      case 'graduation_certificate':
+        return 'Graduation Certificate';
+      case 'other':
+        return 'Other';
+      default:
+        return requestType;
     }
   }
 

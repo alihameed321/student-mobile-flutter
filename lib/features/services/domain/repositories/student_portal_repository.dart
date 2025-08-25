@@ -18,6 +18,7 @@ abstract class StudentPortalRepository {
   Future<ServiceRequest> getServiceRequestDetail(int id);
   Future<ServiceRequest> createServiceRequest({
     required String requestType,
+    required String title,
     required String description,
     String? priority,
   });

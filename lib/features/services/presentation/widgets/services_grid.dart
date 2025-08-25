@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/service_request_form_page.dart';
+import '../bloc/service_request/service_request_bloc.dart';
 
 class ServicesGrid extends StatelessWidget {
   const ServicesGrid({super.key});
@@ -18,7 +20,7 @@ class ServicesGrid extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
-          ),
+             ),
         ),
         const SizedBox(height: 16),
         GridView.count(
@@ -27,91 +29,55 @@ class ServicesGrid extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: 1.1,
+          childAspectRatio: 1.2,
           children: [
             _buildServiceCard(
               context,
-              title: 'Academic Advising',
+              title: 'Enrollment Certificate',
+              subtitle: 'Official enrollment verification',
               icon: Icons.school_outlined,
               color: Colors.blue,
-              onTap: () => _navigateToServiceRequest(context, 'Academic Advising'),
+              requestType: 'enrollment_certificate',
             ),
             _buildServiceCard(
               context,
-              title: 'Student Health',
-              icon: Icons.local_hospital_outlined,
-              color: Colors.red,
-              onTap: () => _navigateToServiceRequest(context, 'Student Health'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'IT Support',
-              icon: Icons.computer_outlined,
+              title: 'Schedule Modification',
+              subtitle: 'Course schedule changes',
+              icon: Icons.schedule_outlined,
               color: Colors.green,
-              onTap: () => _navigateToServiceRequest(context, 'IT Support'),
+              requestType: 'schedule_modification',
             ),
             _buildServiceCard(
               context,
-              title: 'Campus Housing',
-              icon: Icons.home_outlined,
+              title: 'Semester Postponement',
+              subtitle: 'Defer semester enrollment',
+              icon: Icons.pause_circle_outline,
               color: Colors.orange,
-              onTap: () => _navigateToServiceRequest(context, 'Campus Housing'),
+              requestType: 'semester_postponement',
             ),
             _buildServiceCard(
               context,
-              title: 'Transportation',
-              icon: Icons.directions_bus_outlined,
+              title: 'Official Transcript',
+              subtitle: 'Academic records and grades',
+              icon: Icons.description_outlined,
               color: Colors.purple,
-              onTap: () => _navigateToServiceRequest(context, 'Transportation'),
+              requestType: 'transcript',
             ),
             _buildServiceCard(
               context,
-              title: 'Dining Services',
-              icon: Icons.restaurant_outlined,
+              title: 'Graduation Certificate',
+              subtitle: 'Official graduation documents',
+              icon: Icons.workspace_premium_outlined,
+              color: Colors.red,
+              requestType: 'graduation_certificate',
+            ),
+            _buildServiceCard(
+              context,
+              title: 'Other Services',
+              subtitle: 'General inquiries and requests',
+              icon: Icons.help_outline,
               color: Colors.teal,
-              onTap: () => _navigateToServiceRequest(context, 'Dining Services'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'Recreation Center',
-              icon: Icons.fitness_center_outlined,
-              color: Colors.indigo,
-              onTap: () => _navigateToServiceRequest(context, 'Recreation Center'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'Student Activities',
-              icon: Icons.celebration_outlined,
-              color: Colors.pink,
-              onTap: () => _navigateToServiceRequest(context, 'Student Activities'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'Counseling Services',
-              icon: Icons.psychology_outlined,
-              color: Colors.cyan,
-              onTap: () => _navigateToServiceRequest(context, 'Counseling Services'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'International Office',
-              icon: Icons.public_outlined,
-              color: Colors.amber,
-              onTap: () => _navigateToServiceRequest(context, 'International Office'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'Disability Services',
-              icon: Icons.accessibility_outlined,
-              color: Colors.deepOrange,
-              onTap: () => _navigateToServiceRequest(context, 'Disability Services'),
-            ),
-            _buildServiceCard(
-              context,
-              title: 'Alumni Relations',
-              icon: Icons.groups_outlined,
-              color: Colors.brown,
-              onTap: () => _navigateToServiceRequest(context, 'Alumni Relations'),
+              requestType: 'other',
             ),
           ],
         ),
@@ -122,12 +88,13 @@ class ServicesGrid extends StatelessWidget {
   Widget _buildServiceCard(
     BuildContext context, {
     required String title,
+    required String subtitle,
     required IconData icon,
     required Color color,
-    required VoidCallback onTap,
+    required String requestType,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => _navigateToServiceRequest(context, requestType),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -142,7 +109,7 @@ class ServicesGrid extends StatelessWidget {
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
               padding: const EdgeInsets.all(16),
@@ -156,14 +123,31 @@ class ServicesGrid extends StatelessWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
+            const SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -172,11 +156,15 @@ class ServicesGrid extends StatelessWidget {
     );
   }
 
-  void _navigateToServiceRequest(BuildContext context, String serviceType) {
+  void _navigateToServiceRequest(BuildContext context, String requestType) {
+    final serviceRequestBloc = context.read<ServiceRequestBloc>();
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ServiceRequestFormPage(
-          serviceType: serviceType,
+        builder: (_) => BlocProvider.value(
+          value: serviceRequestBloc,
+          child: ServiceRequestFormPage(
+            serviceType: requestType,
+          ),
         ),
       ),
     );

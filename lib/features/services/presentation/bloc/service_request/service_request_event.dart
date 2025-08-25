@@ -37,17 +37,19 @@ class LoadServiceRequestDetail extends ServiceRequestEvent {
 
 class CreateServiceRequestEvent extends ServiceRequestEvent {
   final String requestType;
+  final String title;
   final String description;
   final String? priority;
 
   const CreateServiceRequestEvent({
     required this.requestType,
+    required this.title,
     required this.description,
     this.priority,
   });
 
   @override
-  List<Object?> get props => [requestType, description, priority];
+  List<Object?> get props => [requestType, title, description, priority];
 }
 
 class CancelServiceRequestEvent extends ServiceRequestEvent {

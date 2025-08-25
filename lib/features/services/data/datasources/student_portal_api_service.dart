@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/service_request_model.dart';
-import '../models/student_document_model.dart';
 import '../models/support_ticket_model.dart';
 import '../models/dashboard_model.dart';
 
@@ -18,12 +17,13 @@ abstract class StudentPortalApiService {
   Future<ServiceRequestModel> createServiceRequest(ServiceRequestCreateModel request);
   Future<ServiceRequestModel> cancelServiceRequest(int id);
   Future<List<ServiceRequestTypeModel>> getServiceRequestTypes();
-  Future<List<StudentDocumentModel>> getStudentDocuments({
-    String? documentType,
-    String? search,
-    int? page,
-  });
-  Future<StudentDocumentModel> getStudentDocumentDetail(int id);
+  // TODO: Implement document methods later
+  // Future<List<StudentDocumentModel>> getStudentDocuments({
+  //   String? documentType,
+  //   String? search,
+  //   int? page,
+  // });
+  // Future<StudentDocumentModel> getStudentDocumentDetail(int id);
   Future<List<SupportTicketModel>> getSupportTickets({
     String? category,
     String? status,
@@ -48,7 +48,14 @@ class StudentPortalApiServiceImpl implements StudentPortalApiService {
       final response = await _dioClient.get(
         ApiConstants.studentDashboardEndpoint,
       );
-      return DashboardStatsModel.fromJson(response.data);
+      
+      // Check if response is successful and has data
+      final responseData = response.data as Map<String, dynamic>;
+      if (responseData['success'] == true && responseData['data'] != null) {
+        return DashboardStatsModel.fromJson(responseData['data']);
+      } else {
+        throw Exception('Invalid response format or unsuccessful request');
+      }
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -105,7 +112,14 @@ class StudentPortalApiServiceImpl implements StudentPortalApiService {
         ApiConstants.serviceRequestsEndpoint,
         data: request.toJson(),
       );
-      return ServiceRequestModel.fromJson(response.data);
+      // Backend returns: {success: true, message: '...', data: {...}}
+      // We need to extract the actual service request data from response.data.data
+      final responseData = response.data;
+      if (responseData['success'] == true && responseData['data'] != null) {
+        return ServiceRequestModel.fromJson(responseData['data']);
+      } else {
+        throw Exception('Invalid response format from server');
+      }
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -142,45 +156,47 @@ class StudentPortalApiServiceImpl implements StudentPortalApiService {
     }
   }
 
-  @override
-  Future<List<StudentDocumentModel>> getStudentDocuments({
-    String? documentType,
-    String? search,
-    int? page,
-  }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
-      if (documentType != null) queryParameters['document_type'] = documentType;
-      if (search != null) queryParameters['search'] = search;
-      if (page != null) queryParameters['page'] = page;
+  // TODO: Implement document functionality later
+  // @override
+  // Future<List<StudentDocumentModel>> getStudentDocuments({
+  //   String? documentType,
+  //   String? search,
+  //   int? page,
+  // }) async {
+  //   try {
+  //     final queryParameters = <String, dynamic>{};
+  //     if (documentType != null) queryParameters['document_type'] = documentType;
+  //     if (search != null) queryParameters['search'] = search;
+  //     if (page != null) queryParameters['page'] = page;
 
-      final response = await _dioClient.get(
-        ApiConstants.studentDocumentsEndpoint,
-        queryParameters: queryParameters,
-      );
+  //     final response = await _dioClient.get(
+  //       ApiConstants.studentDocumentsEndpoint,
+  //       queryParameters: queryParameters,
+  //     );
 
-      final List<dynamic> results = response.data['results'] ?? response.data;
-      return results.map((json) => StudentDocumentModel.fromJson(json)).toList();
-    } on DioException catch (e) {
-      throw _handleDioException(e);
-    } catch (e) {
-      throw Exception('Failed to fetch student documents: $e');
-    }
-  }
+  //     final List<dynamic> results = response.data['results'] ?? response.data;
+  //     return results.map((json) => StudentDocumentModel.fromJson(json)).toList();
+  //   } on DioException catch (e) {
+  //     throw _handleDioException(e);
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch student documents: $e');
+  //   }
+  // }
 
-  @override
-  Future<StudentDocumentModel> getStudentDocumentDetail(int id) async {
-    try {
-      final response = await _dioClient.get(
-        ApiConstants.getStudentDocumentDetailEndpoint(id),
-      );
-      return StudentDocumentModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleDioException(e);
-    } catch (e) {
-      throw Exception('Failed to fetch student document detail: $e');
-    }
-  }
+  // TODO: Implement document functionality later
+  // @override
+  // Future<StudentDocumentModel> getStudentDocumentDetail(int id) async {
+  //   try {
+  //     final response = await _dioClient.get(
+  //       ApiConstants.getStudentDocumentDetailEndpoint(id),
+  //     );
+  //     return StudentDocumentModel.fromJson(response.data);
+  //   } on DioException catch (e) {
+  //     throw _handleDioException(e);
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch student document detail: $e');
+  //   }
+  // }
 
   @override
   Future<List<SupportTicketModel>> getSupportTickets({

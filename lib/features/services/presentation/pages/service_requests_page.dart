@@ -44,6 +44,66 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if ServiceRequestBloc already exists in the context
+    ServiceRequestBloc? existingBloc;
+    try {
+      existingBloc = BlocProvider.of<ServiceRequestBloc>(context, listen: false);
+    } catch (e) {
+      // No existing bloc found, will create a new one
+      existingBloc = null;
+    }
+
+    if (existingBloc != null) {
+      // Use existing bloc
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Service Requests'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => BlocProvider.value(
+                  value: existingBloc!,
+                  child: const ServiceRequestFormPage(),
+                ),
+              ),
+            );
+            if (result == true) {
+              existingBloc!.add(RefreshServiceRequests());
+            }
+          },
+          backgroundColor: Colors.blue.shade600,
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
+        body: BlocConsumer<ServiceRequestBloc, ServiceRequestState>(
+          listener: (context, state) {
+            if (state is ServiceRequestError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            return _buildContent(state);
+          },
+        ),
+      );
+    }
+
+    // Create new bloc if none exists
     return BlocProvider(
       create: (context) => sl<ServiceRequestBloc>()
         ..add(LoadServiceRequests())
@@ -63,13 +123,17 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            final serviceRequestBloc = context.read<ServiceRequestBloc>();
             final result = await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const ServiceRequestFormPage(),
+                builder: (context) => BlocProvider.value(
+                  value: serviceRequestBloc,
+                  child: const ServiceRequestFormPage(),
+                ),
               ),
             );
             if (result == true) {
-              context.read<ServiceRequestBloc>().add(RefreshServiceRequests());
+              serviceRequestBloc.add(RefreshServiceRequests());
             }
           },
           backgroundColor: Colors.blue.shade600,
@@ -325,15 +389,17 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () async {
+              final serviceRequestBloc = context.read<ServiceRequestBloc>();
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ServiceRequestFormPage(),
+                  builder: (context) => BlocProvider.value(
+                    value: serviceRequestBloc,
+                    child: const ServiceRequestFormPage(),
+                  ),
                 ),
               );
               if (result == true) {
-                context
-                    .read<ServiceRequestBloc>()
-                    .add(RefreshServiceRequests());
+                serviceRequestBloc.add(RefreshServiceRequests());
               }
             },
             icon: const Icon(Icons.add),

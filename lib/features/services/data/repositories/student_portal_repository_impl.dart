@@ -53,12 +53,14 @@ class StudentPortalRepositoryImpl implements StudentPortalRepository {
   @override
   Future<ServiceRequest> createServiceRequest({
     required String requestType,
+    required String title,
     required String description,
     String? priority,
   }) async {
     try {
       final createModel = ServiceRequestCreateModel(
         requestType: requestType,
+        title: title,
         description: description,
         priority: priority,
       );
@@ -81,37 +83,26 @@ class StudentPortalRepositoryImpl implements StudentPortalRepository {
   Future<List<String>> getServiceRequestTypes() async {
     try {
       final types = await _apiService.getServiceRequestTypes();
-      return types.where((type) => type.isActive).map((type) => type.name).toList();
+      return types.where((type) => type.isActive).map((type) => type.value).toList();
     } catch (e) {
       throw Exception('Failed to get service request types: $e');
     }
   }
 
+  // TODO: Implement document functionality later
   @override
   Future<List<StudentDocument>> getStudentDocuments({
     String? documentType,
     String? search,
     int? page,
   }) async {
-    try {
-      final documents = await _apiService.getStudentDocuments(
-        documentType: documentType,
-        search: search,
-        page: page,
-      );
-      return documents.cast<StudentDocument>();
-    } catch (e) {
-      throw Exception('Failed to get student documents: $e');
-    }
+    throw UnimplementedError('Document functionality not yet implemented');
   }
 
+  // TODO: Implement document functionality later
   @override
   Future<StudentDocument> getStudentDocumentDetail(int id) async {
-    try {
-      return await _apiService.getStudentDocumentDetail(id);
-    } catch (e) {
-      throw Exception('Failed to get student document detail: $e');
-    }
+    throw UnimplementedError('Document functionality not yet implemented');
   }
 
   @override

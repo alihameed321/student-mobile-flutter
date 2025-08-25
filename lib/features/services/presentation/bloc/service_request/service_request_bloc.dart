@@ -72,6 +72,7 @@ class ServiceRequestBloc extends Bloc<ServiceRequestEvent, ServiceRequestState> 
       emit(ServiceRequestCreating());
       final serviceRequest = await createServiceRequest(
         requestType: event.requestType,
+        title: event.title,
         description: event.description,
         priority: event.priority,
       );

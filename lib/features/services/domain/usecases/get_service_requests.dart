@@ -38,17 +38,25 @@ class CreateServiceRequest {
 
   Future<ServiceRequest> call({
     required String requestType,
+    required String title,
     required String description,
     String? priority,
   }) async {
+    // Validate inputs
     if (requestType.trim().isEmpty) {
       throw Exception('Request type cannot be empty');
+    }
+    if (title.trim().isEmpty) {
+      throw Exception('Title cannot be empty');
+    }
+    if (title.length > 200) {
+      throw Exception('Title cannot exceed 200 characters');
     }
     if (description.trim().isEmpty) {
       throw Exception('Description cannot be empty');
     }
-    if (description.length < 10) {
-      throw Exception('Description must be at least 10 characters long');
+    if (description.length < 20) {
+      throw Exception('Description must be at least 20 characters long');
     }
     if (description.length > 1000) {
       throw Exception('Description cannot exceed 1000 characters');
@@ -56,6 +64,7 @@ class CreateServiceRequest {
 
     return await repository.createServiceRequest(
       requestType: requestType.trim(),
+      title: title.trim(),
       description: description.trim(),
       priority: priority?.trim(),
     );

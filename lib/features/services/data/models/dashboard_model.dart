@@ -1,6 +1,5 @@
 import '../../domain/entities/dashboard_stats.dart';
 import 'service_request_model.dart';
-import 'student_document_model.dart';
 import 'support_ticket_model.dart';
 
 class DashboardStatsModel extends DashboardStats {
@@ -36,22 +35,19 @@ class DashboardStatsModel extends DashboardStats {
               .map((item) => ServiceRequestModel.fromJson(item))
               .toList()
           : [],
-      recentDocuments: recentActivities['documents'] != null
-          ? (recentActivities['documents'] as List)
-              .map((item) => StudentDocumentModel.fromJson(item))
-              .toList()
-          : [],
       recentSupportTickets: recentActivities['support_tickets'] != null
           ? (recentActivities['support_tickets'] as List)
               .map((item) => SupportTicketModel.fromJson(item))
               .toList()
           : [],
+      // TODO: Implement documents later
+      recentDocuments: const [],
       userInfo: json['user_info'] != null
           ? UserInfoModel.fromJson(json['user_info'])
           : null,
       quickActions: json['quick_actions'] != null
           ? (json['quick_actions'] as List)
-              .map((item) => QuickActionModel.fromJson(item))
+              .map((item) => QuickActionModel.fromBackendJson(item))
               .toList()
           : [],
     );
@@ -72,9 +68,8 @@ class DashboardStatsModel extends DashboardStats {
         'service_requests': recentServiceRequests
             .map((item) => (item as ServiceRequestModel).toJson())
             .toList(),
-        'documents': recentDocuments
-            .map((item) => (item as StudentDocumentModel).toJson())
-            .toList(),
+        // TODO: Implement documents later
+        'documents': const [],
         'support_tickets': recentSupportTickets
             .map((item) => (item as SupportTicketModel).toJson())
             .toList(),
@@ -99,9 +94,9 @@ class UserInfoModel extends UserInfo {
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
-      studentId: json['student_id'] as String,
-      fullName: json['full_name'] as String,
-      email: json['email'] as String,
+      studentId: json['student_id'] as String? ?? 'Unknown',
+      fullName: json['full_name'] as String? ?? 'Unknown Student',
+      email: json['email'] as String? ?? 'unknown@email.com',
       program: json['program'] as String?,
       year: json['year'] as String?,
       gpa: json['gpa'] as double?,
@@ -135,6 +130,16 @@ class QuickActionModel extends QuickAction {
       description: json['description'] as String,
       endpoint: json['endpoint'] as String,
       icon: json['icon'] as String,
+      color: json['color'] as String?,
+    );
+  }
+
+  factory QuickActionModel.fromBackendJson(Map<String, dynamic> json) {
+    return QuickActionModel(
+      title: json['title'] as String? ?? 'Quick Action',
+      description: json['description'] as String? ?? json['action'] as String? ?? 'No description',
+      endpoint: json['endpoint'] as String? ?? '',
+      icon: json['icon'] as String? ?? 'default',
       color: json['color'] as String?,
     );
   }

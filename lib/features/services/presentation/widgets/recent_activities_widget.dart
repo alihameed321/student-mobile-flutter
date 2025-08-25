@@ -161,29 +161,29 @@ class RecentActivitiesWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: document.isVerified ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+          backgroundColor: document.officialStatusColor.withOpacity(0.1),
           child: Icon(
-            document.isVerified ? Icons.verified : Icons.description,
-            color: document.isVerified ? Colors.green : Colors.orange,
+            document.isOfficial ? Icons.verified : Icons.description,
+            color: document.officialStatusColor,
             size: 20,
           ),
         ),
         title: Text(
-          document.fileName,
+          document.title,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              document.documentType,
+              document.documentTypeDisplayName,
               style: TextStyle(color: Colors.grey[600]),
             ),
             const SizedBox(height: 4),
             Row(
               children: [
                 Text(
-                  document.formattedFileSize,
+                  document.downloadCountText,
                   style: TextStyle(
                     color: Colors.grey[500],
                     fontSize: 12,
@@ -191,7 +191,7 @@ class RecentActivitiesWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat('MMM dd, yyyy').format(document.uploadedAt),
+                  DateFormat('MMM dd, yyyy').format(document.issuedDate),
                   style: TextStyle(
                     color: Colors.grey[500],
                     fontSize: 12,
@@ -204,13 +204,13 @@ class RecentActivitiesWidget extends StatelessWidget {
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: document.isVerified ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+            color: document.officialStatusColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            document.verificationStatus,
+            document.officialStatus,
             style: TextStyle(
-              color: document.isVerified ? Colors.green : Colors.orange,
+              color: document.officialStatusColor,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -229,11 +229,11 @@ class RecentActivitiesWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: _getColorFromString(ticket.statusColor).withOpacity(0.1),
+          backgroundColor: ticket.statusColor.withOpacity(0.1),
           child: Icon(
             ticket.isResolved ? Icons.check_circle : 
             ticket.isOpen ? Icons.help_outline : Icons.support,
-            color: _getColorFromString(ticket.statusColor),
+            color: ticket.statusColor,
             size: 20,
           ),
         ),
@@ -254,13 +254,13 @@ class RecentActivitiesWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getColorFromString(ticket.priorityColor).withOpacity(0.1),
+                    color: ticket.priorityColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     ticket.priority,
                     style: TextStyle(
-                      color: _getColorFromString(ticket.priorityColor),
+                      color: ticket.priorityColor,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
@@ -281,13 +281,13 @@ class RecentActivitiesWidget extends StatelessWidget {
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: _getColorFromString(ticket.statusColor).withOpacity(0.1),
+            color: ticket.statusColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             ticket.status,
             style: TextStyle(
-              color: _getColorFromString(ticket.statusColor),
+              color: ticket.statusColor,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

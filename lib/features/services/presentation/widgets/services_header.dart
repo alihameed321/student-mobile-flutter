@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/service_requests_page.dart';
+import '../bloc/service_request/service_request_bloc.dart';
 
 class ServicesHeader extends StatelessWidget {
   const ServicesHeader({super.key});
@@ -20,26 +22,30 @@ class ServicesHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Services',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Services',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'University services at your fingertips',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 16,
+                    const SizedBox(height: 4),
+                    Text(
+                      'University services at your fingertips',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 16,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Row(
                 children: [
@@ -50,9 +56,13 @@ class ServicesHeader extends StatelessWidget {
                     ),
                     child: IconButton(
                       onPressed: () {
+                        final serviceRequestBloc = context.read<ServiceRequestBloc>();
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const ServiceRequestsPage(),
+                            builder: (context) => BlocProvider.value(
+                              value: serviceRequestBloc,
+                              child: const ServiceRequestsPage(),
+                            ),
                           ),
                         );
                       },

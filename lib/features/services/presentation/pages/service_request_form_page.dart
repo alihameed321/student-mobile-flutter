@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/service_request/service_request_bloc.dart';
-import '../../../../core/di/injection_container.dart';
 
 class ServiceRequestFormPage extends StatefulWidget {
   final String? serviceType;
@@ -17,9 +16,23 @@ class ServiceRequestFormPage extends StatefulWidget {
 
 class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   String? _selectedRequestType;
+  String? _selectedPriority;
   List<String> _requestTypes = [];
+  final List<String> _priorityOptions = ['low', 'medium', 'high'];
+  bool _hasLoadedTypes = false;
+  
+  // Mapping for display labels
+  final Map<String, String> _requestTypeLabels = {
+    'enrollment_certificate': 'Enrollment Certificate',
+    'schedule_modification': 'Schedule Modification',
+    'semester_postponement': 'Semester Postponement',
+    'transcript': 'Official Transcript',
+    'graduation_certificate': 'Graduation Certificate',
+    'other': 'Other',
+  };
 
   @override
   void initState() {
@@ -28,17 +41,26 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Load service request types when dependencies are ready
+    if (!_hasLoadedTypes) {
+      _hasLoadedTypes = true;
+      context.read<ServiceRequestBloc>().add(LoadServiceRequestTypes());
+    }
+  }
+
+  @override
   void dispose() {
+    _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<ServiceRequestBloc>()
-        ..add(LoadServiceRequestTypes()),
-      child: Scaffold(
+    
+    return Scaffold(
         appBar: AppBar(
           title: const Text('New Service Request'),
           backgroundColor: Colors.white,
@@ -155,7 +177,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                       items: _requestTypes.map((type) {
                         return DropdownMenuItem(
                           value: type,
-                          child: Text(type),
+                          child: Text(_requestTypeLabels[type] ?? type),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -166,6 +188,48 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please select a service type';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Title Field
+                    Text(
+                      'Title',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter request title',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        prefixIcon: const Icon(Icons.title),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        if (value.trim().length < 3) {
+                          return 'Title must be at least 3 characters';
                         }
                         return null;
                       },
@@ -210,8 +274,72 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please provide a description';
                         }
-                        if (value.trim().length < 10) {
-                          return 'Description must be at least 10 characters';
+                        if (value.trim().length < 20) {
+                          return 'Description must be at least 20 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Priority Field
+                    Text(
+                      'Priority',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: _selectedPriority,
+                      decoration: InputDecoration(
+                        hintText: 'Select priority level',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        prefixIcon: const Icon(Icons.priority_high),
+                      ),
+                      items: _priorityOptions.map((priority) {
+                        return DropdownMenuItem(
+                          value: priority,
+                          child: Row(
+                            children: [
+                              Icon(
+                                priority == 'high' ? Icons.keyboard_arrow_up :
+                                priority == 'medium' ? Icons.remove :
+                                Icons.keyboard_arrow_down,
+                                color: priority == 'high' ? Colors.red :
+                                       priority == 'medium' ? Colors.orange :
+                                       Colors.green,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(priority.toUpperCase()),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a priority level';
                         }
                         return null;
                       },
@@ -273,7 +401,6 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
             );
           },
         ),
-      ),
     );
   }
 
@@ -282,7 +409,9 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
       context.read<ServiceRequestBloc>().add(
         CreateServiceRequestEvent(
           requestType: _selectedRequestType!,
+          title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
+          priority: _selectedPriority,
         ),
       );
     }
