@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/documents_bloc.dart';
+import '../../../services/presentation/pages/service_request_form_page.dart';
+import '../../../services/presentation/pages/service_requests_page.dart';
+import '../../../services/presentation/bloc/service_request/service_request_bloc.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 class DocumentActions extends StatelessWidget {
   const DocumentActions({super.key});
@@ -37,48 +41,11 @@ class DocumentActions extends StatelessWidget {
               Expanded(
                 child: _buildActionButton(
                   context,
-                  icon: Icons.upload_file,
-                  label: 'Upload Document',
-                  color: Colors.blue,
-                  onTap: () {
-                    // Navigate to search page or show search dialog
-                    _showSearchDialog(context);
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  icon: Icons.download,
-                  label: 'Download All',
-                  color: Colors.green,
-                  onTap: () {
-                    // Refresh documents list
-                    context.read<DocumentsBloc>().add(RefreshDocuments());
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Refreshing documents...'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
                   icon: Icons.request_page,
                   label: 'Request Document',
                   color: Colors.orange,
                   onTap: () {
-                    // Navigate to all documents page
-                    // TODO: Implement navigation to full documents list
+                    _showDocumentRequestOptions(context);
                   },
                 ),
               ),
@@ -86,58 +53,23 @@ class DocumentActions extends StatelessWidget {
               Expanded(
                 child: _buildActionButton(
                   context,
-                  icon: Icons.share,
-                  label: 'Share Documents',
-                  color: Colors.purple,
+                  icon: Icons.list_alt,
+                  label: 'My Requests',
+                  color: Colors.blue,
                   onTap: () {
-                    // Navigate to document request page
-                    // TODO: Implement navigation to document request form
+                    _navigateToMyRequests(context);
                   },
                 ),
               ),
             ],
           ),
+
         ],
       ),
     );
   }
 
-  void _showSearchDialog(BuildContext context) {
-    String searchQuery = '';
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Search Documents'),
-        content: TextField(
-          onChanged: (value) => searchQuery = value,
-          decoration: const InputDecoration(
-            hintText: 'Enter search term...',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.search),
-          ),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              if (searchQuery.isNotEmpty) {
-                context.read<DocumentsBloc>().add(
-                      SearchDocuments(query: searchQuery),
-                    );
-              }
-            },
-            child: const Text('Search'),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildActionButton(
     BuildContext context, {
@@ -150,7 +82,8 @@ class DocumentActions extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        height: 100, // Reduced height to prevent overflow
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
@@ -159,12 +92,159 @@ class DocumentActions extends StatelessWidget {
             width: 1,
           ),
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: color,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDocumentRequestOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Title
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Request Document',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Choose the type of document you need',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Document options
+            _buildDocumentOption(
+              context,
+              icon: Icons.school_rounded,
+              title: 'Enrollment Certificate',
+              subtitle: 'Official enrollment verification',
+              color: const Color(0xFF2196F3),
+              requestType: 'enrollment_certificate',
+            ),
+            _buildDocumentOption(
+              context,
+              icon: Icons.description_rounded,
+              title: 'Official Transcript',
+              subtitle: 'Academic records and grades',
+              color: const Color(0xFF9C27B0),
+              requestType: 'transcript',
+            ),
+            _buildDocumentOption(
+              context,
+              icon: Icons.workspace_premium_rounded,
+              title: 'Graduation Certificate',
+              subtitle: 'Official graduation documentation',
+              color: const Color(0xFFE91E63),
+              requestType: 'graduation_certificate',
+            ),
+            _buildDocumentOption(
+              context,
+              icon: Icons.support_agent_rounded,
+              title: 'Other Documents',
+              subtitle: 'Custom document requests',
+              color: const Color(0xFF00BCD4),
+              requestType: 'other',
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required String requestType,
+  }) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context); // Close bottom sheet
+        _navigateToServiceRequest(context, requestType);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -173,17 +253,78 @@ class DocumentActions extends StatelessWidget {
                 size: 24,
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: color,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
             ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[400],
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToServiceRequest(BuildContext context, String requestType) async {
+    final serviceRequestBloc = di.sl<ServiceRequestBloc>();
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: serviceRequestBloc,
+          child: ServiceRequestFormPage(
+            serviceType: requestType,
+          ),
+        ),
+      ),
+    );
+    
+    // Refresh documents when returning from service request
+    if (result == true) {
+      if (context.mounted) {
+        context.read<DocumentsBloc>().add(RefreshDocuments());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Document request submitted successfully!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  void _navigateToMyRequests(BuildContext context) async {
+    final serviceRequestBloc = di.sl<ServiceRequestBloc>();
+    // Load service requests before navigation
+    serviceRequestBloc.add(LoadServiceRequests());
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: serviceRequestBloc,
+          child: const ServiceRequestsPage(),
         ),
       ),
     );

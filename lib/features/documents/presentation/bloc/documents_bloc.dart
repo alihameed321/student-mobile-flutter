@@ -1,5 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../domain/entities/document_entity.dart';
 import '../../domain/entities/document_filter.dart';
 import '../../domain/entities/document_statistics.dart';
@@ -9,7 +13,6 @@ import '../../domain/entities/document_sharing_info.dart';
 import '../../domain/repositories/document_repository.dart';
 import '../../domain/usecases/get_documents_usecase.dart';
 import '../../domain/usecases/get_document_metadata_usecase.dart';
-
 
 // Events
 abstract class DocumentsEvent extends Equatable {
@@ -347,6 +350,18 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
         statistics = currentState.statistics;
       }
 
+      // Load statistics if not already loaded or if refreshing
+      if (statistics == null || event.refresh) {
+        try {
+          print('DEBUG: Loading document statistics');
+          statistics = await getDocumentStatisticsUseCase();
+          print('DEBUG: Statistics loaded - Total: ${statistics.totalDocuments}, Types: ${statistics.documentsByType.length}');
+        } catch (e) {
+          print('DEBUG: Failed to load statistics: $e');
+          // Continue without statistics
+        }
+      }
+
       print('DEBUG: Emitting DocumentsLoaded state with ${response.documents.length} documents');
       emit(DocumentsLoaded(
         documents: response.documents,
@@ -354,6 +369,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
         hasReachedMax: response.documents.length < _pageSize,
         appliedFilter: event.filter,
         documentTypes: documentTypes,
+        selectedFilters: event.filter ?? const DocumentFilter(),
         statistics: statistics,
       ));
     } catch (e) {
@@ -442,6 +458,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
         hasReachedMax: response.documents.length < _pageSize,
         appliedFilter: event.filter,
         documentTypes: documentTypes,
+        selectedFilters: event.filter ?? const DocumentFilter(),
         statistics: statistics,
       ));
     } catch (e) {
@@ -515,17 +532,78 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     DownloadDocument event,
     Emitter<DocumentsState> emit,
   ) async {
+    // Preserve current state
+    final currentState = state;
+    
     try {
       emit(DocumentDownloading(event.documentId));
       
+      // Request storage permission
+      PermissionStatus permission;
+      if (Platform.isAndroid) {
+        // For Android 11+ (API 30+), we need MANAGE_EXTERNAL_STORAGE
+        permission = await Permission.manageExternalStorage.request();
+        if (!permission.isGranted) {
+          // Fallback to regular storage permission for older Android versions
+          permission = await Permission.storage.request();
+        }
+      } else {
+        permission = await Permission.storage.request();
+      }
+      
+      if (!permission.isGranted) {
+        // Restore previous state and show error
+        if (currentState is DocumentsLoaded) {
+          emit(currentState);
+        }
+        emit(DocumentsError('Storage permission denied. Please grant storage access to download files.'));
+        return;
+      }
+      
+      // Get document details first to get proper title and extension
+      final document = await getDocumentByIdUseCase(event.documentId);
       final bytes = await downloadDocumentUseCase(event.documentId);
       
-      // Here you would typically save the file to device storage
-      // For now, we'll just emit success with a placeholder path
-      final filePath = '/downloads/document_${event.documentId}.pdf';
+      // Get the Downloads directory
+      Directory? downloadsDir;
+      if (Platform.isAndroid) {
+        downloadsDir = Directory('/storage/emulated/0/Download');
+        if (!await downloadsDir.exists()) {
+          downloadsDir = await getExternalStorageDirectory();
+        }
+      } else if (Platform.isIOS) {
+        downloadsDir = await getApplicationDocumentsDirectory();
+      }
       
-      emit(DocumentDownloaded(event.documentId, filePath));
+      if (downloadsDir == null) {
+        // Restore previous state and show error
+        if (currentState is DocumentsLoaded) {
+          emit(currentState);
+        }
+        emit(DocumentsError('Could not access downloads directory'));
+        return;
+      }
+      
+      // Create proper filename using document title and extension
+      String fileName = document.title.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
+      final extension = document.fileExtension ?? 'pdf';
+      fileName = '${fileName}.${extension}';
+      
+      final file = File('${downloadsDir.path}/$fileName');
+      
+      // Write bytes to file
+      await file.writeAsBytes(bytes);
+      
+      // Restore previous state after successful download
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
+      emit(DocumentDownloaded(event.documentId, file.path));
     } catch (e) {
+      // Restore previous state and show error
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
       emit(DocumentsError('Failed to download document: ${e.toString()}'));
     }
   }
@@ -551,10 +629,22 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     LoadDocumentById event,
     Emitter<DocumentsState> emit,
   ) async {
+    // Preserve current state
+    final currentState = state;
+    
     try {
       final document = await getDocumentByIdUseCase(event.documentId);
+      
+      // Restore previous state first, then emit the document details
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
       emit(DocumentByIdLoaded(document));
     } catch (e) {
+      // Restore previous state and show error
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
       emit(DocumentsError(e.toString()));
     }
   }
@@ -563,10 +653,22 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     GetDocumentSharingInfo event,
     Emitter<DocumentsState> emit,
   ) async {
+    // Preserve current state
+    final currentState = state;
+    
     try {
       final sharingInfo = await getDocumentSharingInfoUseCase(event.documentId);
+      
+      // Restore previous state first, then emit the sharing info
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
       emit(DocumentSharingInfoLoaded(sharingInfo));
     } catch (e) {
+      // Restore previous state and show error
+      if (currentState is DocumentsLoaded) {
+        emit(currentState);
+      }
       emit(DocumentsError(e.toString()));
     }
   }
@@ -575,12 +677,8 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     FilterDocuments event,
     Emitter<DocumentsState> emit,
   ) async {
-    final currentState = state;
-    if (currentState is DocumentsLoaded) {
-      emit(currentState.copyWith(selectedFilters: event.filter));
-      add(LoadDocuments(filter: event.filter, refresh: true));
-    } else {
-      add(LoadDocuments(filter: event.filter, refresh: true));
-    }
+    // Don't update selectedFilters immediately - let LoadDocuments handle it
+    // This prevents UI from showing wrong selected state before documents load
+    add(LoadDocuments(filter: event.filter, refresh: true));
   }
 }

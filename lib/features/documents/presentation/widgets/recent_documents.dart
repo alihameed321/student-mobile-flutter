@@ -55,10 +55,19 @@ class RecentDocuments extends StatelessWidget {
           ),
 
           // Documents List
-          BlocBuilder<DocumentsBloc, DocumentsState>(
-            builder: (context, state) {
-              print('DEBUG: RecentDocuments - Current state: ${state.runtimeType}');
-              
+          BlocListener<DocumentsBloc, DocumentsState>(
+            listener: (context, state) {
+              if (state is DocumentSharingInfoLoaded) {
+                _showSharingDialog(context, state.sharingInfo);
+              } else if (state is DocumentByIdLoaded) {
+                _showDocumentDetailsDialog(context, state.document);
+              }
+            },
+            child: BlocBuilder<DocumentsBloc, DocumentsState>(
+              builder: (context, state) {
+              print(
+                  'DEBUG: RecentDocuments - Current state: ${state.runtimeType}');
+
               if (state is DocumentsLoading) {
                 print('DEBUG: RecentDocuments - Showing loading indicator');
                 return const Padding(
@@ -95,13 +104,55 @@ class RecentDocuments extends StatelessWidget {
                 );
               }
 
+              if (state is DocumentDownloading) {
+                print('DEBUG: RecentDocuments - Document downloading: ${state.documentId}');
+                // Show a snackbar or toast for download progress
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Downloading document...'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                });
+                // Continue showing the current documents list
+                context.read<DocumentsBloc>().add(const LoadDocuments());
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state is DocumentDownloaded) {
+                print('DEBUG: RecentDocuments - Document downloaded: ${state.filePath}');
+                // Show success message and reload documents
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Document downloaded successfully!'),
+                      duration: const Duration(seconds: 3),
+                      backgroundColor: Colors.green,
+                      action: SnackBarAction(
+                        label: 'OK',
+                        textColor: Colors.white,
+                        onPressed: () {},
+                      ),
+                    ),
+                  );
+                });
+                // Reload documents to refresh the list
+                context.read<DocumentsBloc>().add(const LoadDocuments());
+                return const Center(child: CircularProgressIndicator());
+              }
+
               if (state is DocumentsLoaded) {
-                print('DEBUG: RecentDocuments - DocumentsLoaded state with ${state.documents.length} documents');
-                final recentDocuments = state.documents; // Show all documents instead of just 5
-                print('DEBUG: RecentDocuments - All documents count: ${recentDocuments.length}');
+                print(
+                    'DEBUG: RecentDocuments - DocumentsLoaded state with ${state.documents.length} documents');
+                final recentDocuments =
+                    state.documents; // Show all documents instead of just 5
+                print(
+                    'DEBUG: RecentDocuments - All documents count: ${recentDocuments.length}');
 
                 if (recentDocuments.isEmpty) {
-                  print('DEBUG: RecentDocuments - No documents, showing empty state');
+                  print(
+                      'DEBUG: RecentDocuments - No documents, showing empty state');
                   return Padding(
                     padding: const EdgeInsets.all(20),
                     child: Center(
@@ -141,15 +192,108 @@ class RecentDocuments extends StatelessWidget {
                 );
               }
 
+              if (state is DocumentSharingInfoLoaded || state is DocumentByIdLoaded) {
+                // These states are handled by the BlocListener, continue showing current documents
+                context.read<DocumentsBloc>().add(const LoadDocuments());
+                return const Center(child: CircularProgressIndicator());
+              }
+
               // Handle DocumentsInitial and other states
-              print('DEBUG: RecentDocuments - Unhandled state: ${state.runtimeType}, showing loading');
+              print(
+                  'DEBUG: RecentDocuments - Unhandled state: ${state.runtimeType}, showing loading');
               return const Center(
                 child: CircularProgressIndicator(),
-              );
-            },
+              );            },
+            ),
           ),
         ],
       ),
+    );  }
+
+  void _showSharingDialog(BuildContext context, dynamic sharingInfo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Share Document'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Document: ${sharingInfo.title}'),
+              const SizedBox(height: 8),
+              Text('Type: ${sharingInfo.documentType}'),
+              const SizedBox(height: 16),
+              if (sharingInfo.sharingCapabilities.canShare)
+                const Text('This document can be shared.')
+              else
+                Text('Cannot share: ${sharingInfo.sharingCapabilities.reason}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+            if (sharingInfo.sharingCapabilities.canShare)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // TODO: Implement actual sharing functionality
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Sharing functionality coming soon!'),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                },
+                child: const Text('Share'),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDocumentDetailsDialog(BuildContext context, dynamic document) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Document Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Title: ${document.title}'),
+              const SizedBox(height: 8),
+              Text('Type: ${document.documentType}'),
+              const SizedBox(height: 8),
+              Text('Size: ${document.fileSizeFormatted}'),
+              const SizedBox(height: 8),
+              Text('Issued: ${_formatDate(document.issuedDate)}'),
+              const SizedBox(height: 8),
+              Text('Status: ${document.statusBadge.text}'),
+              const SizedBox(height: 8),
+              Text('Official: ${document.isOfficial ? "Yes" : "No"}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+            if (document.isDownloadable)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.read<DocumentsBloc>().add(DownloadDocument(document.id));
+                },
+                child: const Text('Download'),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -202,8 +346,6 @@ class RecentDocuments extends StatelessWidget {
       return '${date.day}/${date.month}/${date.year}';
     }
   }
-
-
 
   Color _getFileTypeColor(String type) {
     switch (type.toLowerCase()) {
@@ -284,6 +426,15 @@ class _DocumentItem extends StatelessWidget {
         children: [
           const SizedBox(height: 4),
           Text(
+            document.documentTypeDisplay ?? 'Document',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
             '${document.fileSizeFormatted} • ${_formatDate(document.issuedDate)}',
             style: TextStyle(
               fontSize: 12,
@@ -294,7 +445,8 @@ class _DocumentItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Color(int.parse(document.statusBadge.background.replaceFirst('#', '0xff'))),
+              color: Color(int.parse(
+                  document.statusBadge.background.replaceFirst('#', '0xff'))),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -302,79 +454,24 @@ class _DocumentItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
-                color: Color(int.parse(document.statusBadge.color.replaceFirst('#', '0xff'))),
+                color: Color(int.parse(
+                    document.statusBadge.color.replaceFirst('#', '0xff'))),
               ),
             ),
           ),
         ],
       ),
-      trailing: PopupMenuButton<String>(
-        icon: const Icon(
-          Icons.more_vert,
-          color: Color(0xFF9E9E9E),
+      trailing: IconButton(
+        icon: Icon(
+          Icons.download,
+          color: document.isDownloadable ? const Color(0xFF2B6CB0) : Colors.grey,
           size: 20,
         ),
-        onSelected: (value) {
-          switch (value) {
-            case 'download':
-              if (document.isDownloadable) {
-                context
-                    .read<DocumentsBloc>()
-                    .add(DownloadDocument(document.id));
-              }
-              break;
-            case 'share':
-              context
-                  .read<DocumentsBloc>()
-                  .add(GetDocumentSharingInfo(document.id));
-              break;
-            case 'details':
-              context.read<DocumentsBloc>().add(LoadDocumentById(document.id));
-              break;
-          }
-        },
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 'download',
-            enabled: document.isDownloadable,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.download,
-                  size: 16,
-                  color: document.isDownloadable ? null : Colors.grey,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Download',
-                  style: TextStyle(
-                    color: document.isDownloadable ? null : Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const PopupMenuItem(
-            value: 'share',
-            child: Row(
-              children: [
-                Icon(Icons.share, size: 16),
-                SizedBox(width: 8),
-                Text('Share'),
-              ],
-            ),
-          ),
-          const PopupMenuItem(
-            value: 'details',
-            child: Row(
-              children: [
-                Icon(Icons.info_outline, size: 16),
-                SizedBox(width: 8),
-                Text('Details'),
-              ],
-            ),
-          ),
-        ],
+        onPressed: document.isDownloadable ? () {
+          context
+              .read<DocumentsBloc>()
+              .add(DownloadDocument(document.id));
+        } : null,
       ),
     );
   }
@@ -393,8 +490,6 @@ class _DocumentItem extends StatelessWidget {
       return '${date.day}/${date.month}/${date.year}';
     }
   }
-
-
 
   Color _getFileTypeColor(String type) {
     switch (type.toLowerCase()) {
@@ -531,46 +626,17 @@ class _DocumentItemLegacy extends StatelessWidget {
               ],
             ),
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              // Handle menu selection
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'download',
-                child: Row(
-                  children: [
-                    Icon(Icons.download, size: 18),
-                    SizedBox(width: 8),
-                    Text('Download'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'share',
-                child: Row(
-                  children: [
-                    Icon(Icons.share, size: 18),
-                    SizedBox(width: 8),
-                    Text('Share'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, size: 18, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text('Delete', style: TextStyle(color: Colors.red)),
-                  ],
-                ),
-              ),
-            ],
-            child: Icon(
-              Icons.more_vert,
-              color: Colors.grey[400],
+          IconButton(
+            icon: Icon(
+              Icons.download,
+              color: const Color(0xFF2B6CB0),
+              size: 20,
             ),
+            onPressed: () {
+              // Handle download action for legacy documents
+              // Note: Legacy documents don't have the same structure as DocumentEntity
+              // This is a placeholder for legacy document download
+            },
           ),
         ],
       ),

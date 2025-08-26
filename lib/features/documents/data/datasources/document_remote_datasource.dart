@@ -80,7 +80,21 @@ class DocumentRemoteDataSourceImpl implements DocumentRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      return DocumentModel.fromJson(response.data);
+      // Handle nested API response structure: {"success": true, "data": {...}}
+      final responseData = response.data;
+      if (responseData is Map<String, dynamic>) {
+        if (responseData.containsKey('data') && responseData['success'] == true) {
+          return DocumentModel.fromJson(responseData['data'] as Map<String, dynamic>);
+        } else {
+          // Direct document object format
+          return DocumentModel.fromJson(responseData);
+        }
+      } else {
+        throw DocumentApiException(
+          'Invalid response format for document',
+          response.statusCode ?? 0,
+        );
+      }
     } else {
       throw DocumentApiException(
         'Failed to fetch document: ${response.statusCode}',
@@ -91,20 +105,41 @@ class DocumentRemoteDataSourceImpl implements DocumentRemoteDataSource {
 
   @override
   Future<Uint8List> downloadDocument(int id) async {
-    final response = await dioClient.get(
-      ApiConstants.getStudentDocumentDownloadEndpoint(id),
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: {'Accept': 'application/octet-stream'},
-      ),
-    );
+    try {
+      final response = await dioClient.get(
+        ApiConstants.getStudentDocumentDownloadEndpoint(id),
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {
+            'Accept': 'application/pdf, application/octet-stream, */*',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      return Uint8List.fromList(response.data);
-    } else {
+      if (response.statusCode == 200) {
+        // Ensure response.data is a List<int> before converting
+        if (response.data is List<int>) {
+          return Uint8List.fromList(response.data);
+        } else {
+          throw DocumentApiException(
+            'Invalid response format for document download',
+            response.statusCode ?? 0,
+          );
+        }
+      } else {
+        throw DocumentApiException(
+          'Failed to download document: ${response.statusCode}',
+          response.statusCode ?? 0,
+        );
+      }
+    } catch (e) {
+      if (e is DocumentApiException) {
+        rethrow;
+      }
       throw DocumentApiException(
-        'Failed to download document: ${response.statusCode}',
-        response.statusCode ?? 0,
+        'Failed to download document: ${e.toString()}',
+        0,
       );
     }
   }
@@ -133,7 +168,30 @@ class DocumentRemoteDataSourceImpl implements DocumentRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      return DocumentStatisticsModel.fromJson(response.data);
+      // Handle nested API response structure: {"success": true, "data": {...}}
+      final responseData = response.data;
+      print('DEBUG: RemoteDataSource - Raw response: $responseData');
+      
+      if (responseData is Map<String, dynamic>) {
+        if (responseData.containsKey('data') && responseData['success'] == true) {
+          final dataSection = responseData['data'] as Map<String, dynamic>;
+          print('DEBUG: RemoteDataSource - Data section: $dataSection');
+          final model = DocumentStatisticsModel.fromJson(dataSection);
+          print('DEBUG: RemoteDataSource - Model created: totalDocuments=${model.totalDocuments}, documentsByType=${model.documentsByType.length}');
+          return model;
+        } else {
+          // Direct statistics object format
+          print('DEBUG: RemoteDataSource - Using direct format');
+          final model = DocumentStatisticsModel.fromJson(responseData);
+          print('DEBUG: RemoteDataSource - Model created: totalDocuments=${model.totalDocuments}, documentsByType=${model.documentsByType.length}');
+          return model;
+        }
+      } else {
+        throw DocumentApiException(
+          'Invalid response format for document statistics',
+          response.statusCode ?? 0,
+        );
+      }
     } else {
       throw DocumentApiException(
         'Failed to fetch document statistics: ${response.statusCode}',

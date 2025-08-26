@@ -7,17 +7,50 @@ import '../widgets/document_categories.dart';
 import '../widgets/recent_documents.dart';
 import '../widgets/document_actions.dart';
 
-class DocumentsPage extends StatelessWidget {
+class DocumentsPage extends StatefulWidget {
   const DocumentsPage({super.key});
 
   @override
+  State<DocumentsPage> createState() => _DocumentsPageState();
+}
+
+class _DocumentsPageState extends State<DocumentsPage> {
+  bool _showSearch = false;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _showSearch = !_showSearch;
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    if (query.trim().isEmpty) {
+      context.read<DocumentsBloc>().add(const LoadDocuments());
+    } else if (query.trim().length >= 2) {
+      context.read<DocumentsBloc>().add(SearchDocuments(
+        query: query.trim(),
+      ));
+    }
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    context.read<DocumentsBloc>().add(const LoadDocuments());
+    setState(() {
+      _showSearch = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => di.sl<DocumentsBloc>()
-        ..add(const LoadDocuments(refresh: true))
-        ..add(const LoadDocumentTypes())
-        ..add(const LoadDocumentStatistics()),
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.grey[50],
         body: SafeArea(
           child: BlocBuilder<DocumentsBloc, DocumentsState>(
@@ -31,23 +64,28 @@ class DocumentsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       // Header
-                      const DocumentsHeader(),
-                      
-                      const SizedBox(height: 20),
-                      
-                      // Document Actions
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: DocumentActions(),
+                      DocumentsHeader(
+                        onSearchTap: _toggleSearch,
+                        isSearchActive: _showSearch,
+                        searchController: _searchController,
+                        onSearchChanged: _onSearchChanged,
+                        onSearchClear: _clearSearch,
                       ),
                       
                       const SizedBox(height: 20),
                       
-                      // Document Categories
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: DocumentCategories(),
-                      ),
+                      // Document Actions (hidden when search is active)
+                       if (!_showSearch) const Padding(
+                         padding: EdgeInsets.symmetric(horizontal: 20),
+                         child: DocumentActions(),
+                       ),
+                       if (!_showSearch) const SizedBox(height: 20),
+                       
+                       // Document Categories (hidden when search is active)
+                       if (!_showSearch) const Padding(
+                         padding: EdgeInsets.symmetric(horizontal: 20),
+                         child: DocumentCategories(),
+                       ),
                       
                       const SizedBox(height: 20),
                       
@@ -65,7 +103,6 @@ class DocumentsPage extends StatelessWidget {
             },
           ),
         ),
-      ),
-    );
+      );
   }
 }

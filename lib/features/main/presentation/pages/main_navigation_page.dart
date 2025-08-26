@@ -9,6 +9,7 @@ import '../../../financial/presentation/pages/financial_page.dart';
 import '../../../financial/presentation/bloc/financial_bloc.dart';
 import '../../../services/presentation/pages/services_page.dart';
 import '../../../documents/presentation/pages/documents_page.dart';
+import '../../../documents/presentation/bloc/documents_bloc.dart';
 import '../../../notifications/presentation/pages/notifications_page.dart';
 import '../widgets/custom_bottom_navigation.dart';
 import '../../../../core/di/injection_container.dart' as di;
@@ -40,6 +41,15 @@ class MainNavigationPage extends StatelessWidget {
           create: (context) {
             print('[MainNavigationPage] Creating FinancialBloc');
             return di.sl<FinancialBloc>();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            print('[MainNavigationPage] Creating DocumentsBloc');
+            return di.sl<DocumentsBloc>()
+              ..add(const LoadDocuments(refresh: true))
+              ..add(const LoadDocumentTypes())
+              ..add(const LoadDocumentStatistics());
           },
         ),
       ],

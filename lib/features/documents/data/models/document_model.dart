@@ -11,9 +11,9 @@ class StatusBadge {
 
   factory StatusBadge.fromJson(Map<String, dynamic> json) {
     return StatusBadge(
-      text: json['text'] as String,
-      color: json['color'] as String,
-      background: json['background'] as String,
+      text: json['text'] as String? ?? 'Unknown',
+      color: json['color'] as String? ?? '#000000',
+      background: json['background'] as String? ?? '#FFFFFF',
     );
   }
 
@@ -64,20 +64,20 @@ class DocumentModel {
   factory DocumentModel.fromJson(Map<String, dynamic> json) {
     return DocumentModel(
       id: json['id'] as int,
-      title: json['title'] as String,
-      documentType: json['document_type'] as String,
-      documentTypeDisplay: json['document_type_display'] as String,
-      issuedDate: DateTime.parse(json['issued_date'] as String),
-      issuedDateFormatted: json['issued_date_formatted'] as String,
-      isOfficial: json['is_official'] as bool,
-      downloadCount: json['download_count'] as int,
-      fileSize: json['file_size'] as int,
-      fileSizeFormatted: json['file_size_formatted'] as String,
+      title: json['title'] as String? ?? 'Unknown Document',
+      documentType: json['document_type'] as String? ?? 'unknown',
+      documentTypeDisplay: json['document_type_display'] as String? ?? 'Unknown Type',
+      issuedDate: DateTime.parse(json['issued_date'] as String? ?? DateTime.now().toIso8601String()),
+      issuedDateFormatted: json['issued_date_formatted'] as String? ?? 'Unknown Date',
+      isOfficial: json['is_official'] as bool? ?? false,
+      downloadCount: json['download_count'] as int? ?? 0,
+      fileSize: json['file_size'] as int? ?? 0,
+      fileSizeFormatted: json['file_size_formatted'] as String? ?? '0 B',
       fileExtension: json['file_extension'] as String?,
-      downloadUrl: json['download_url'] as String,
-      previewUrl: json['preview_url'] as String,
-      isDownloadable: json['is_downloadable'] as bool,
-      statusBadge: StatusBadge.fromJson(json['status_badge'] as Map<String, dynamic>),
+      downloadUrl: json['download_url'] as String? ?? '',
+      previewUrl: json['preview_url'] as String? ?? '',
+      isDownloadable: json['is_downloadable'] as bool? ?? false,
+      statusBadge: StatusBadge.fromJson(json['status_badge'] as Map<String, dynamic>? ?? {}),
     );
   }
 
@@ -211,17 +211,36 @@ class DocumentStatisticsModel {
   });
 
   factory DocumentStatisticsModel.fromJson(Map<String, dynamic> json) {
-    return DocumentStatisticsModel(
-      totalDocuments: json['total_documents'] as int,
-      officialDocuments: json['official_documents'] as int,
-      totalDownloads: json['total_downloads'] as int,
-      recentDocuments: (json['recent_documents'] as List)
+    // Handle documents_by_type which comes as a Map from server
+    final documentsByTypeMap = json['documents_by_type'] as Map<String, dynamic>? ?? {};
+    final documentsByTypeList = documentsByTypeMap.entries.map((entry) {
+      final typeData = entry.value as Map<String, dynamic>;
+      final typeKey = entry.key ?? 'unknown';
+      final typeLabel = typeData['label'] as String? ?? typeKey;
+      return DocumentTypeCount(
+        type: typeKey,
+        typeDisplay: typeLabel,
+        count: (typeData['count'] as num?)?.toInt() ?? 0,
+      );
+    }).toList();
+
+    // Handle recent_documents - API returns count as int, not list of documents
+    List<DocumentModel> recentDocumentsList = [];
+    final recentDocsData = json['recent_documents'];
+    if (recentDocsData is List) {
+      recentDocumentsList = recentDocsData
           .map((doc) => DocumentModel.fromJson(doc as Map<String, dynamic>))
-          .toList(),
-      documentsByType: (json['documents_by_type'] as List)
-          .map((item) => DocumentTypeCount.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      mostDownloaded: (json['most_downloaded'] as List)
+          .toList();
+    }
+    // If it's an int (count), we leave the list empty as we don't have actual document data
+
+    return DocumentStatisticsModel(
+      totalDocuments: (json['total_documents'] as num?)?.toInt() ?? 0,
+      officialDocuments: (json['official_documents'] as num?)?.toInt() ?? 0,
+      totalDownloads: (json['total_downloads'] as num?)?.toInt() ?? 0,
+      recentDocuments: recentDocumentsList,
+      documentsByType: documentsByTypeList,
+      mostDownloaded: (json['most_downloaded'] as List? ?? [])
           .map((doc) => DocumentModel.fromJson(doc as Map<String, dynamic>))
           .toList(),
     );
@@ -241,9 +260,9 @@ class DocumentTypeCount {
 
   factory DocumentTypeCount.fromJson(Map<String, dynamic> json) {
     return DocumentTypeCount(
-      type: json['type'] as String,
-      typeDisplay: json['type_display'] as String,
-      count: json['count'] as int,
+      type: json['type'] as String? ?? 'unknown',
+      typeDisplay: json['type_display'] as String? ?? 'Unknown Type',
+      count: json['count'] as int? ?? 0,
     );
   }
 }
@@ -423,14 +442,38 @@ class DocumentSharingInfoModel {
   });
 
   factory DocumentSharingInfoModel.fromJson(Map<String, dynamic> json) {
-    return DocumentSharingInfoModel(
-      documentId: json['document_id'],
-      title: json['title'],
-      documentType: json['document_type'],
-      isOfficial: json['is_official'] ?? false,
-      issuedDate: DateTime.parse(json['issued_date']),
-      sharingCapabilities: SharingCapabilitiesModel.fromJson(json['sharing_capabilities']),
+    // Handle nested response structure from API
+    final data = json.containsKey('data') ? json['data'] : json;
+    
+    // Create sharing capabilities from the actual API response structure
+    final sharingCapabilities = SharingCapabilitiesModel(
+      canShare: data['sharing_enabled'] ?? false,
+      canGenerateLink: data['sharing_enabled'] ?? false,
+      supportsAccessControl: (data['access_control'] != null),
+      reason: data['sharing_enabled'] == false ? 'Sharing not enabled for this document' : '',
     );
+    
+    return DocumentSharingInfoModel(
+      documentId: data['document_id'] ?? 0,
+      title: data['title'] ?? '',
+      documentType: data['document_type'] ?? '',
+      isOfficial: data['is_official'] ?? false,
+      issuedDate: _parseDateTime(data['issued_date']),
+      sharingCapabilities: sharingCapabilities,
+    );
+  }
+  
+  static DateTime _parseDateTime(dynamic dateValue) {
+    if (dateValue == null) {
+      return DateTime.now();
+    }
+    if (dateValue is String) {
+      return DateTime.parse(dateValue);
+    }
+    if (dateValue is DateTime) {
+      return dateValue;
+    }
+    return DateTime.now();
   }
 
   Map<String, dynamic> toJson() {
@@ -463,7 +506,7 @@ class SharingCapabilitiesModel {
       canShare: json['can_share'] ?? false,
       canGenerateLink: json['can_generate_link'] ?? false,
       supportsAccessControl: json['supports_access_control'] ?? false,
-      reason: json['reason'] ?? '',
+      reason: (json['reason'] ?? '').toString(),
     );
   }
 

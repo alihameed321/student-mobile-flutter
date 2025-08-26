@@ -30,39 +30,62 @@ class DocumentCategories extends StatelessWidget {
               ),
             );
           }
-          
+
           List<Map<String, dynamic>> categories = [];
-          
+          int totalDocuments = 0;
+
+          // Get total documents count from statistics
+          if (state is DocumentsLoaded && state.statistics != null) {
+            totalDocuments = state.statistics!.totalDocuments;
+          }
+
           // Add 'All Documents' option at the top
           categories.add({
             'title': 'All Documents',
             'subtitle': 'View all your documents',
             'icon': Icons.folder_open,
             'color': Colors.indigo,
-            'count': 0,
+            'count': totalDocuments,
             'api_value': null, // null means no filter
           });
-          
-          if (state is DocumentsLoaded && state.documentTypes.isNotEmpty) {
-            categories.addAll(state.documentTypes.map((type) => {
-              'title': type.display,
-              'subtitle': _getCategorySubtitle(type.display),
-              'icon': _getCategoryIcon(type.display),
-              'color': _getCategoryColor(type.display),
-              'count': 0, // DocumentType doesn't have count, will need to get from DocumentTypeCount
-              'api_value': type.value, // Store the actual API value
-            }).toList());
-          } else {
-            // Fallback to server-compatible categories
-            categories.addAll(_getServerCompatibleCategories());
+
+          // Use dynamic categories from statistics if available
+          if (state is DocumentsLoaded &&
+              state.statistics != null &&
+              state.statistics!.documentsByType.isNotEmpty) {
+            categories.addAll(state.statistics!.documentsByType
+                .map((typeCount) => {
+                      'title': typeCount.typeDisplay,
+                      'subtitle': _getCategorySubtitle(typeCount.typeDisplay),
+                      'icon': _getCategoryIcon(typeCount.typeDisplay),
+                      'color': _getCategoryColor(typeCount.typeDisplay),
+                      'count': typeCount.count,
+                      'api_value':
+                          typeCount.type, // Use the actual API type value
+                    })
+                .toList());
+          } else if (state is DocumentsLoaded &&
+              state.documentTypes.isNotEmpty) {
+            // Fallback to document types without counts
+            categories.addAll(state.documentTypes
+                .map((type) => {
+                      'title': type.display,
+                      'subtitle': type.description ?? 'Document category',
+                      'icon': _getCategoryIcon(type.display),
+                      'color': _getCategoryColor(type.display),
+                      'count': 0,
+                      'api_value': type.value,
+                    })
+                .toList());
           }
-          
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
+          // Removed hardcoded fallback - rely only on server data
+
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
                   'Document Categories',
                   style: TextStyle(
                     fontSize: 18,
@@ -70,230 +93,165 @@ class DocumentCategories extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-              ),
-              ...categories.asMap().entries.map((entry) {
-                final index = entry.key;
-                final category = entry.value;
-                return Column(
-                  children: [
-                    _buildCategoryItem(
-                      context,
-                      title: category['title'],
-                      subtitle: category['subtitle'],
-                      icon: category['icon'],
-                      color: category['color'],
-                      count: category['count'],
-                      onTap: () {
-                        // Handle 'All Documents' option
-                        if (category['api_value'] == null) {
-                          print('DEBUG: All Documents tapped - clearing filters');
-                          context.read<DocumentsBloc>().add(
-                            const LoadDocuments(refresh: true),
-                          );
-                          return;
-                        }
-                        
-                        // Use the API value from server if available, otherwise fallback to mapping
-                        final apiValue = category['api_value'] ?? _getApiDocumentType(category['title']);
-                        final currentFilters = state is DocumentsLoaded 
-                            ? state.selectedFilters 
-                            : const DocumentFilter();
-                        
-                        print('DEBUG: Category tapped: ${category['title']}, API value: $apiValue');
-                        
-                        final newFilters = currentFilters.copyWith(
-                          documentType: apiValue,
-                        );
-                        
-                        context.read<DocumentsBloc>().add(
-                          FilterDocuments(newFilters),
-                        );
-                      },
-                    ),
-                    if (index < categories.length - 1) _buildDivider(),
-                  ],
-                );
-              }).toList(),
-              const SizedBox(height: 8),
-            ],
+                const SizedBox(height: 16),
+                // Horizontal scrollable filter row
+                SizedBox(
+                  height: 80,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      final isSelected = state is DocumentsLoaded &&
+                          ((category['api_value'] == null &&
+                                  state.selectedFilters.documentType == null) ||
+                              (category['api_value'] != null &&
+                                  state.selectedFilters.documentType ==
+                                      category['api_value']));
+
+                      return _buildFilterChip(
+                        context,
+                        title: category['title'],
+                        icon: category['icon'],
+                        color: category['color'],
+                        count: category['count'],
+                        isSelected: isSelected,
+                        onTap: () {
+                          // Handle 'All Documents' option
+                          if (category['api_value'] == null) {
+                            // Clear all filters to show all documents
+                            context.read<DocumentsBloc>().add(
+                                  FilterDocuments(
+                                    DocumentFilter(
+                                      documentType: null,
+                                      search: state is DocumentsLoaded
+                                          ? state.selectedFilters.search
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                          } else {
+                            // Apply specific document type filter
+                            context.read<DocumentsBloc>().add(
+                                  FilterDocuments(
+                                    DocumentFilter(
+                                      documentType: category['api_value'],
+                                      search: state is DocumentsLoaded
+                                          ? state.selectedFilters.search
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildCategoryItem(
+  Widget _buildFilterChip(
     BuildContext context, {
     required String title,
-    required String subtitle,
     required IconData icon,
     required Color color,
     required int count,
+    required bool isSelected,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.15) : Colors.grey[100],
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: isSelected ? color : Colors.grey[300]!,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
+            Icon(
+              icon,
+              color: isSelected ? color : Colors.grey[600],
+              size: 18,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? color : Colors.grey[700],
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    count.toString(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
+            if (count > 0) ...[
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? color.withOpacity(0.2) : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  count.toString(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? color : Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 8),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey[400],
-                  size: 20,
-                ),
-              ],
-            ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      color: Colors.grey[200],
-      indent: 68,
-      endIndent: 20,
-    );
-  }
-
-  List<Map<String, dynamic>> _getServerCompatibleCategories() {
-    return [
-      {
-        'title': 'Academic Records',
-        'subtitle': 'Transcripts, grades, certificates',
-        'icon': Icons.school,
-        'color': Colors.blue,
-        'count': 0,
-        'api_value': 'transcript',
-      },
-      {
-        'title': 'Financial Documents',
-        'subtitle': 'Receipts, invoices, financial aid',
-        'icon': Icons.receipt_long,
-        'color': Colors.green,
-        'count': 0,
-        'api_value': 'payment_receipt',
-      },
-      {
-        'title': 'Personal Documents',
-        'subtitle': 'ID, passport, personal info',
-        'icon': Icons.person,
-        'color': Colors.orange,
-        'count': 0,
-        'api_value': 'enrollment_certificate',
-      },
-      {
-        'title': 'Application Forms',
-        'subtitle': 'Applications, requests, forms',
-        'icon': Icons.description,
-        'color': Colors.purple,
-        'count': 0,
-        'api_value': 'graduation_certificate',
-      },
-      {
-        'title': 'Other Documents',
-        'subtitle': 'Miscellaneous files',
-        'icon': Icons.folder,
-        'color': Colors.grey,
-        'count': 0,
-        'api_value': 'other',
-      },
-    ];
-  }
+  // Removed hardcoded categories - now using server data only
 
   String _getCategorySubtitle(String categoryName) {
     switch (categoryName.toLowerCase()) {
-      case 'official transcript':
-        return 'Transcripts, grades, certificates';
-      case 'financial documents':
-      case 'payment receipt':
-        return 'Receipts, invoices, financial aid';
-      case 'personal documents':
       case 'enrollment certificate':
-        return 'ID, passport, personal info';
-      case 'application forms':
+        return 'Student enrollment verification';
+      case 'official transcript':
+        return 'Academic transcripts and grades';
       case 'graduation certificate':
-        return 'Applications, requests, forms';
+        return 'Graduation and completion certificates';
+      case 'payment receipt':
+        return 'Payment receipts and financial records';
       case 'other document':
-        return 'Miscellaneous files';
+        return 'Miscellaneous documents';
       default:
-        return 'Miscellaneous files';
+        return 'Miscellaneous documents';
     }
   }
 
   IconData _getCategoryIcon(String categoryName) {
     switch (categoryName.toLowerCase()) {
-      case 'official transcript':
-        return Icons.school;
-      case 'financial documents':
-      case 'payment receipt':
-        return Icons.receipt_long;
-      case 'personal documents':
       case 'enrollment certificate':
         return Icons.person;
-      case 'application forms':
+      case 'official transcript':
+        return Icons.school;
       case 'graduation certificate':
         return Icons.description;
+      case 'payment receipt':
+        return Icons.receipt_long;
       case 'other document':
         return Icons.folder;
       default:
@@ -303,17 +261,14 @@ class DocumentCategories extends StatelessWidget {
 
   Color _getCategoryColor(String categoryName) {
     switch (categoryName.toLowerCase()) {
-      case 'official transcript':
-        return Colors.blue;
-      case 'financial documents':
-      case 'payment receipt':
-        return Colors.green;
-      case 'personal documents':
       case 'enrollment certificate':
         return Colors.orange;
-      case 'application forms':
+      case 'official transcript':
+        return Colors.blue;
       case 'graduation certificate':
         return Colors.purple;
+      case 'payment receipt':
+        return Colors.green;
       case 'other document':
         return Colors.grey;
       default:
@@ -323,18 +278,14 @@ class DocumentCategories extends StatelessWidget {
 
   String _getApiDocumentType(String displayName) {
     switch (displayName.toLowerCase()) {
-      case 'official transcript':
-        return 'transcript';
-      case 'financial documents':
-      case 'payment receipt':
-        return 'payment_receipt';
-      case 'personal documents':
       case 'enrollment certificate':
         return 'enrollment_certificate';
-      case 'application forms':
+      case 'official transcript':
+        return 'transcript';
       case 'graduation certificate':
         return 'graduation_certificate';
-      case 'other documents':
+      case 'payment receipt':
+        return 'payment_receipt';
       case 'other document':
         return 'other';
       default:

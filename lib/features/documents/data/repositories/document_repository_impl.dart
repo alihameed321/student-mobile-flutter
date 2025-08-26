@@ -79,7 +79,9 @@ class DocumentRepositoryImpl implements DocumentRepository {
   Future<DocumentStatistics> getDocumentStatistics() async {
     try {
       final model = await remoteDataSource.getDocumentStatistics();
-      return DocumentStatistics(
+      print('DEBUG: Repository - Model received: totalDocuments=${model.totalDocuments}, documentsByType=${model.documentsByType.length}');
+      
+      final statistics = DocumentStatistics(
         totalDocuments: model.totalDocuments,
         officialDocuments: model.officialDocuments,
         totalDownloads: model.totalDownloads,
@@ -93,6 +95,9 @@ class DocumentRepositoryImpl implements DocumentRepository {
         ).toList(),
         mostDownloaded: model.mostDownloaded.map(_mapToEntity).toList(),
       );
+      
+      print('DEBUG: Repository - Statistics created: totalDocuments=${statistics.totalDocuments}, documentsByType=${statistics.documentsByType.length}');
+      return statistics;
     } catch (e) {
       throw _handleException(e);
     }
