@@ -4,7 +4,6 @@ import '../bloc/financial_bloc.dart';
 import '../widgets/financial_header.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/recent_transactions.dart';
-import '../widgets/financial_actions.dart';
 import '../widgets/payment_reminders.dart';
 
 class FinancialPage extends StatefulWidget {
@@ -127,14 +126,6 @@ class _FinancialPageState extends State<FinancialPage> {
                       
                       const SizedBox(height: 20),
                       
-                      // Financial Actions
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: FinancialActions(),
-                      ),
-                      
-                      const SizedBox(height: 20),
-                      
                       // Recent Transactions with real data
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -152,13 +143,6 @@ class _FinancialPageState extends State<FinancialPage> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: PaymentReminders(),
-                      ),
-                      
-                      const SizedBox(height: 20),
-                      
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: FinancialActions(),
                       ),
                       
                       const SizedBox(height: 20),

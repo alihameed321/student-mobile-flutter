@@ -104,8 +104,8 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       ),
     );
     
-    if (result == true) {
-      // Refresh financial data after successful payment
+    // Refresh financial data when returning from payment page (regardless of payment outcome)
+    if (context.mounted) {
       financialBloc.add(LoadStudentFees(studentId: '1'));
     }
   }

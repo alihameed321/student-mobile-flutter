@@ -80,9 +80,9 @@ class PaymentReminders extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Don't pass synthetic fee data, let AllPaymentRemindersPage load real fees
-                    Navigator.push(
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
@@ -91,6 +91,10 @@ class PaymentReminders extends StatelessWidget {
                         ),
                       ),
                     );
+                    // Refresh financial data when returning from AllPaymentRemindersPage
+                    if (context.mounted) {
+                      financialBloc.add(const RefreshFinancialData('student_id_placeholder'));
+                    }
                   },
                   child: const Text('View All'),
                 ),

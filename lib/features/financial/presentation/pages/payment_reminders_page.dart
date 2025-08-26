@@ -255,8 +255,8 @@ class PaymentRemindersPage extends StatelessWidget {
         ),
       );
       
-      if (result == true) {
-        // Refresh financial data after successful payment
+      // Refresh financial data when returning from payment page (regardless of payment outcome)
+      if (context.mounted) {
         financialBloc.add(const RefreshFinancialData('1'));
       }
   }

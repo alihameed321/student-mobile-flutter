@@ -135,7 +135,7 @@ class FinancialRepositoryImpl implements FinancialRepository {
     String? transferNotes,
   }) async {
     try {
-      // Get the actual fee amounts from the outstanding fees
+      // Get the actual fee amounts from the outstanding fees for validation
       final outstandingFeesResult = await getOutstandingFees();
       final Map<String, double> feeAmountMap = {};
       
@@ -148,17 +148,46 @@ class FinancialRepositoryImpl implements FinancialRepository {
         },
       );
       
-      // Convert feeIds to the format expected by the API with actual amounts
-      final fees = feeIds.map((id) => {
-        'id': id,
-        'amount': feeAmountMap[id] ?? (amount / feeIds.length), // Use actual fee amount or fallback to even distribution
-      }).toList();
-      
-      // Calculate the correct total amount from the actual fee amounts
-      double calculatedTotal = 0.0;
-      for (final fee in fees) {
-        calculatedTotal += (fee['amount'] as double);
+      // Validate that the custom amount doesn't exceed the total remaining balance
+      double totalRemainingBalance = 0.0;
+      for (final feeId in feeIds) {
+        totalRemainingBalance += feeAmountMap[feeId] ?? 0.0;
       }
+      
+      if (amount > totalRemainingBalance) {
+        throw Exception('Payment amount exceeds total remaining balance');
+      }
+      
+      // Distribute the custom amount across selected fees proportionally
+      final fees = <Map<String, dynamic>>[];
+      double remainingAmount = amount;
+      
+      for (int i = 0; i < feeIds.length; i++) {
+        final feeId = feeIds[i];
+        final feeBalance = feeAmountMap[feeId] ?? 0.0;
+        
+        double feePaymentAmount;
+        if (i == feeIds.length - 1) {
+          // Last fee gets the remaining amount to avoid rounding issues
+          feePaymentAmount = remainingAmount;
+        } else {
+          // Calculate proportional amount based on fee balance
+          final proportion = feeBalance / totalRemainingBalance;
+          feePaymentAmount = amount * proportion;
+          // Ensure we don't exceed the fee's remaining balance
+          feePaymentAmount = feePaymentAmount > feeBalance ? feeBalance : feePaymentAmount;
+        }
+        
+        fees.add({
+          'id': feeId,
+          'amount': feePaymentAmount,
+        });
+        
+        remainingAmount -= feePaymentAmount;
+      }
+      
+      // Use the custom amount as the total
+      final calculatedTotal = amount;
       
       final response = await _apiService.createPayment(
         fees: fees,
