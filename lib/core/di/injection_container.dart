@@ -28,6 +28,14 @@ import '../../features/services/domain/usecases/document_usecases.dart';
 import '../../features/services/presentation/bloc/service_request/service_request_bloc.dart';
 import '../../features/services/presentation/bloc/dashboard/dashboard_bloc.dart';
 
+// Documents feature imports
+import '../../features/documents/data/datasources/document_remote_datasource.dart';
+import '../../features/documents/data/repositories/document_repository_impl.dart';
+import '../../features/documents/domain/repositories/document_repository.dart';
+import '../../features/documents/domain/usecases/get_documents_usecase.dart';
+import '../../features/documents/domain/usecases/get_document_metadata_usecase.dart';
+import '../../features/documents/presentation/bloc/documents_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -48,6 +56,9 @@ Future<void> init() async {
   sl.registerLazySingleton<StudentPortalApiService>(
     () => StudentPortalApiServiceImpl(sl()),
   );
+  sl.registerLazySingleton<DocumentRemoteDataSource>(
+    () => DocumentRemoteDataSourceImpl(sl()),
+  );
   
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -58,6 +69,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<StudentPortalRepository>(
     () => StudentPortalRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<DocumentRepository>(
+    () => DocumentRepositoryImpl(sl()),
   );
   
   // Use cases
@@ -86,6 +100,18 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetStudentDocuments(sl()));
   sl.registerLazySingleton(() => GetStudentDocumentDetail(sl()));
   
+  // Enhanced Documents Use Cases
+  sl.registerLazySingleton(() => GetDocumentsUseCase(sl()));
+  sl.registerLazySingleton(() => GetDocumentByIdUseCase(sl()));
+  sl.registerLazySingleton(() => DownloadDocumentUseCase(sl()));
+  sl.registerLazySingleton(() => SearchDocumentsUseCase(sl()));
+  sl.registerLazySingleton(() => GetDocumentTypesUseCase(sl()));
+  sl.registerLazySingleton(() => GetDocumentStatisticsUseCase(sl()));
+  sl.registerLazySingleton(() => GetDocumentStatusUseCase(sl()));
+  sl.registerLazySingleton(() => GetDocumentSharingInfoUseCase(sl()));
+  sl.registerLazySingleton(() => CreateSharingLinkUseCase(sl()));
+  sl.registerLazySingleton(() => RevokeSharingAccessUseCase(sl()));
+  
   // Blocs
   sl.registerFactory(() => AuthBloc(
     loginUseCase: sl(),
@@ -111,5 +137,17 @@ Future<void> init() async {
   ));
   sl.registerFactory(() => DashboardBloc(
     getDashboardStats: sl(),
+  ));
+  
+  // Documents Bloc
+  sl.registerFactory(() => DocumentsBloc(
+    getDocumentsUseCase: sl(),
+    getDocumentByIdUseCase: sl(),
+    downloadDocumentUseCase: sl(),
+    searchDocumentsUseCase: sl(),
+    getDocumentTypesUseCase: sl(),
+      getDocumentStatisticsUseCase: sl(),
+      getDocumentStatusUseCase: sl(),
+      getDocumentSharingInfoUseCase: sl(),
   ));
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/documents_bloc.dart';
 
 class DocumentActions extends StatelessWidget {
   const DocumentActions({super.key});
@@ -39,7 +41,8 @@ class DocumentActions extends StatelessWidget {
                   label: 'Upload Document',
                   color: Colors.blue,
                   onTap: () {
-                    // Upload document action
+                    // Navigate to search page or show search dialog
+                    _showSearchDialog(context);
                   },
                 ),
               ),
@@ -51,7 +54,14 @@ class DocumentActions extends StatelessWidget {
                   label: 'Download All',
                   color: Colors.green,
                   onTap: () {
-                    // Download all documents
+                    // Refresh documents list
+                    context.read<DocumentsBloc>().add(RefreshDocuments());
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Refreshing documents...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -67,7 +77,8 @@ class DocumentActions extends StatelessWidget {
                   label: 'Request Document',
                   color: Colors.orange,
                   onTap: () {
-                    // Request document action
+                    // Navigate to all documents page
+                    // TODO: Implement navigation to full documents list
                   },
                 ),
               ),
@@ -79,11 +90,49 @@ class DocumentActions extends StatelessWidget {
                   label: 'Share Documents',
                   color: Colors.purple,
                   onTap: () {
-                    // Share documents action
+                    // Navigate to document request page
+                    // TODO: Implement navigation to document request form
                   },
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSearchDialog(BuildContext context) {
+    String searchQuery = '';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Search Documents'),
+        content: TextField(
+          onChanged: (value) => searchQuery = value,
+          decoration: const InputDecoration(
+            hintText: 'Enter search term...',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.search),
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (searchQuery.isNotEmpty) {
+                context.read<DocumentsBloc>().add(
+                      SearchDocuments(query: searchQuery),
+                    );
+              }
+            },
+            child: const Text('Search'),
           ),
         ],
       ),

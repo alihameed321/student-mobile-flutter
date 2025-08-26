@@ -25,9 +25,20 @@ class ApiConstants {
   // Documents endpoints (legacy)
   static const String documentsEndpoint = '/api/documents/';
 
+  // Enhanced Document Management API endpoints
+  static const String documentTypesEndpoint = '/api/student/document-types/';
+  static const String documentStatisticsEndpoint = '/api/student/documents/statistics/';
+  static const String documentStatusEndpoint = '/api/student/documents/status/';
+  static const String documentSearchEndpoint = '/api/student/documents/search/';
+  static const String documentSharingEndpoint = '/api/student/documents/sharing/';
+
   // Student-specific document endpoints
   static String getStudentDocumentDetailEndpoint(int id) =>
       '/api/student/documents/$id/';
+  static String getStudentDocumentDownloadEndpoint(int id) =>
+      '/api/student/documents/$id/download/';
+  static String getDocumentStatusEndpoint(int id) =>
+      '/api/student/documents/$id/status/';
   static String getServiceRequestDetailEndpoint(int id) =>
       '/api/student/service-requests/$id/';
   static String getCancelServiceRequestEndpoint(int id) =>
