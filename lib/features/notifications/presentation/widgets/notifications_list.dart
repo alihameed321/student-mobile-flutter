@@ -1,15 +1,115 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../data/models/notification_model.dart';
+import '../providers/notification_provider.dart';
 
-enum NotificationType { academic, financial, event, system, general }
-enum NotificationPriority { high, medium, low }
+class NotificationsList extends StatefulWidget {
+  final bool showAll;
+  final VoidCallback? onNotificationTap;
+  
+  const NotificationsList({
+    super.key,
+    this.showAll = false,
+    this.onNotificationTap,
+  });
 
-class NotificationsList extends StatelessWidget {
-  const NotificationsList({super.key});
+  @override
+  State<NotificationsList> createState() => _NotificationsListState();
+}
+
+class _NotificationsListState extends State<NotificationsList> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationProvider>().loadNotifications();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final notifications = _getNotifications();
+    return Consumer<NotificationProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading && provider.notifications.isEmpty) {
+          return _buildLoadingState();
+        }
 
+        if (provider.error != null && provider.notifications.isEmpty) {
+          return _buildErrorState(provider.error!, provider);
+        }
+
+        final notifications = widget.showAll 
+            ? provider.notifications 
+            : provider.notifications.take(5).toList();
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(provider),
+              if (notifications.isEmpty)
+                _buildEmptyState()
+              else
+                _buildNotificationsList(notifications, provider),
+              if (widget.showAll && provider.hasMore)
+                _buildLoadMoreButton(provider),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeader(NotificationProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.showAll ? 'All Notifications' : 'Recent Notifications',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              if (provider.unreadCount > 0)
+                Text(
+                  '${provider.unreadCount} unread',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+            ],
+          ),
+          if (widget.showAll && provider.unreadCount > 0)
+            TextButton(
+              onPressed: () => provider.markAllAsRead(),
+              child: const Text('Mark all read'),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -22,49 +122,142 @@ class NotificationsList extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              'Recent Notifications',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
+      padding: const EdgeInsets.all(40),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String error, NotificationProvider provider) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: notifications.length,
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              color: Colors.grey[200],
-              indent: 20,
-              endIndent: 20,
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 48,
+            color: Colors.red[300],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Failed to load notifications',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[800],
             ),
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return _buildNotificationItem(context, notification);
-            },
           ),
           const SizedBox(height: 8),
+          Text(
+            error,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => provider.loadNotifications(refresh: true),
+            child: const Text('Retry'),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildNotificationItem(BuildContext context, Map<String, dynamic> notification) {
-    final type = notification['type'] as NotificationType;
-    final priority = notification['priority'] as NotificationPriority;
-    final isRead = notification['isRead'] as bool;
-    
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 48,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No notifications yet',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'You\'ll see your notifications here when you receive them.',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[500],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationsList(List<NotificationModel> notifications, NotificationProvider provider) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: notifications.length,
+      separatorBuilder: (context, index) => Divider(
+        height: 1,
+        color: Colors.grey[200],
+        indent: 20,
+        endIndent: 20,
+      ),
+      itemBuilder: (context, index) {
+        final notification = notifications[index];
+        return _buildNotificationItem(context, notification, provider);
+      },
+    );
+  }
+
+  Widget _buildLoadMoreButton(NotificationProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: provider.isLoadingMore
+            ? const CircularProgressIndicator()
+            : TextButton(
+                onPressed: () => provider.loadMoreNotifications(),
+                child: const Text('Load More'),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationItem(BuildContext context, NotificationModel notification, NotificationProvider provider) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        // Mark as read if not already read
+        if (!notification.isRead) {
+          await provider.markAsRead(notification.id);
+        }
+        
         // Handle notification tap
+        if (widget.onNotificationTap != null) {
+          widget.onNotificationTap!();
+        }
+      },
+      onLongPress: () {
+        _showNotificationOptions(context, notification, provider);
       },
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -76,16 +269,16 @@ class NotificationsList extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _getTypeColor(type).withOpacity(0.1),
+                    color: _getTypeColor(notification.notificationType).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    _getTypeIcon(type),
-                    color: _getTypeColor(type),
+                    _getTypeIcon(notification.notificationType),
+                    color: _getTypeColor(notification.notificationType),
                     size: 24,
                   ),
                 ),
-                if (priority == NotificationPriority.high)
+                if (notification.priority == 'high' || notification.priority == 'urgent')
                   Positioned(
                     top: 0,
                     right: 0,
@@ -109,20 +302,20 @@ class NotificationsList extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          notification['title'],
+                          notification.title,
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: isRead ? FontWeight.w500 : FontWeight.bold,
-                            color: isRead ? Colors.black87 : Colors.black,
+                            fontWeight: notification.isRead ? FontWeight.w500 : FontWeight.bold,
+                            color: notification.isRead ? Colors.black87 : Colors.black,
                           ),
                         ),
                       ),
-                      if (!isRead)
+                      if (!notification.isRead)
                         Container(
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: _getTypeColor(type),
+                            color: _getTypeColor(notification.notificationType),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -130,7 +323,7 @@ class NotificationsList extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    notification['message'],
+                    notification.message,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -148,22 +341,42 @@ class NotificationsList extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: _getTypeColor(type).withOpacity(0.1),
+                          color: _getTypeColor(notification.notificationType).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          _getTypeLabel(type),
+                          _getTypeLabel(notification.notificationType),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: _getTypeColor(type),
+                            color: _getTypeColor(notification.notificationType),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
+                      if (notification.priority != 'low')
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getPriorityColor(notification.priority).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            notification.priority.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: _getPriorityColor(notification.priority),
+                            ),
+                          ),
+                        ),
+                      const Spacer(),
                       Flexible(
                         child: Text(
-                          notification['time'],
+                          notification.timeSinceCreated,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[500],
@@ -182,117 +395,106 @@ class NotificationsList extends StatelessWidget {
     );
   }
 
-  List<Map<String, dynamic>> _getNotifications() {
-    return [
-      {
-        'title': 'Course Registration Deadline',
-        'message': 'Don\'t forget to register for Spring 2024 courses. Registration closes in 3 days.',
-        'time': '2 hours ago',
-        'type': NotificationType.academic,
-        'priority': NotificationPriority.high,
-        'isRead': false,
-      },
-      {
-        'title': 'Tuition Payment Due',
-        'message': 'Your tuition payment of \$2,500 is due on January 15th. Pay now to avoid late fees.',
-        'time': '5 hours ago',
-        'type': NotificationType.financial,
-        'priority': NotificationPriority.high,
-        'isRead': false,
-      },
-      {
-        'title': 'New Grade Posted',
-        'message': 'Your grade for Computer Science 101 midterm exam has been posted.',
-        'time': '1 day ago',
-        'type': NotificationType.academic,
-        'priority': NotificationPriority.medium,
-        'isRead': false,
-      },
-      {
-        'title': 'Career Fair Next Week',
-        'message': 'Join us for the Spring Career Fair on January 20th. Over 50 companies will be attending.',
-        'time': '2 days ago',
-        'type': NotificationType.event,
-        'priority': NotificationPriority.medium,
-        'isRead': true,
-      },
-      {
-        'title': 'Library Book Due Soon',
-        'message': 'Your borrowed book "Advanced Mathematics" is due in 2 days. Renew or return it.',
-        'time': '3 days ago',
-        'type': NotificationType.general,
-        'priority': NotificationPriority.low,
-        'isRead': true,
-      },
-      {
-        'title': 'System Maintenance',
-        'message': 'The student portal will be under maintenance on January 18th from 2-4 AM.',
-        'time': '4 days ago',
-        'type': NotificationType.system,
-        'priority': NotificationPriority.low,
-        'isRead': true,
-      },
-      {
-        'title': 'Scholarship Application Open',
-        'message': 'Applications for the Merit Scholarship are now open. Deadline: February 1st.',
-        'time': '1 week ago',
-        'type': NotificationType.financial,
-        'priority': NotificationPriority.medium,
-        'isRead': true,
-      },
-      {
-        'title': 'Class Schedule Updated',
-        'message': 'Your Physics 201 class has been moved to Room 305. Check your updated schedule.',
-        'time': '1 week ago',
-        'type': NotificationType.academic,
-        'priority': NotificationPriority.medium,
-        'isRead': true,
-      },
-    ];
+  void _showNotificationOptions(BuildContext context, NotificationModel notification, NotificationProvider provider) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                notification.isRead ? Icons.mark_email_unread : Icons.mark_email_read,
+              ),
+              title: Text(
+                notification.isRead ? 'Mark as unread' : 'Mark as read',
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                if (notification.isRead) {
+                  provider.markAsUnread(notification.id);
+                } else {
+                  provider.markAsRead(notification.id);
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                provider.deleteNotification(notification.id);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Color _getTypeColor(NotificationType type) {
-    switch (type) {
-      case NotificationType.academic:
-        return Colors.blue;
-      case NotificationType.financial:
-        return Colors.green;
-      case NotificationType.event:
-        return Colors.purple;
-      case NotificationType.system:
-        return Colors.grey;
-      case NotificationType.general:
+  Color _getPriorityColor(String priority) {
+    switch (priority.toLowerCase()) {
+      case 'urgent':
+        return Colors.red;
+      case 'high':
         return Colors.orange;
+      case 'medium':
+        return Colors.blue;
+      case 'low':
+      default:
+        return Colors.grey;
     }
   }
 
-  IconData _getTypeIcon(NotificationType type) {
-    switch (type) {
-      case NotificationType.academic:
-        return Icons.school;
-      case NotificationType.financial:
-        return Icons.account_balance_wallet;
-      case NotificationType.event:
-        return Icons.event;
-      case NotificationType.system:
-        return Icons.settings;
-      case NotificationType.general:
+  Color _getTypeColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'info':
+        return Colors.blue;
+      case 'warning':
+        return Colors.orange;
+      case 'success':
+        return Colors.green;
+      case 'error':
+        return Colors.red;
+      case 'announcement':
+        return Colors.purple;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  IconData _getTypeIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'info':
+        return Icons.info;
+      case 'warning':
+        return Icons.warning;
+      case 'success':
+        return Icons.check_circle;
+      case 'error':
+        return Icons.error;
+      case 'announcement':
+        return Icons.campaign;
+      default:
         return Icons.notifications;
     }
   }
 
-  String _getTypeLabel(NotificationType type) {
-    switch (type) {
-      case NotificationType.academic:
-        return 'Academic';
-      case NotificationType.financial:
-        return 'Financial';
-      case NotificationType.event:
-        return 'Event';
-      case NotificationType.system:
-        return 'System';
-      case NotificationType.general:
-        return 'General';
+  String _getTypeLabel(String type) {
+    switch (type.toLowerCase()) {
+      case 'info':
+        return 'Information';
+      case 'warning':
+        return 'Warning';
+      case 'success':
+        return 'Success';
+      case 'error':
+        return 'Error';
+      case 'announcement':
+        return 'Announcement';
+      default:
+        return type.substring(0, 1).toUpperCase() + type.substring(1);
     }
   }
 }

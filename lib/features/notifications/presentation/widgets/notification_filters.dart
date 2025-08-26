@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/notification_provider.dart';
 
 class NotificationFilters extends StatefulWidget {
   const NotificationFilters({super.key});
@@ -12,10 +14,11 @@ class _NotificationFiltersState extends State<NotificationFilters> {
 
   final List<Map<String, dynamic>> filters = [
     {'label': 'All', 'icon': Icons.all_inbox, 'color': Colors.blue},
-    {'label': 'Academic', 'icon': Icons.school, 'color': Colors.green},
-    {'label': 'Financial', 'icon': Icons.account_balance_wallet, 'color': Colors.orange},
-    {'label': 'Events', 'icon': Icons.event, 'color': Colors.purple},
-    {'label': 'System', 'icon': Icons.settings, 'color': Colors.grey},
+    {'label': 'Info', 'icon': Icons.info, 'color': Colors.blue},
+    {'label': 'Warning', 'icon': Icons.warning, 'color': Colors.orange},
+    {'label': 'Success', 'icon': Icons.check_circle, 'color': Colors.green},
+    {'label': 'Error', 'icon': Icons.error, 'color': Colors.red},
+    {'label': 'Announcement', 'icon': Icons.campaign, 'color': Colors.purple},
   ];
 
   @override
@@ -43,6 +46,14 @@ class _NotificationFiltersState extends State<NotificationFilters> {
                 setState(() {
                   selectedFilter = filter['label'];
                 });
+                
+                // Apply filter through provider
+                final provider = Provider.of<NotificationProvider>(context, listen: false);
+                if (filter['label'] == 'All') {
+                  provider.setFilters(type: null);
+                } else {
+                  provider.setFilters(type: filter['label'].toLowerCase());
+                }
               },
             ),
           );

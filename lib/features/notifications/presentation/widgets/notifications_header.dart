@@ -22,30 +22,32 @@ class NotificationsHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Notifications',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Notifications',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Stay updated with important information',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
+                    SizedBox(height: 4),
+                    Text(
+                      'Stay updated with important information',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     onPressed: () {
@@ -74,22 +76,28 @@ class NotificationsHeader extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildStatItem(
-                icon: Icons.notifications,
-                label: 'Total',
-                value: '24',
+              Expanded(
+                child: _buildStatItem(
+                  icon: Icons.notifications,
+                  label: 'Total',
+                  value: '24',
+                ),
               ),
-              const SizedBox(width: 24),
-              _buildStatItem(
-                icon: Icons.circle,
-                label: 'Unread',
-                value: '8',
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatItem(
+                  icon: Icons.circle,
+                  label: 'Unread',
+                  value: '8',
+                ),
               ),
-              const SizedBox(width: 24),
-              _buildStatItem(
-                icon: Icons.priority_high,
-                label: 'Important',
-                value: '3',
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatItem(
+                  icon: Icons.priority_high,
+                  label: 'Important',
+                  value: '3',
+                ),
               ),
             ],
           ),

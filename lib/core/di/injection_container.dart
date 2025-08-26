@@ -36,6 +36,11 @@ import '../../features/documents/domain/usecases/get_documents_usecase.dart';
 import '../../features/documents/domain/usecases/get_document_metadata_usecase.dart';
 import '../../features/documents/presentation/bloc/documents_bloc.dart';
 
+// Notifications feature imports
+import '../../features/notifications/data/services/notification_service.dart';
+import '../../features/notifications/data/repositories/notification_repository.dart';
+import '../../features/notifications/presentation/providers/notification_provider.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -59,6 +64,9 @@ Future<void> init() async {
   sl.registerLazySingleton<DocumentRemoteDataSource>(
     () => DocumentRemoteDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<NotificationService>(
+    () => NotificationService(sl()),
+  );
   
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -72,6 +80,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<DocumentRepository>(
     () => DocumentRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepository(sl()),
   );
   
   // Use cases
@@ -150,4 +161,7 @@ Future<void> init() async {
       getDocumentStatusUseCase: sl(),
       getDocumentSharingInfoUseCase: sl(),
   ));
+  
+  // Notifications Provider
+  sl.registerFactory(() => NotificationProvider(sl()));
 }

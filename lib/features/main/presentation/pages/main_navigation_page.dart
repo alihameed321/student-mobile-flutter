@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import '../bloc/navigation_bloc.dart';
 import '../bloc/navigation_event.dart';
 import '../bloc/navigation_state.dart';
@@ -11,6 +12,7 @@ import '../../../services/presentation/pages/services_page.dart';
 import '../../../documents/presentation/pages/documents_page.dart';
 import '../../../documents/presentation/bloc/documents_bloc.dart';
 import '../../../notifications/presentation/pages/notifications_page.dart';
+import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../widgets/custom_bottom_navigation.dart';
 import '../../../../core/di/injection_container.dart' as di;
 
@@ -29,7 +31,7 @@ class MainNavigationPage extends StatelessWidget {
       print('[MainNavigationPage] AuthBloc NOT found: $e');
     }
     
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
         BlocProvider(
           create: (context) {
@@ -50,6 +52,12 @@ class MainNavigationPage extends StatelessWidget {
               ..add(const LoadDocuments(refresh: true))
               ..add(const LoadDocumentTypes())
               ..add(const LoadDocumentStatistics());
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            print('[MainNavigationPage] Creating NotificationProvider');
+            return di.sl<NotificationProvider>();
           },
         ),
       ],
