@@ -86,20 +86,11 @@ class LoginPage extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        // Logo with modern design
+        // University Logo
         Container(
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.blue.shade600,
-                Colors.indigo.shade600,
-                Colors.purple.shade600,
-              ],
-            ),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
@@ -109,20 +100,24 @@ class LoginPage extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.school_rounded,
-            size: 50,
-            color: Colors.white,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         
         const SizedBox(height: 24),
         
-        // Title with modern typography
+        // University Name
         Text(
-          'نظام خدمات طلابية',
+          'الجامعة اليمنية',
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 28,
             fontWeight: FontWeight.w700,
             color: Colors.grey.shade800,
             letterSpacing: -0.5,
@@ -131,8 +126,21 @@ class LoginPage extends StatelessWidget {
         
         const SizedBox(height: 8),
         
+        // System Title
         Text(
-          'مرحباً بك في نظام خدمات طلابية الجامعي',
+          'خدمات طلابية',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade700,
+            letterSpacing: -0.3,
+          ),
+        ),
+        
+        const SizedBox(height: 8),
+        
+        Text(
+          'مرحباً بك في منصة الخدمات الطلابية الجامعية',
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey.shade600,
@@ -199,35 +207,35 @@ class LoginPage extends StatelessWidget {
   Widget _buildFooter(BuildContext context) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue.shade100),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.info_outline,
-                size: 16,
-                color: Colors.blue.shade600,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'استخدم بيانات اعتماد الجامعة الخاصة بك',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.blue.shade700,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        //   decoration: BoxDecoration(
+        //     color: Colors.blue.shade50,
+        //     borderRadius: BorderRadius.circular(12),
+        //     border: Border.all(color: Colors.blue.shade100),
+        //   ),
+        //   child: Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Icon(
+        //         Icons.info_outline,
+        //         size: 16,
+        //         color: Colors.blue.shade600,
+        //       ),
+        //       const SizedBox(width: 8),
+        //       Text(
+        //         'استخدم بيانات اعتماد الجامعة الخاصة بك',
+        //         style: TextStyle(
+        //           fontSize: 12,
+        //           color: Colors.blue.shade700,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         
-        const SizedBox(height: 16),
+        // const SizedBox(height: 16),
         
         TextButton.icon(
           onPressed: () {

@@ -185,15 +185,8 @@ class _PaymentPageState extends State<PaymentPage> {
             setState(() {
               _isProcessing = false;
             });
-            // Always show success message to student even if payment fails
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم تقديم الدفعة بنجاح! جاري معالجة دفعتك.'),
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 4),
-              ),
-            );
-            Navigator.of(context).pop(true);
+            // Don't show any message here - let parent handle error display
+            Navigator.of(context).pop(false);
           }
         },
         child: SingleChildScrollView(

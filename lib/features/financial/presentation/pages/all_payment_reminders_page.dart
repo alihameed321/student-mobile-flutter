@@ -93,12 +93,27 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
     
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: financialBloc,
-          child: PaymentPage(
-            availableFees: [fee], // Pass the selected fee
-            paymentProviders: paymentProviders,
-            studentId: '1', // This should come from user session
+        builder: (context) => BlocListener<FinancialBloc, FinancialState>(
+          bloc: financialBloc,
+          listener: (context, state) {
+            if (state is FinancialError) {
+              // Show error message for payment creation failures
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('فشل في إنشاء الدفعة: ${state.message}'),
+                  backgroundColor: Colors.red,
+                  duration: const Duration(seconds: 4),
+                ),
+              );
+            }
+          },
+          child: BlocProvider.value(
+            value: financialBloc,
+            child: PaymentPage(
+              availableFees: [fee], // Pass the selected fee
+              paymentProviders: paymentProviders,
+              studentId: '1', // This should come from user session
+            ),
           ),
         ),
       ),

@@ -22,10 +22,6 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     developer.log('LoginForm initialized', name: 'LoginForm');
-    
-    // Set default credentials for development mode
-    _identifierController.text = 'student00';
-    _passwordController.text = 'student123';
   }
   
   @override

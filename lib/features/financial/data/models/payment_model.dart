@@ -19,12 +19,49 @@ class PaymentModel extends Payment {
   });
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) {
+    // Helper function to safely parse amount from String or num
+    double parseAmount(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is double) return value;
+      if (value is int) return value.toDouble();
+      if (value is String) {
+        return double.tryParse(value) ?? 0.0;
+      }
+      return 0.0;
+    }
+
+    // Handle fees - can be either 'fees' array or single 'fee' object
+    List<PaymentFeeModel> feesList = [];
+    if (json['fees'] != null) {
+      feesList = (json['fees'] as List<dynamic>)
+          .map((e) => PaymentFeeModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else if (json['fee'] != null) {
+      final feeData = json['fee'] as Map<String, dynamic>;
+      try {
+        feesList = [PaymentFeeModel(
+          feeId: feeData['id'] as int? ?? 0,
+          feeType: feeData['fee_type']?['name'] as String? ?? '',
+          amount: parseAmount(feeData['amount']),
+        )];
+      } catch (feeParseError) {
+        print('Error parsing fee data: $feeParseError');
+        print('Fee data: $feeData');
+        // Create a default fee to prevent complete failure
+        feesList = [PaymentFeeModel(
+          feeId: 0,
+          feeType: 'Unknown',
+          amount: 0.0,
+        )];
+      }
+    }
+
     return PaymentModel(
       id: json['id'] as int? ?? 0,
       studentName: json['student_name'] as String? ?? '',
       studentId: json['student_id'] as String? ?? '',
       paymentReference: json['payment_reference'] as String? ?? '',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      amount: parseAmount(json['amount']),
       paymentProvider: PaymentProviderModel.fromJson(
         json['payment_provider'] as Map<String, dynamic>? ?? {},
       ),
@@ -35,9 +72,7 @@ class PaymentModel extends Payment {
       receiptNumber: json['receipt_number'] as String?,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? '') ?? DateTime.now(),
-      fees: (json['fees'] as List<dynamic>?)
-          ?.map((e) => PaymentFeeModel.fromJson(e as Map<String, dynamic>))
-          .toList() ?? [],
+      fees: feesList,
     );
   }
 
@@ -114,10 +149,21 @@ class PaymentFeeModel extends PaymentFee {
   });
 
   factory PaymentFeeModel.fromJson(Map<String, dynamic> json) {
+    // Helper function to safely parse amount from String or num
+    double parseAmount(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is double) return value;
+      if (value is int) return value.toDouble();
+      if (value is String) {
+        return double.tryParse(value) ?? 0.0;
+      }
+      return 0.0;
+    }
+
     return PaymentFeeModel(
-      feeId: json['fee_id'] as int? ?? 0,
+      feeId: json['fee_id'] as int? ?? json['id'] as int? ?? 0,
       feeType: json['fee_type'] as String? ?? '',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      amount: parseAmount(json['amount']),
     );
   }
 
@@ -195,10 +241,21 @@ class MonthlyPaymentModel extends MonthlyPayment {
   });
 
   factory MonthlyPaymentModel.fromJson(Map<String, dynamic> json) {
+    // Helper function to safely parse amount from String or num
+    double parseAmount(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is double) return value;
+      if (value is int) return value.toDouble();
+      if (value is String) {
+        return double.tryParse(value) ?? 0.0;
+      }
+      return 0.0;
+    }
+
     return MonthlyPaymentModel(
       month: json['month'] as String? ?? 'January',
       count: json['count'] as int? ?? 0,
-      totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
+      totalAmount: parseAmount(json['total_amount']),
     );
   }
 

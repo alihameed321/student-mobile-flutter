@@ -25,8 +25,8 @@ class PaymentReminders extends StatelessWidget {
       
       return StudentFee(
         id: breakdown.feeType.hashCode, // Use hashCode as a simple ID
-        studentName: 'Current Student', // Placeholder
-        studentId: '1', // Placeholder
+        studentName: '', // Will be populated from actual user data
+        studentId: '', // Will be populated from actual user data
         feeType: FeeType(
            id: breakdown.feeType.hashCode,
            name: breakdown.feeType,
@@ -39,7 +39,7 @@ class PaymentReminders extends StatelessWidget {
         remainingBalance: breakdown.remainingAmount,
         status: status,
         dueDate: breakdown.remainingAmount > 0 ? DateTime.now().add(const Duration(days: 30)) : null,
-        semester: 'Current Semester',
+        semester: '', // Will be populated from actual academic data
         academicYear: DateTime.now().year.toString(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

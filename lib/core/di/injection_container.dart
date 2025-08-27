@@ -43,6 +43,13 @@ import '../../features/notifications/data/services/notification_service.dart';
 import '../../features/notifications/data/repositories/notification_repository.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart';
 
+// Profile/Academic feature imports
+import '../../features/profile/data/datasources/academic_api_service.dart';
+import '../../features/profile/data/repositories/academic_repository_impl.dart';
+import '../../features/profile/domain/repositories/academic_repository.dart';
+import '../../features/profile/domain/usecases/get_academic_info.dart';
+import '../../features/profile/presentation/bloc/academic_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -70,6 +77,9 @@ Future<void> init() async {
   sl.registerLazySingleton<NotificationService>(
     () => NotificationService(sl()),
   );
+  sl.registerLazySingleton<AcademicApiService>(
+    () => AcademicApiServiceImpl(sl()),
+  );
   
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -86,6 +96,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<NotificationRepository>(
     () => NotificationRepository(sl()),
+  );
+  sl.registerLazySingleton<AcademicRepository>(
+    () => AcademicRepositoryImpl(sl()),
   );
   
   // Use cases
@@ -118,6 +131,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetTicketCategories(sl()));
   sl.registerLazySingleton(() => GetStudentDocuments(sl()));
   sl.registerLazySingleton(() => GetStudentDocumentDetail(sl()));
+  
+  // Academic Use Cases
+  sl.registerLazySingleton(() => GetAcademicInfo(sl()));
   
   // Enhanced Documents Use Cases
   sl.registerLazySingleton(() => GetDocumentsUseCase(sl()));
@@ -169,6 +185,9 @@ Future<void> init() async {
       getDocumentStatusUseCase: sl(),
       getDocumentSharingInfoUseCase: sl(),
   ));
+  
+  // Academic Bloc
+  sl.registerFactory(() => AcademicBloc(sl()));
   
   // Notifications Provider
   sl.registerFactory(() => NotificationProvider(sl()));

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_menu_section.dart';
 import '../widgets/profile_stats_card.dart';
+import '../widgets/quick_actions_card.dart';
+import '../widgets/academic_progress_card.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -62,6 +64,22 @@ class ProfilePage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: ProfileStatsCard(),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Quick Actions
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: QuickActionsCard(),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Academic Progress
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: AcademicProgressCard(),
               ),
               
               const SizedBox(height: 20),

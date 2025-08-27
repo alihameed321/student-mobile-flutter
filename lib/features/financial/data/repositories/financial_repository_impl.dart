@@ -204,14 +204,23 @@ class FinancialRepositoryImpl implements FinancialRepository {
       if (payments.isEmpty) {
         return Left(ServerFailure('No payment data returned'));
       }
-      final paymentModel = PaymentModel.fromJson(payments[0]);
-      return Right(_mapPaymentModelToEntity(paymentModel));
+      
+      try {
+        print('Payment data to parse: ${payments[0]}');
+        final paymentModel = PaymentModel.fromJson(payments[0] as Map<String, dynamic>);
+        return Right(_mapPaymentModelToEntity(paymentModel));
+      } catch (parseError) {
+        print('Error parsing payment model: $parseError');
+        print('Payment data keys: ${(payments[0] as Map<String, dynamic>).keys}');
+        rethrow;
+      }
     } on ServerException {
       return Left(ServerFailure('Failed to create payment'));
     } on NetworkException {
       return Left(NetworkFailure('No internet connection'));
     } catch (e) {
-      return Left(ServerFailure('Unexpected error occurred'));
+      print('Create payment error: $e');
+      return Left(ServerFailure('Unexpected error occurred: $e'));
     }
   }
 

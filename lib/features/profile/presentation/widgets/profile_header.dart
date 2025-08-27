@@ -129,7 +129,7 @@ class ProfileHeader extends StatelessWidget {
           );
         }
         
-        // Fallback for non-authenticated states
+        // Show login prompt for non-authenticated states
         return Row(
           children: [
             // Profile Avatar
@@ -139,65 +139,61 @@ class ProfileHeader extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white,
-                  width: 3,
+                  color: Colors.white.withOpacity(0.3),
+                  width: 2,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
               ),
-              child: const CircleAvatar(
+              child: CircleAvatar(
                 radius: 38,
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.white.withOpacity(0.1),
                 child: Icon(
-                  Icons.person,
+                  Icons.person_outline,
                   size: 40,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.7),
                 ),
               ),
             ),
             
             const SizedBox(width: 16),
             
-            // User Info
-            const Expanded(
+            // Login Prompt
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'جاري التحميل...',
+                    'يرجى تسجيل الدخول',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 20,
                       fontWeight: AppTypography.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
-                    'يرجى الانتظار',
+                    'للوصول إلى ملفك الشخصي',
                     style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 14,
                     ),
                   ),
                 ],
               ),
             ),
             
-            // Edit Button
+            // Login Button
             Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: IconButton(
-                onPressed: null,
+                onPressed: () {
+                  // Navigate to login page
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
                 icon: const Icon(
-                  Icons.edit_outlined,
+                  Icons.login,
                   color: Colors.white,
                 ),
               ),

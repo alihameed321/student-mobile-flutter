@@ -13,6 +13,7 @@ import '../../../documents/presentation/pages/documents_page.dart';
 import '../../../documents/presentation/bloc/documents_bloc.dart';
 import '../../../notifications/presentation/pages/notifications_page.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
+import '../../../profile/presentation/bloc/academic_bloc.dart';
 import '../widgets/custom_bottom_navigation.dart';
 import '../../../../core/di/injection_container.dart' as di;
 
@@ -52,6 +53,12 @@ class MainNavigationPage extends StatelessWidget {
               ..add(const LoadDocuments(refresh: true))
               ..add(const LoadDocumentTypes())
               ..add(const LoadDocumentStatistics());
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            print('[MainNavigationPage] Creating AcademicBloc');
+            return di.sl<AcademicBloc>();
           },
         ),
         ChangeNotifierProvider(

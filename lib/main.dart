@@ -269,27 +269,27 @@ class HomePage extends StatelessWidget {
         Expanded(
           child: _buildStatCard(
             'المعدل التراكمي',
-            '3.75',
-            Icons.trending_up,
-            Colors.green,
+            'غير متوفر',
+            Icons.star,
+            Colors.grey,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
             'الساعات المعتمدة',
-            '120/140',
+            'غير متوفر',
             Icons.school,
-            Colors.blue,
+            Colors.grey,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
             'الرصيد',
-            '\$2,450',
+            'غير متوفر',
             Icons.account_balance_wallet,
-            Colors.orange,
+            Colors.grey,
           ),
         ),
       ],
@@ -449,32 +449,35 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              _buildActivityItem(
-                'تم نشر الدرجة',
-                'Mathematics - Assignment 3',
-                '2 hours ago',
-                Icons.grade,
-                Colors.green,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.inbox_outlined,
+                    size: 48,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'لا توجد أنشطة حديثة',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'يرجى تسجيل الدخول لعرض الأنشطة',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
               ),
-              const Divider(height: 1),
-              _buildActivityItem(
-                'دفعة مستحقة',
-                'Tuition Fee - Spring 2024',
-                '1 day ago',
-                Icons.payment,
-                Colors.orange,
-              ),
-              const Divider(height: 1),
-              _buildActivityItem(
-                'إعلان جديد',
-                      'تحديث ساعات المكتبة',
-                '3 days ago',
-                Icons.announcement,
-                Colors.blue,
-              ),
-            ],
+            ),
           ),
         ),
       ],
