@@ -15,7 +15,7 @@ class PaymentRemindersPage extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
-          'Payment Reminders',
+          'تذكيرات الدفع',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -45,7 +45,7 @@ class PaymentRemindersPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Error loading payment reminders',
+                    'خطأ في تحميل تذكيرات الدفع',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[600],
@@ -65,7 +65,7 @@ class PaymentRemindersPage extends StatelessWidget {
                     onPressed: () {
                       context.read<FinancialBloc>().add(const LoadFinancialSummary('student_id_placeholder'));
                     },
-                    child: const Text('Retry'),
+                    child: const Text('إعادة المحاولة'),
                   ),
                 ],
               ),
@@ -133,10 +133,10 @@ class PaymentRemindersPage extends StatelessWidget {
     // Add overdue payments reminder
     if (summary.overdueCount > 0) {
       reminders.add(PaymentReminderItem(
-        title: 'Overdue Payments',
+        title: 'المدفوعات المتأخرة',
         subtitle: '${summary.overdueCount} payment${summary.overdueCount > 1 ? 's' : ''} overdue',
         amount: null,
-        dueDate: 'Action required immediately',
+        dueDate: 'مطلوب إجراء فوري',
         priority: ReminderPriority.high,
         icon: Icons.warning,
         description: 'These payments are past their due date and require immediate attention to avoid penalties.',
@@ -146,10 +146,10 @@ class PaymentRemindersPage extends StatelessWidget {
     // Add pending payments reminder
     if (summary.pendingPayments > 0) {
       reminders.add(PaymentReminderItem(
-        title: 'Pending Payments',
-        subtitle: 'Outstanding balance',
+        title: 'المدفوعات المعلقة',
+        subtitle: 'الرصيد المستحق',
         amount: summary.pendingPayments,
-        dueDate: 'Payment due soon',
+        dueDate: 'الدفع مستحق قريباً',
         priority: ReminderPriority.medium,
         icon: Icons.pending,
         description: 'These payments are due soon. Pay now to avoid late fees and maintain good standing.',
@@ -163,7 +163,7 @@ class PaymentRemindersPage extends StatelessWidget {
           title: fee.feeType,
           subtitle: '${fee.count} item${fee.count > 1 ? 's' : ''} • \$${fee.totalAmount.toStringAsFixed(2)} total',
           amount: fee.remainingAmount,
-          dueDate: 'Remaining balance',
+          dueDate: 'الرصيد المتبقي',
           priority: ReminderPriority.low,
           icon: _getIconForFeeType(fee.feeType),
           description: 'Partial payment made. \$${fee.paidAmount.toStringAsFixed(2)} paid of \$${fee.totalAmount.toStringAsFixed(2)} total.',
@@ -189,7 +189,7 @@ class PaymentRemindersPage extends StatelessWidget {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('No outstanding fees to pay'),
+                content: Text('لا توجد رسوم مستحقة للدفع'),
                 backgroundColor: Colors.orange,
               ),
             );
@@ -274,13 +274,13 @@ class PaymentRemindersPage extends StatelessWidget {
       
       return StudentFee(
         id: breakdown.feeType.hashCode,
-        studentName: 'Current Student',
+        studentName: 'الطالب الحالي',
         studentId: '1',
         feeType: FeeType(
           id: breakdown.feeType.hashCode,
           name: breakdown.feeType,
           description: '${breakdown.feeType} fee',
-          category: 'Academic',
+          category: 'أكاديمي',
           isActive: true,
         ),
         amount: breakdown.totalAmount,
@@ -290,7 +290,7 @@ class PaymentRemindersPage extends StatelessWidget {
         dueDate: breakdown.remainingAmount > 0 
             ? DateTime.now().add(const Duration(days: 30)) 
             : null,
-        semester: 'Current Semester',
+        semester: 'الفصل الحالي',
         academicYear: DateTime.now().year.toString(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -459,7 +459,7 @@ class PaymentRemindersPage extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      'Pay Now',
+                      'ادفع الآن',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
@@ -480,7 +480,7 @@ class PaymentRemindersPage extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Details',
+                    'التفاصيل',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
@@ -523,7 +523,7 @@ class PaymentRemindersPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Payment Details',
+                      'تفاصيل الدفع',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -560,15 +560,15 @@ class PaymentRemindersPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     if (reminder.amount != null) ...[
-                      _buildDetailRow('Amount Due', '\$${reminder.amount!.toStringAsFixed(2)}'),
+                      _buildDetailRow('المبلغ المستحق', '\$${reminder.amount!.toStringAsFixed(2)}'),
                       const SizedBox(height: 12),
                     ],
-                    _buildDetailRow('Status', reminder.dueDate),
+                    _buildDetailRow('الحالة', reminder.dueDate),
                     const SizedBox(height: 12),
-                    _buildDetailRow('Priority', _getPriorityText(reminder.priority)),
+                    _buildDetailRow('الأولوية', _getPriorityText(reminder.priority)),
                     const SizedBox(height: 24),
                     const Text(
-                      'Description',
+                      'الوصف',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

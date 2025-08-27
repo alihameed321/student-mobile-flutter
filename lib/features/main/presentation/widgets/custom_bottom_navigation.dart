@@ -114,14 +114,14 @@ class CustomBottomNavigation extends StatelessWidget {
                 color: isSelected 
                     ? theme.primaryColor 
                     : Colors.grey[600],
-                size: 24,
+                size: 20,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected 
                     ? theme.primaryColor 

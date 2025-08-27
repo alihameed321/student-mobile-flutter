@@ -281,7 +281,7 @@ class RecentDocuments extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
+              child: const Text('إغلاق'),
             ),
             if (document.isDownloadable)
               ElevatedButton(

@@ -39,7 +39,9 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('تذاكر الدعم'),
         backgroundColor: Colors.blue.shade600,
@@ -87,7 +89,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Error loading tickets',
+                          'خطأ في تحميل التذاكر',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey.shade600,
@@ -104,7 +106,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: _loadTickets,
-                          child: const Text('Retry'),
+                          child: const Text('إعادة المحاولة'),
                         ),
                       ],
                     ),
@@ -173,6 +175,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
         backgroundColor: Colors.blue.shade600,
         child: const Icon(Icons.add, color: Colors.white),
       ),
+    ),
     );
   }
 
@@ -182,7 +185,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: 'Search tickets...',
+          hintText: 'البحث في التذاكر...',
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
@@ -219,7 +222,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
         children: [
           if (_selectedCategory != null)
             _buildFilterChip(
-              'Category: ${_getCategoryDisplayName(_selectedCategory!)}',
+              'الفئة: ${_getCategoryDisplayName(_selectedCategory!)}',
               () {
                 setState(() => _selectedCategory = null);
                 _loadTickets();
@@ -227,7 +230,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
             ),
           if (_selectedStatus != null)
             _buildFilterChip(
-              'Status: ${_getStatusDisplayName(_selectedStatus!)}',
+              'الحالة: ${_getStatusDisplayName(_selectedStatus!)}',
               () {
                 setState(() => _selectedStatus = null);
                 _loadTickets();
@@ -235,7 +238,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
             ),
           if (_selectedPriority != null)
             _buildFilterChip(
-              'Priority: ${_getPriorityDisplayName(_selectedPriority!)}',
+              'الأولوية: ${_getPriorityDisplayName(_selectedPriority!)}',
               () {
                 setState(() => _selectedPriority = null);
                 _loadTickets();
@@ -385,7 +388,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${ticket.responses!.length} response${ticket.responses!.length == 1 ? '' : 's'}',
+                        '${ticket.responses!.length} ${ticket.responses!.length == 1 ? 'رد' : 'ردود'}',
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 12,
@@ -405,12 +408,12 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Filter Tickets'),
+        title: const Text('تصفية التذاكر'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Category'),
+            const Text('الفئة'),
             DropdownButton<String?>(
               value: _selectedCategory,
               isExpanded: true,
@@ -425,7 +428,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               onChanged: (value) => setState(() => _selectedCategory = value),
             ),
             const SizedBox(height: 16),
-            const Text('Status'),
+            const Text('الحالة'),
             DropdownButton<String?>(
               value: _selectedStatus,
               isExpanded: true,
@@ -440,7 +443,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               onChanged: (value) => setState(() => _selectedStatus = value),
             ),
             const SizedBox(height: 16),
-            const Text('Priority'),
+            const Text('الأولوية'),
             DropdownButton<String?>(
               value: _selectedPriority,
               isExpanded: true,
@@ -467,18 +470,18 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               Navigator.pop(context);
               _loadTickets();
             },
-            child: const Text('Clear All'),
+            child: const Text('مسح الكل'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('إلغاء'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _loadTickets();
             },
-            child: const Text('Apply'),
+            child: const Text('تطبيق'),
           ),
         ],
       ),
@@ -488,13 +491,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
   String _getCategoryDisplayName(String category) {
     switch (category) {
       case 'technical':
-        return 'Technical Support';
+        return 'الدعم التقني';
       case 'academic':
-        return 'Academic Services';
+        return 'الخدمات الأكاديمية';
       case 'financial':
-        return 'Financial Services';
+        return 'الخدمات المالية';
       case 'general':
-        return 'General Inquiry';
+        return 'استفسار عام';
       default:
         return category;
     }
@@ -518,13 +521,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
   String _getPriorityDisplayName(String priority) {
     switch (priority) {
       case 'low':
-        return 'Low';
+        return 'منخفض';
       case 'medium':
-        return 'Medium';
+        return 'متوسط';
       case 'high':
-        return 'High';
+        return 'عالي';
       case 'urgent':
-        return 'Urgent';
+        return 'عاجل';
       default:
         return priority;
     }
@@ -536,13 +539,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
 
     if (difference.inDays == 0) {
       if (difference.inHours == 0) {
-        return '${difference.inMinutes}m ago';
+        return 'منذ ${difference.inMinutes} دقيقة';
       }
-      return '${difference.inHours}h ago';
+      return 'منذ ${difference.inHours} ساعة';
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return 'أمس';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}d ago';
+      return 'منذ ${difference.inDays} يوم';
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

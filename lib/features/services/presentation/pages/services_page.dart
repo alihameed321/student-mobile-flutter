@@ -105,7 +105,7 @@ class _ServicesPageState extends State<ServicesPage> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    'Failed to load dashboard: ${state.message}',
+                                    'فشل في تحميل لوحة التحكم: ${state.message}',
                                     style: TextStyle(color: Colors.red[700]),
                                   ),
                                 ),

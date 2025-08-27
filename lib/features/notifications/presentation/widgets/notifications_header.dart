@@ -30,7 +30,7 @@ class NotificationsHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Notifications',
+                      'الإشعارات',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -39,7 +39,7 @@ class NotificationsHeader extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Stay updated with important information',
+                      'ابق على اطلاع بالمعلومات المهمة',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
@@ -61,7 +61,7 @@ class NotificationsHeader extends StatelessWidget {
                           Icons.done_all,
                           color: Colors.white,
                         ),
-                        tooltip: 'Mark all as read',
+                        tooltip: 'تحديد الكل كمقروء',
                       );
                     },
                   ),
@@ -73,7 +73,7 @@ class NotificationsHeader extends StatelessWidget {
                       Icons.settings,
                       color: Colors.white,
                     ),
-                    tooltip: 'Settings',
+                    tooltip: 'الإعدادات',
                   ),
                 ],
               ),
@@ -90,7 +90,7 @@ class NotificationsHeader extends StatelessWidget {
                   Expanded(
                     child: _buildStatItem(
                       icon: Icons.notifications,
-                      label: 'Total',
+                      label: 'الإجمالي',
                       value: isLoading ? '...' : (stats?.totalNotifications.toString() ?? '0'),
                     ),
                   ),
@@ -98,7 +98,7 @@ class NotificationsHeader extends StatelessWidget {
                   Expanded(
                     child: _buildStatItem(
                       icon: Icons.circle,
-                      label: 'Unread',
+                      label: 'غير مقروء',
                       value: isLoading ? '...' : (stats?.unreadNotifications.toString() ?? provider.unreadCount.toString()),
                     ),
                   ),
@@ -106,7 +106,7 @@ class NotificationsHeader extends StatelessWidget {
                   Expanded(
                     child: _buildStatItem(
                       icon: Icons.priority_high,
-                      label: 'Important',
+                      label: 'مهم',
                       value: isLoading ? '...' : ((stats?.highPriorityUnread ?? 0) + (stats?.urgentPriorityUnread ?? 0)).toString(),
                     ),
                   ),

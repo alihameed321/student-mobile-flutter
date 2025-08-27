@@ -82,7 +82,7 @@ class _NotificationsListState extends State<NotificationsList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.showAll ? 'All Notifications' : 'Recent Notifications',
+                widget.showAll ? 'جميع الإشعارات' : 'الإشعارات الحديثة',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -91,7 +91,7 @@ class _NotificationsListState extends State<NotificationsList> {
               ),
               if (provider.unreadCount > 0)
                 Text(
-                  '${provider.unreadCount} unread',
+                  '${provider.unreadCount} غير مقروء',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -102,7 +102,7 @@ class _NotificationsListState extends State<NotificationsList> {
           if (widget.showAll && provider.unreadCount > 0)
             TextButton(
               onPressed: () => provider.markAllAsRead(),
-              child: const Text('Mark all read'),
+              child: const Text('تحديد الكل كمقروء'),
             ),
         ],
       ),
@@ -152,7 +152,7 @@ class _NotificationsListState extends State<NotificationsList> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Failed to load notifications',
+            'فشل في تحميل الإشعارات',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -171,7 +171,7 @@ class _NotificationsListState extends State<NotificationsList> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => provider.loadNotifications(refresh: true),
-            child: const Text('Retry'),
+            child: const Text('إعادة المحاولة'),
           ),
         ],
       ),
@@ -190,7 +190,7 @@ class _NotificationsListState extends State<NotificationsList> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No notifications yet',
+            'لا توجد إشعارات بعد',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -199,7 +199,7 @@ class _NotificationsListState extends State<NotificationsList> {
           ),
           const SizedBox(height: 8),
           Text(
-            'You\'ll see your notifications here when you receive them.',
+            'ستظهر إشعاراتك هنا عند استلامها.',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -237,7 +237,7 @@ class _NotificationsListState extends State<NotificationsList> {
             ? const CircularProgressIndicator()
             : TextButton(
                 onPressed: () => provider.loadMoreNotifications(),
-                child: const Text('Load More'),
+                child: const Text('تحميل المزيد'),
               ),
       ),
     );
@@ -408,7 +408,7 @@ class _NotificationsListState extends State<NotificationsList> {
                 notification.isRead ? Icons.mark_email_unread : Icons.mark_email_read,
               ),
               title: Text(
-                notification.isRead ? 'Mark as unread' : 'Mark as read',
+                notification.isRead ? 'تحديد كغير مقروء' : 'تحديد كمقروء',
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -421,7 +421,7 @@ class _NotificationsListState extends State<NotificationsList> {
             ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              title: const Text('حذف', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 provider.deleteNotification(notification.id);
@@ -484,15 +484,15 @@ class _NotificationsListState extends State<NotificationsList> {
   String _getTypeLabel(String type) {
     switch (type.toLowerCase()) {
       case 'info':
-        return 'Information';
+        return 'معلومات';
       case 'warning':
-        return 'Warning';
+        return 'تحذير';
       case 'success':
-        return 'Success';
+        return 'نجاح';
       case 'error':
-        return 'Error';
+        return 'خطأ';
       case 'announcement':
-        return 'Announcement';
+        return 'إعلان';
       default:
         return type.substring(0, 1).toUpperCase() + type.substring(1);
     }

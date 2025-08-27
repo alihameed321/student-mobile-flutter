@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     print('[MyApp] Building app with AuthBloc provider');
     return MaterialApp(
-      title: 'Student Services',
+      title: 'خدمات الطلاب',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        title: const Text('لوحة تحكم الطالب'),
         elevation: 0,
         actions: [
           IconButton(
@@ -225,7 +225,7 @@ class HomePage extends StatelessWidget {
       children: [
         Expanded(
           child: _buildStatCard(
-            'GPA',
+            'المعدل التراكمي',
             '3.75',
             Icons.trending_up,
             Colors.green,
@@ -234,7 +234,7 @@ class HomePage extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            'Credits',
+            'الساعات المعتمدة',
             '120/140',
             Icons.school,
             Colors.blue,
@@ -243,7 +243,7 @@ class HomePage extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            'Balance',
+            'الرصيد',
             '\$2,450',
             Icons.account_balance_wallet,
             Colors.orange,
@@ -295,7 +295,7 @@ class HomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Quick Actions',
+          'الإجراءات السريعة',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class HomePage extends StatelessWidget {
           childAspectRatio: 1.5,
           children: [
             _buildActionCard(
-              'Grades',
+              'الدرجات',
               Icons.grade,
               Colors.purple,
               () {
@@ -319,7 +319,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             _buildActionCard(
-              'Schedule',
+              'الجدول الدراسي',
               Icons.schedule,
               Colors.blue,
               () {
@@ -327,7 +327,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             _buildActionCard(
-              'Payments',
+              'المدفوعات',
               Icons.payment,
               Colors.green,
               () {
@@ -335,7 +335,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             _buildActionCard(
-              'Library',
+              'المكتبة',
               Icons.library_books,
               Colors.orange,
               () {
@@ -387,7 +387,7 @@ class HomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Recent Activities',
+          'الأنشطة الحديثة',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             children: [
               _buildActivityItem(
-                'Grade Posted',
+                'تم نشر الدرجة',
                 'Mathematics - Assignment 3',
                 '2 hours ago',
                 Icons.grade,
@@ -417,7 +417,7 @@ class HomePage extends StatelessWidget {
               ),
               const Divider(height: 1),
               _buildActivityItem(
-                'Payment Due',
+                'دفعة مستحقة',
                 'Tuition Fee - Spring 2024',
                 '1 day ago',
                 Icons.payment,
@@ -425,8 +425,8 @@ class HomePage extends StatelessWidget {
               ),
               const Divider(height: 1),
               _buildActivityItem(
-                'New Announcement',
-                'Library Hours Update',
+                'إعلان جديد',
+                      'تحديث ساعات المكتبة',
                 '3 days ago',
                 Icons.announcement,
                 Colors.blue,

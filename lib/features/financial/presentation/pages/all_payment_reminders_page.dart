@@ -241,13 +241,13 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          _buildFilterTab('all', 'All'),
+          _buildFilterTab('all', 'الكل'),
           const SizedBox(width: 12),
-          _buildFilterTab('overdue', 'Overdue'),
+          _buildFilterTab('overdue', 'المتأخرة'),
           const SizedBox(width: 12),
-          _buildFilterTab('pending', 'Pending'),
+          _buildFilterTab('pending', 'المعلقة'),
           const SizedBox(width: 12),
-          _buildFilterTab('paid', 'Paid'),
+          _buildFilterTab('paid', 'المدفوعة'),
         ],
       ),
     );
@@ -289,22 +289,22 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
     
     switch (_selectedFilter) {
       case 'overdue':
-        message = 'No overdue payments';
+        message = 'لا توجد مدفوعات متأخرة';
         icon = Icons.check_circle_outline;
         color = Colors.green;
         break;
       case 'pending':
-        message = 'No pending payments';
+        message = 'لا توجد مدفوعات معلقة';
         icon = Icons.check_circle_outline;
         color = Colors.green;
         break;
       case 'paid':
-        message = 'No paid fees to display';
+        message = 'لا توجد رسوم مدفوعة للعرض';
         icon = Icons.receipt_outlined;
         color = Colors.grey;
         break;
       default:
-        message = 'No payment reminders';
+        message = 'لا توجد تذكيرات دفع';
         icon = Icons.check_circle_outline;
         color = Colors.green;
     }
@@ -330,8 +330,8 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
           const SizedBox(height: 8),
           Text(
             _selectedFilter == 'overdue' || _selectedFilter == 'pending'
-                ? 'All your payments are up to date!'
-                : 'Check back later for updates.',
+                ? 'جميع المدفوعات الخاصة بك هي على آخر صفة!'
+                : 'تحقق مرة أخرى لاحقًا للحصول على التحديثات.',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],
@@ -371,17 +371,17 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       priorityColor = Colors.red;
       backgroundColor = Colors.red.withOpacity(0.1);
       icon = Icons.warning;
-      statusText = 'Overdue';
+      statusText = 'متأخرة';
     } else if (isPending) {
       priorityColor = Colors.orange;
       backgroundColor = Colors.orange.withOpacity(0.1);
       icon = Icons.pending;
-      statusText = 'Pending';
+      statusText = 'معلقة';
     } else {
       priorityColor = Colors.green;
       backgroundColor = Colors.green.withOpacity(0.1);
       icon = Icons.check_circle;
-      statusText = 'Paid';
+      statusText = 'مدفوعة';
     }
     
     return Container(
@@ -498,7 +498,7 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
                     ),
                   ),
                   child: Text(
-                    'Pay Now',
+                    'ادفع الآن',
                     style: TextStyle(
                       color: priorityColor,
                       fontSize: 12,

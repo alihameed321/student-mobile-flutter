@@ -23,26 +23,26 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
   final List<Map<String, dynamic>> _categories = [
     {
       'value': 'technical',
-      'label': 'Technical Support',
-      'description': 'Issues with systems, applications, or technology',
+      'label': 'الدعم التقني',
+      'description': 'مشاكل في الأنظمة والتطبيقات والتكنولوجيا',
       'icon': Icons.computer,
     },
     {
       'value': 'academic',
-      'label': 'Academic Services',
-      'description': 'Course registration, grades, academic records',
+      'label': 'الخدمات الأكاديمية',
+      'description': 'تسجيل المقررات والدرجات والسجلات الأكاديمية',
       'icon': Icons.school,
     },
     {
       'value': 'financial',
-      'label': 'Financial Services',
-      'description': 'Tuition, fees, financial aid, billing',
+      'label': 'الخدمات المالية',
+      'description': 'الرسوم الدراسية والمساعدات المالية والفواتير',
       'icon': Icons.account_balance_wallet,
     },
     {
       'value': 'general',
-      'label': 'General Inquiry',
-      'description': 'Other questions or general support',
+      'label': 'استفسار عام',
+      'description': 'أسئلة أخرى أو دعم عام',
       'icon': Icons.help_outline,
     },
   ];
@@ -50,29 +50,29 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
   final List<Map<String, dynamic>> _priorities = [
     {
       'value': 'low',
-      'label': 'Low',
-      'description': 'General questions, non-urgent issues',
+      'label': 'منخفض',
+      'description': 'أسئلة عامة، مشاكل غير عاجلة',
       'color': Colors.green,
       'icon': Icons.keyboard_arrow_down,
     },
     {
       'value': 'medium',
-      'label': 'Medium',
-      'description': 'Standard support requests',
+      'label': 'متوسط',
+      'description': 'طلبات دعم عادية',
       'color': Colors.orange,
       'icon': Icons.remove,
     },
     {
       'value': 'high',
-      'label': 'High',
-      'description': 'Important issues affecting your studies',
+      'label': 'عالي',
+      'description': 'مشاكل مهمة تؤثر على دراستك',
       'color': Colors.red,
       'icon': Icons.keyboard_arrow_up,
     },
     {
       'value': 'urgent',
-      'label': 'Urgent',
-      'description': 'Critical issues requiring immediate attention',
+      'label': 'عاجل',
+      'description': 'مشاكل حرجة تتطلب اهتماماً فورياً',
       'color': Colors.red.shade700,
       'icon': Icons.priority_high,
     },
@@ -80,7 +80,9 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('إنشاء تذكرة دعم'),
         backgroundColor: Colors.blue.shade600,
@@ -102,7 +104,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
             setState(() => _isSubmitting = false);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Support ticket created successfully'),
+                content: Text('تم إنشاء تذكرة الدعم بنجاح'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -140,9 +142,9 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
           );
         },
       ),
-    );
-  }
-
+    ),
+    ); 
+     }
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -297,10 +299,10 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Please enter a subject';
+          return 'يرجى إدخال الموضوع';
         }
         if (value.trim().length < 5) {
-          return 'Subject must be at least 5 characters long';
+          return 'يجب أن يكون الموضوع 5 أحرف على الأقل';
         }
         return null;
       },
@@ -323,10 +325,10 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Please provide a description';
+          return 'يرجى تقديم وصف';
         }
         if (value.trim().length < 20) {
-          return 'Description must be at least 20 characters long';
+          return 'يجب أن يكون الوصف 20 حرفاً على الأقل';
         }
         return null;
       },

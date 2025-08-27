@@ -120,7 +120,7 @@ class LoginPage extends StatelessWidget {
         
         // Title with modern typography
         Text(
-          'خدمات الطلاب',
+          'نظام خدمات طلابية',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w700,
@@ -132,7 +132,7 @@ class LoginPage extends StatelessWidget {
         const SizedBox(height: 8),
         
         Text(
-          'بوابتك نحو التميز الأكاديمي',
+          'مرحباً بك في نظام خدمات طلابية الجامعي',
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey.shade600,
@@ -167,7 +167,7 @@ class LoginPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'أهلاً بعودتك',
+            'تسجيل الدخول',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -179,7 +179,7 @@ class LoginPage extends StatelessWidget {
           const SizedBox(height: 8),
           
           Text(
-            'سجل دخولك للوصول إلى بوابة الطالب',
+            'أدخل بياناتك للوصول إلى حسابك',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade600,
@@ -216,7 +216,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'وضع التطوير: بيانات الاعتماد معبأة تلقائياً',
+                'استخدم بيانات اعتماد الجامعة الخاصة بك',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.blue.shade700,
@@ -249,7 +249,7 @@ class LoginPage extends StatelessWidget {
             color: Colors.grey.shade600,
           ),
           label: Text(
-            'تحتاج مساعدة؟ تواصل مع الدعم الفني',
+            'هل تحتاج مساعدة؟',
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 14,

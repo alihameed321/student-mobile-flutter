@@ -143,7 +143,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
           title: const Text(
-            'My Requests',
+            'طلباتي',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 20,
@@ -219,7 +219,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
             } else if (state is ServiceRequestCanceled) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Service request cancelled successfully'),
+                  content: Text('تم إلغاء طلب الخدمة بنجاح'),
                   backgroundColor: Colors.orange,
                 ),
               );
@@ -263,7 +263,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Active Filters',
+                                'المرشحات النشطة',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -302,7 +302,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'Status: $_selectedStatus',
+                                        'الحالة: $_selectedStatus',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -358,7 +358,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'Type: $_selectedType',
+                                        'النوع: $_selectedType',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -691,7 +691,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                             ),
                           ),
                           child: const Text(
-                            'Cancel',
+                            'إلغاء',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -850,7 +850,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 ),
                 icon: const Icon(Icons.add_rounded, size: 20),
                 label: const Text(
-                  'Create Request',
+                  'إنشاء طلب',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -912,7 +912,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              'حدث خطأ ما',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -963,7 +963,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 ),
                 icon: const Icon(Icons.refresh_rounded, size: 20),
                 label: const Text(
-                  'Try Again',
+                  'حاول مرة أخرى',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -981,18 +981,18 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Filter Requests'),
+        title: const Text('تصفية الطلبات'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Status'),
+            const Text('الحالة'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Select status',
+                hintText: 'اختر الحالة',
               ),
               items: _statusFilters.map((status) {
                 return DropdownMenuItem(
@@ -1018,14 +1018,14 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
               Navigator.of(context).pop();
               _applyFilters();
             },
-            child: const Text('Clear'),
+            child: const Text('مسح'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               _applyFilters();
             },
-            child: const Text('Apply'),
+            child: const Text('تطبيق'),
           ),
         ],
       ),
@@ -1120,21 +1120,21 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildDetailRow('Request ID', '#${request.id}'),
+                        _buildDetailRow('رقم الطلب', '#${request.id}'),
                         _buildDetailRow(
-                            'Created',
+                            'تاريخ الإنشاء',
                             DateFormat('MMM dd, yyyy • HH:mm')
                                 .format(request.createdAt)),
                         if (request.updatedAt != request.createdAt)
                           _buildDetailRow(
-                              'Updated',
+                              'آخر تحديث',
                               request.updatedAt != null
                                   ? DateFormat('MMM dd, yyyy • HH:mm')
                                       .format(request.updatedAt!)
-                                  : 'Not updated'),
+                                  : 'لم يتم التحديث'),
                         const SizedBox(height: 16),
                         const Text(
-                          'Description',
+                          'الوصف',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -1166,7 +1166,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Cancel Request'),
+                      child: const Text('إلغاء الطلب'),
                     ),
                   ),
               ],
@@ -1214,14 +1214,14 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Cancel Request'),
+        title: const Text('إلغاء الطلب'),
         content: Text(
-          'Are you sure you want to cancel this ${request.requestType.toLowerCase()} request?',
+          'هل أنت متأكد من أنك تريد إلغاء طلب ${request.requestType.toLowerCase()} هذا؟',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('No'),
+            child: const Text('لا'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -1235,7 +1235,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Yes, Cancel'),
+            child: const Text('نعم، إلغاء'),
           ),
         ],
       ),

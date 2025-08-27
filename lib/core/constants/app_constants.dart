@@ -1,6 +1,6 @@
 class AppConstants {
   // App Information
-  static const String appName = 'Student Services';
+  static const String appName = 'خدمات الطلاب';
   static const String appVersion = '1.0.0';
   
   // Storage Keys

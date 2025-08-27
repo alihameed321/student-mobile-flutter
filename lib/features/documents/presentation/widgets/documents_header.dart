@@ -172,7 +172,7 @@ class DocumentsHeader extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _StatCard(
-                      title: 'Total Documents',
+                      title: 'إجمالي الوثائق',
                       value: totalDocs,
                       icon: Icons.description,
                       color: Colors.blue,
@@ -181,7 +181,7 @@ class DocumentsHeader extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _StatCard(
-                      title: 'Recent Downloads',
+                      title: 'التحميلات الحديثة',
                       value: recentDownloads,
                       icon: Icons.download,
                       color: Colors.green,
@@ -190,7 +190,7 @@ class DocumentsHeader extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _StatCard(
-                      title: 'Pending Requests',
+                      title: 'الطلبات المعلقة',
                       value: pendingRequests,
                       icon: Icons.pending,
                       color: Colors.orange,

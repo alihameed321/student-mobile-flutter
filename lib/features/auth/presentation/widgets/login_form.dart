@@ -69,8 +69,8 @@ class _LoginFormState extends State<LoginForm> {
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  labelText: 'Username or Email',
-                  hintText: 'Enter your username or email',
+                  labelText: 'اسم المستخدم أو البريد الإلكتروني',
+                hintText: 'أدخل اسم المستخدم أو البريد الإلكتروني',
                   prefixIcon: Container(
                     margin: const EdgeInsets.all(12),
                     padding: const EdgeInsets.all(8),
@@ -136,12 +136,12 @@ class _LoginFormState extends State<LoginForm> {
                   developer.log('Validating identifier field: "${value ?? 'null'}"', name: 'LoginForm');
                   if (value == null || value.isEmpty) {
                     developer.log('Identifier validation failed: empty field', name: 'LoginForm');
-                    return 'Please enter your email or username';
+                    return 'يرجى إدخال البريد الإلكتروني أو اسم المستخدم';
                   }
                   // Allow both email and username formats
                   if (value.length < 3) {
                     developer.log('Identifier validation failed: too short (${value.length} chars)', name: 'LoginForm');
-                    return 'Must be at least 3 characters long';
+                    return 'يجب أن يكون 3 أحرف على الأقل';
                   }
                   developer.log('Identifier validation passed', name: 'LoginForm');
                   return null;
@@ -163,8 +163,8 @@ class _LoginFormState extends State<LoginForm> {
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
+                  labelText: 'كلمة المرور',
+                hintText: 'أدخل كلمة المرور',
                   prefixIcon: Container(
                     margin: const EdgeInsets.all(12),
                     padding: const EdgeInsets.all(8),
@@ -248,11 +248,11 @@ class _LoginFormState extends State<LoginForm> {
                   developer.log('Validating password field: ${value?.length ?? 0} characters', name: 'LoginForm');
                   if (value == null || value.isEmpty) {
                     developer.log('Password validation failed: empty field', name: 'LoginForm');
-                    return 'Please enter your password';
+                    return 'يرجى إدخال كلمة المرور';
                   }
                   if (value.length < 6) {
                     developer.log('Password validation failed: too short (${value.length} chars)', name: 'LoginForm');
-                    return 'Password must be at least 6 characters';
+                    return 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
                   }
                   developer.log('Password validation passed', name: 'LoginForm');
                   return null;
@@ -307,7 +307,7 @@ class _LoginFormState extends State<LoginForm> {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              'Signing In...',
+                          'جاري تسجيل الدخول...',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -317,7 +317,7 @@ class _LoginFormState extends State<LoginForm> {
                           ],
                         )
                       : const Text(
-                          'Sign In',
+                    'تسجيل الدخول',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -333,7 +333,7 @@ class _LoginFormState extends State<LoginForm> {
               TextButton(
                 onPressed: isLoading ? null : _onForgotPasswordPressed,
                 child: Text(
-                  'Forgot Password?',
+                'نسيت كلمة المرور؟',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w500,
@@ -374,7 +374,7 @@ class _LoginFormState extends State<LoginForm> {
     // TODO: Implement forgot password functionality
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Forgot password functionality coming soon!'),
+          content: Text('وظيفة نسيان كلمة المرور قريباً!'),
       ),
     );
   }

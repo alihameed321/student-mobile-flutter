@@ -25,7 +25,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: Consumer<NotificationProvider>(
@@ -62,7 +64,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Error loading notifications',
+                                      'خطأ في تحميل الإشعارات',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.red[800],
@@ -80,7 +82,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               ),
                               TextButton(
                                 onPressed: () => provider.clearError(),
-                                child: const Text('Dismiss'),
+                                child: const Text('إغلاق'),
                               ),
                             ],
                           ),
@@ -92,6 +94,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             );
           },
         ),
+      ),
       ),
     );
   }

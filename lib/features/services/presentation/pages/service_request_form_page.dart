@@ -26,12 +26,12 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
   // Mapping for display labels
   final Map<String, String> _requestTypeLabels = {
-    'enrollment_certificate': 'Enrollment Certificate',
-    'schedule_modification': 'Schedule Modification',
-    'semester_postponement': 'Semester Postponement',
-    'transcript': 'Official Transcript',
-    'graduation_certificate': 'Graduation Certificate',
-    'other': 'Other',
+    'enrollment_certificate': 'شهادة قيد',
+    'schedule_modification': 'تعديل الجدول',
+    'semester_postponement': 'تأجيل الفصل الدراسي',
+    'transcript': 'كشف درجات رسمي',
+    'graduation_certificate': 'شهادة تخرج',
+    'other': 'أخرى',
   };
 
   @override
@@ -71,7 +71,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
           if (state is ServiceRequestCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Service request created successfully!'),
+                content: Text('تم إنشاء طلب الخدمة بنجاح!'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -123,7 +123,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         ),
                         const SizedBox(height: 12),
                         const Text(
-                          'Submit Service Request',
+                          'تقديم طلب خدمة',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -132,7 +132,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Fill out the form below to submit your service request',
+                          'املأ النموذج أدناه لتقديم طلب الخدمة',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 16,
@@ -225,7 +225,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a service type';
+                            return 'يرجى اختيار نوع الخدمة';
                           }
                           return null;
                         },
@@ -303,10 +303,10 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a title';
+                            return 'يرجى إدخال العنوان';
                           }
                           if (value.trim().length < 3) {
-                            return 'Title must be at least 3 characters';
+                            return 'يجب أن يكون العنوان 3 أحرف على الأقل';
                           }
                           return null;
                         },
@@ -386,10 +386,10 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Please provide a description';
+                            return 'يرجى تقديم وصف';
                           }
                           if (value.trim().length < 20) {
-                            return 'Description must be at least 20 characters';
+                            return 'يجب أن يكون الوصف 20 حرف على الأقل';
                           }
                           return null;
                         },
@@ -400,7 +400,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
                   // Priority Section
                   _buildFormSection(
-                    title: 'مستوى الأولوية',
+                    title: 'الأولوية',
                     required: true,
                     child: Container(
                       decoration: BoxDecoration(
@@ -481,7 +481,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  priority.toUpperCase(),
+                                  priority == 'high' ? 'عالية' : priority == 'medium' ? 'متوسطة' : 'منخفضة',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w600,
@@ -499,7 +499,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a priority level';
+                            return 'يرجى اختيار مستوى الأولوية';
                           }
                           return null;
                         },

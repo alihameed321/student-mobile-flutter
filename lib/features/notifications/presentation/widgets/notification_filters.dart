@@ -13,12 +13,12 @@ class _NotificationFiltersState extends State<NotificationFilters> {
   String selectedFilter = 'All';
 
   final List<Map<String, dynamic>> filters = [
-    {'label': 'All', 'icon': Icons.all_inbox, 'color': Colors.blue},
-    {'label': 'Info', 'icon': Icons.info, 'color': Colors.blue},
-    {'label': 'Warning', 'icon': Icons.warning, 'color': Colors.orange},
-    {'label': 'Success', 'icon': Icons.check_circle, 'color': Colors.green},
-    {'label': 'Error', 'icon': Icons.error, 'color': Colors.red},
-    {'label': 'Announcement', 'icon': Icons.campaign, 'color': Colors.purple},
+    {'label': 'الكل', 'value': 'All', 'icon': Icons.all_inbox, 'color': Colors.blue},
+    {'label': 'معلومات', 'value': 'Info', 'icon': Icons.info, 'color': Colors.blue},
+    {'label': 'تحذير', 'value': 'Warning', 'icon': Icons.warning, 'color': Colors.orange},
+    {'label': 'نجاح', 'value': 'Success', 'icon': Icons.check_circle, 'color': Colors.green},
+    {'label': 'خطأ', 'value': 'Error', 'icon': Icons.error, 'color': Colors.red},
+    {'label': 'إعلان', 'value': 'Announcement', 'icon': Icons.campaign, 'color': Colors.purple},
   ];
 
   @override
@@ -30,7 +30,7 @@ class _NotificationFiltersState extends State<NotificationFilters> {
         itemCount: filters.length,
         itemBuilder: (context, index) {
           final filter = filters[index];
-          final isSelected = selectedFilter == filter['label'];
+          final isSelected = selectedFilter == filter['value'];
           
           return Padding(
             padding: EdgeInsets.only(
@@ -44,15 +44,15 @@ class _NotificationFiltersState extends State<NotificationFilters> {
               isSelected: isSelected,
               onTap: () {
                 setState(() {
-                  selectedFilter = filter['label'];
+                  selectedFilter = filter['value'];
                 });
                 
                 // Apply filter through provider
                 final provider = Provider.of<NotificationProvider>(context, listen: false);
-                if (filter['label'] == 'All') {
+                if (filter['value'] == 'All') {
                   provider.setFilters(type: null);
                 } else {
-                  provider.setFilters(type: filter['label'].toLowerCase());
+                  provider.setFilters(type: filter['value'].toLowerCase());
                 }
               },
             ),

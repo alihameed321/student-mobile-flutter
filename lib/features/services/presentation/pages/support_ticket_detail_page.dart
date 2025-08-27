@@ -90,7 +90,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Error loading ticket',
+                    'خطأ في تحميل التذكرة',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey.shade600,
@@ -111,7 +111,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
                         LoadSupportTicketDetail(widget.ticketId),
                       );
                     },
-                    child: const Text('Retry'),
+                    child: const Text('إعادة المحاولة'),
                   ),
                 ],
               ),
@@ -313,7 +313,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Ticket Information',
+              'معلومات التذكرة',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -326,7 +326,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
             _buildInfoRow('تاريخ الإنشاء', _formatDateTime(ticket.createdAt)),
             _buildInfoRow('آخر تحديث', _formatDateTime(ticket.updatedAt)),
             if (ticket.assignedTo != null)
-              _buildInfoRow('Assigned To', ticket.assignedTo!),
+              _buildInfoRow('مُسند إلى', ticket.assignedTo!),
           ],
         ),
       ),
@@ -477,7 +477,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Internal Note',
+                      'ملاحظة داخلية',
                       style: TextStyle(
                         color: Colors.orange.shade600,
                         fontSize: 10,
@@ -510,7 +510,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Add Response',
+            'إضافة رد',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -535,7 +535,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
               const Spacer(),
               TextButton(
                 onPressed: () => _responseController.clear(),
-                child: const Text('Clear'),
+                child: const Text('مسح'),
               ),
               const SizedBox(width: 8),
               ElevatedButton(
@@ -584,13 +584,13 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
     if (difference.inDays == 0) {
       if (difference.inHours == 0) {
         if (difference.inMinutes == 0) {
-          return 'Just now';
+          return 'الآن';
         }
         return '${difference.inMinutes}m ago';
       }
       return '${difference.inHours}h ago';
     } else if (difference.inDays == 1) {
-      return 'Yesterday at ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+      return 'أمس في ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
     } else if (difference.inDays < 7) {
       return '${difference.inDays}d ago';
     } else {
