@@ -31,7 +31,7 @@ class RecentTransactions extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Recent Transactions',
+                  'المعاملات الحديثة',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class RecentTransactions extends StatelessWidget {
                       );
                     }
                   },
-                  child: const Text('View All'),
+                  child: const Text('عرض الكل'),
                 ),
               ],
             ),
@@ -61,7 +61,7 @@ class RecentTransactions extends StatelessWidget {
               _buildTransactionItem(
                 context,
                 title: '${transaction.feeType} Payment',
-                subtitle: 'Payment ID: ${transaction.paymentId}',
+                subtitle: 'معرف الدفع: ${transaction.paymentId}',
                 amount: '-\$${transaction.amount.toStringAsFixed(2)}',
                 date: DateFormat('MMM dd, yyyy').format(transaction.paymentDate),
                 type: TransactionType.payment,
@@ -83,7 +83,7 @@ class RecentTransactions extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'No recent transactions',
+                      'لا توجد معاملات حديثة',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -128,19 +128,19 @@ class RecentTransactions extends StatelessWidget {
     switch (status.toLowerCase()) {
       case 'verified':
         statusColor = Colors.green;
-        statusText = 'Verified';
+        statusText = 'تم التحقق';
         break;
       case 'pending':
         statusColor = Colors.orange;
-        statusText = 'Pending';
+        statusText = 'معلق';
         break;
       case 'rejected':
         statusColor = Colors.red;
-        statusText = 'Rejected';
+        statusText = 'مرفوض';
         break;
       case 'cancelled':
         statusColor = Colors.grey;
-        statusText = 'Cancelled';
+        statusText = 'ملغي';
         break;
       default:
         statusColor = Colors.blue;

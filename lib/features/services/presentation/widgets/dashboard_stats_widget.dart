@@ -15,7 +15,7 @@ class DashboardStatsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Dashboard Overview',
+          'نظرة عامة على لوحة التحكم',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.grey[800],
@@ -34,7 +34,7 @@ class DashboardStatsWidget extends StatelessWidget {
           children: [
             _buildModernStatCard(
               context,
-              'Service Requests',
+              'طلبات الخدمة',
               dashboardStats.totalServiceRequests.toString(),
               Icons.assignment_outlined,
               [const Color(0xFF667EEA), const Color(0xFF764BA2)],
@@ -42,7 +42,7 @@ class DashboardStatsWidget extends StatelessWidget {
             ),
             _buildModernStatCard(
               context,
-              'Documents',
+              'الوثائق',
               dashboardStats.totalDocuments.toString(),
               Icons.description_outlined,
               [const Color(0xFF11998E), const Color(0xFF38EF7D)],
@@ -50,7 +50,7 @@ class DashboardStatsWidget extends StatelessWidget {
             ),
             _buildModernStatCard(
               context,
-              'Support Tickets',
+              'تذاكر الدعم',
               dashboardStats.totalSupportTickets.toString(),
               Icons.support_agent_outlined,
               [const Color(0xFFFF6B6B), const Color(0xFFFFE66D)],
@@ -59,11 +59,11 @@ class DashboardStatsWidget extends StatelessWidget {
             if (dashboardStats.totalServiceRequests > 0)
               _buildModernStatCard(
                 context,
-                'Completion Rate',
+                'معدل الإنجاز',
                 '${(dashboardStats.serviceRequestCompletionRate * 100).toStringAsFixed(1)}%',
                 Icons.trending_up_outlined,
                 [const Color(0xFF4ECDC4), const Color(0xFF44A08D)],
-                'Overall progress',
+                'التقدم العام',
               ),
           ],
         ),
@@ -76,7 +76,7 @@ class DashboardStatsWidget extends StatelessWidget {
             Expanded(
               child: _buildQuickStat(
                 context,
-                'Completed',
+                'مكتمل',
                 dashboardStats.completedServiceRequests.toString(),
                 Icons.check_circle_outline,
                 Colors.green,
@@ -86,7 +86,7 @@ class DashboardStatsWidget extends StatelessWidget {
             Expanded(
               child: _buildQuickStat(
                 context,
-                'Pending',
+                'معلق',
                 dashboardStats.pendingServiceRequests.toString(),
                 Icons.schedule_outlined,
                 Colors.orange,

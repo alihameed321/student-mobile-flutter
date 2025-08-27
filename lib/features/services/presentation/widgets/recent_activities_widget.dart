@@ -37,7 +37,7 @@ class RecentActivitiesWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Activities',
+          'الأنشطة الحديثة',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.grey[800],
@@ -47,7 +47,7 @@ class RecentActivitiesWidget extends StatelessWidget {
         
         // Recent Service Requests
         if (dashboardStats.recentServiceRequests.isNotEmpty) ...[
-          _buildSectionHeader(context, 'Service Requests', Icons.assignment),
+          _buildSectionHeader(context, 'طلبات الخدمة', Icons.assignment),
           const SizedBox(height: 8),
           ...dashboardStats.recentServiceRequests.take(3).map(
             (request) => _buildServiceRequestItem(context, request),
@@ -57,7 +57,7 @@ class RecentActivitiesWidget extends StatelessWidget {
         
         // Recent Documents
         if (dashboardStats.recentDocuments.isNotEmpty) ...[
-          _buildSectionHeader(context, 'Documents', Icons.description),
+          _buildSectionHeader(context, 'الوثائق', Icons.description),
           const SizedBox(height: 8),
           ...dashboardStats.recentDocuments.take(3).map(
             (document) => _buildDocumentItem(context, document),
@@ -67,7 +67,7 @@ class RecentActivitiesWidget extends StatelessWidget {
         
         // Recent Support Tickets
         if (dashboardStats.recentSupportTickets.isNotEmpty) ...[
-          _buildSectionHeader(context, 'Support Tickets', Icons.support),
+          _buildSectionHeader(context, 'تذاكر الدعم', Icons.support),
           const SizedBox(height: 8),
           ...dashboardStats.recentSupportTickets.take(3).map(
             (ticket) => _buildSupportTicketItem(context, ticket),

@@ -8,7 +8,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,7 +32,7 @@ class ProfilePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'My Profile',
+                          'ملفي الشخصي',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -75,6 +77,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

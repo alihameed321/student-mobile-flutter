@@ -82,7 +82,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Support Ticket'),
+        title: const Text('إنشاء تذكرة دعم'),
         backgroundColor: Colors.blue.shade600,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -117,19 +117,19 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('Category'),
+                  _buildSectionTitle('الفئة'),
                   const SizedBox(height: 8),
                   _buildCategorySelection(),
                   const SizedBox(height: 24),
-                  _buildSectionTitle('Priority'),
+                  _buildSectionTitle('الأولوية'),
                   const SizedBox(height: 8),
                   _buildPrioritySelection(),
                   const SizedBox(height: 24),
-                  _buildSectionTitle('Subject'),
+                  _buildSectionTitle('الموضوع'),
                   const SizedBox(height: 8),
                   _buildSubjectField(),
                   const SizedBox(height: 24),
-                  _buildSectionTitle('Description'),
+                  _buildSectionTitle('الوصف'),
                   const SizedBox(height: 8),
                   _buildDescriptionField(),
                   const SizedBox(height: 32),
@@ -287,7 +287,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
     return TextFormField(
       controller: _subjectController,
       decoration: InputDecoration(
-        hintText: 'Enter a brief subject for your ticket',
+        hintText: 'أدخل موضوع مختصر لتذكرتك',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -313,7 +313,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
       controller: _descriptionController,
       maxLines: 6,
       decoration: InputDecoration(
-        hintText: 'Describe your issue in detail. Include any relevant information that might help us assist you better.',
+        hintText: 'اوصف مشكلتك بالتفصيل. قم بتضمين أي معلومات ذات صلة قد تساعدنا في مساعدتك بشكل أفضل.',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -362,7 +362,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Creating Ticket...',
+                    'جاري إنشاء التذكرة...',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -371,7 +371,7 @@ class _CreateSupportTicketPageState extends State<CreateSupportTicketPage> {
                 ],
               )
             : const Text(
-                'Create Support Ticket',
+                'إنشاء تذكرة دعم',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

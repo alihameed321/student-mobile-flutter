@@ -26,9 +26,11 @@ class _FinancialPageState extends State<FinancialPage> {
   Widget build(BuildContext context) {
     final financialBloc = context.read<FinancialBloc>();
     
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        body: SafeArea(
         child: BlocConsumer<FinancialBloc, FinancialState>(
           listener: (context, state) {
             if (state is FinancialError) {
@@ -74,7 +76,7 @@ class _FinancialPageState extends State<FinancialPage> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Error loading financial data',
+                              'خطأ في تحميل البيانات المالية',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -97,7 +99,7 @@ class _FinancialPageState extends State<FinancialPage> {
                                   LoadFinancialSummary('student_id_placeholder'),
                                 );
                               },
-                              child: const Text('Retry'),
+                              child: const Text('إعادة المحاولة'),
                             ),
                           ],
                         ),
@@ -105,7 +107,7 @@ class _FinancialPageState extends State<FinancialPage> {
                     else if (state is FinancialInitial)
                       const Center(
                         child: Text(
-                          'Loading financial data...',
+                          'جاري تحميل البيانات المالية...',
                           style: TextStyle(fontSize: 16),
                         ),
                       )
@@ -160,6 +162,7 @@ class _FinancialPageState extends State<FinancialPage> {
             );
           },
         ),
+      ),
       ),
     );
   }

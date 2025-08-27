@@ -13,7 +13,7 @@ class StudentDetailsPage extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
-          'Student Details',
+          'تفاصيل الطالب',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).primaryColor,
@@ -36,56 +36,56 @@ class StudentDetailsPage extends StatelessWidget {
 
                   // Personal Information
                   _buildSectionCard(
-                    'Personal Information',
+                    'المعلومات الشخصية',
                     Icons.person_outline,
                     [
-                      _buildInfoRow('Full Name', user.fullName),
-                      _buildInfoRow('University ID', user.studentId ?? 'N/A'),
-                      _buildInfoRow('Email', user.email),
+                      _buildInfoRow('الاسم الكامل', user.fullName),
+            _buildInfoRow('الرقم الجامعي', user.studentId ?? 'غير متوفر'),
+            _buildInfoRow('البريد الإلكتروني', user.email),
                       _buildInfoRow(
-                          'Phone Number',
+                          'رقم الهاتف',
                           user.phone?.isNotEmpty == true
                               ? user.phone!
-                              : 'Not provided'),
+                              : 'غير متوفر'),
                       _buildInfoRow(
-                          'Date Joined',
+                          'تاريخ الانضمام',
                           user.dateJoined?.toString().split(' ')[0] ??
-                              'Not provided'),
-                      _buildInfoRow('User Type',
-                          user.userType?.toUpperCase() ?? 'Not specified'),
+                              'غير متوفر'),
+                      _buildInfoRow('نوع المستخدم',
+                          user.userType?.toUpperCase() ?? 'غير محدد'),
                     ],
                   ),
                   const SizedBox(height: 20),
 
                   // Academic Information
                   _buildSectionCard(
-                    'Academic Information',
+                      'المعلومات الأكاديمية',
                     Icons.school_outlined,
                     [
-                      _buildInfoRow('Major', user.major ?? 'Not specified'),
-                      _buildInfoRow('Academic Level',
-                          user.academicLevel ?? 'Not specified'),
-                      _buildInfoRow('University ID',
-                          user.universityId ?? 'Not specified'),
-                      _buildInfoRow('Student Status',
-                          user.isActive ? 'Active' : 'Inactive'),
+                      _buildInfoRow('التخصص', user.major ?? 'غير محدد'),
+                        _buildInfoRow('المستوى الأكاديمي',
+                            user.academicLevel ?? 'غير محدد'),
+                        _buildInfoRow('الرقم الجامعي',
+                            user.universityId ?? 'غير محدد'),
+                        _buildInfoRow('حالة الطالب',
+                            user.isActive ? 'نشط' : 'غير نشط'),
                     ],
                   ),
                   const SizedBox(height: 20),
 
                   // Account Information
                   _buildSectionCard(
-                    'Account Information',
+                      'معلومات الحساب',
                     Icons.account_circle_outlined,
                     [
-                      _buildInfoRow('Account Status',
-                          user.isActive ? 'Active' : 'Inactive'),
-                      _buildInfoRow(
-                          'Staff Member', user.isStaff ? 'Yes' : 'No'),
-                      _buildInfoRow(
-                          'Date Joined',
-                          user.dateJoined?.toString().split(' ')[0] ??
-                              'Not available'),
+                      _buildInfoRow('حالة الحساب',
+                            user.isActive ? 'نشط' : 'غير نشط'),
+                        _buildInfoRow(
+                            'عضو هيئة تدريس', user.isStaff ? 'نعم' : 'لا'),
+                        _buildInfoRow(
+                            'تاريخ الانضمام',
+                            user.dateJoined?.toString().split(' ')[0] ??
+                                'غير متوفر'),
                     ],
                   ),
                 ],
@@ -94,7 +94,7 @@ class StudentDetailsPage extends StatelessWidget {
           }
 
           return const Center(
-            child: Text('Please log in to view student details'),
+            child: Text('يرجى تسجيل الدخول لعرض تفاصيل الطالب'),
           );
         },
       ),
@@ -161,7 +161,7 @@ class StudentDetailsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  user.major ?? 'No Major Specified',
+                  user.major ?? 'لم يتم تحديد التخصص',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
@@ -178,7 +178,7 @@ class StudentDetailsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'ID: ${user.studentId ?? 'N/A'}',
+                    'الرقم الجامعي: ${user.studentId ?? 'غير متوفر'}',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

@@ -36,7 +36,7 @@ class ServicesHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Services',
+                      'الخدمات',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -45,7 +45,7 @@ class ServicesHeader extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'University services at your fingertips',
+                      'خدمات الجامعة في متناول يدك',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: 16,
@@ -100,7 +100,7 @@ class ServicesHeader extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    'My Requests',
+                                    'طلباتي',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 13,
@@ -142,7 +142,7 @@ class ServicesHeader extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
-                hintText: 'Search for services, documents, or help...',
+                hintText: 'البحث عن الخدمات أو الوثائق أو المساعدة...',
                 hintStyle: TextStyle(
                   color: Colors.grey[400],
                   fontSize: 15,

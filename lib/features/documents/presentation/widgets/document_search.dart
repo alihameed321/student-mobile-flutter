@@ -69,7 +69,7 @@ class _DocumentSearchState extends State<DocumentSearch> {
           color: Colors.black87,
         ),
         decoration: InputDecoration(
-          hintText: 'Search documents...',
+          hintText: 'البحث في الوثائق...',
           hintStyle: TextStyle(
             color: Colors.grey[400],
             fontSize: 16,

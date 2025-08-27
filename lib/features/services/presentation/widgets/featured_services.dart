@@ -11,7 +11,7 @@ class FeaturedServices extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 4),
           child: Text(
-            'Featured Services',
+            'الخدمات المميزة',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -27,8 +27,8 @@ class FeaturedServices extends StatelessWidget {
             children: [
               _buildFeaturedCard(
                 context,
-                title: 'Course Registration',
-                subtitle: 'Register for next semester',
+                title: 'تسجيل المقررات',
+          subtitle: 'التسجيل للفصل القادم',
                 icon: Icons.app_registration,
                 gradient: LinearGradient(
                   colors: [Colors.blue.shade400, Colors.blue.shade600],
@@ -38,8 +38,8 @@ class FeaturedServices extends StatelessWidget {
               const SizedBox(width: 16),
               _buildFeaturedCard(
                 context,
-                title: 'Library Services',
-                subtitle: 'Books, research & study rooms',
+                title: 'خدمات المكتبة',
+          subtitle: 'الكتب والبحوث وقاعات الدراسة',
                 icon: Icons.local_library,
                 gradient: LinearGradient(
                   colors: [Colors.green.shade400, Colors.green.shade600],
@@ -49,8 +49,8 @@ class FeaturedServices extends StatelessWidget {
               const SizedBox(width: 16),
               _buildFeaturedCard(
                 context,
-                title: 'Career Center',
-                subtitle: 'Job search & career guidance',
+                title: 'مركز التوظيف',
+          subtitle: 'البحث عن وظائف والإرشاد المهني',
                 icon: Icons.work,
                 gradient: LinearGradient(
                   colors: [Colors.purple.shade400, Colors.purple.shade600],

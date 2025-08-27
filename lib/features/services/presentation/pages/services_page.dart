@@ -41,8 +41,10 @@ class _ServicesPageState extends State<ServicesPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
+   Widget build(BuildContext context) {
+     return Directionality(
+       textDirection: TextDirection.rtl,
+       child: MultiBlocProvider(
       providers: [
         BlocProvider<DashboardBloc>(
           create: (context) =>
@@ -137,7 +139,9 @@ class _ServicesPageState extends State<ServicesPage> {
                 ),
               ),
             );
-          }))),
-    );
+          })),
+       ),
+     ),
+     );
   }
 }

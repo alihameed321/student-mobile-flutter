@@ -36,8 +36,8 @@ class ServicesGrid extends StatelessWidget {
                   children: [
                     Text(
                       searchQuery.isEmpty 
-                          ? 'University Services' 
-                          : 'Search Results',
+                          ? 'خدمات الجامعة' 
+                          : 'نتائج البحث',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
@@ -47,7 +47,7 @@ class ServicesGrid extends StatelessWidget {
                     ),
                     if (searchQuery.isNotEmpty)
                       Text(
-                        '${filteredServices.length} services found',
+                        'تم العثور على ${filteredServices.length} خدمة',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -56,7 +56,7 @@ class ServicesGrid extends StatelessWidget {
                       )
                     else
                       Text(
-                        'Choose from our comprehensive service offerings',
+                        'اختر من عروض الخدمات الشاملة لدينا',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -81,43 +81,43 @@ class ServicesGrid extends StatelessWidget {
   List<Map<String, dynamic>> _getServices() {
     return [
       {
-        'title': 'Enrollment Certificate',
-        'subtitle': 'Official enrollment verification document',
+        'title': 'شهادة القيد',
+        'subtitle': 'وثيقة التحقق الرسمية من القيد',
         'icon': Icons.school_rounded,
         'color': const Color(0xFF2196F3),
         'requestType': 'enrollment_certificate',
       },
       {
-        'title': 'Schedule Modification',
-        'subtitle': 'Course schedule and timetable changes',
+        'title': 'تعديل الجدول',
+        'subtitle': 'تغييرات جدول المقررات والمواعيد',
         'icon': Icons.schedule_rounded,
         'color': const Color(0xFF4CAF50),
         'requestType': 'schedule_modification',
       },
       {
-        'title': 'Semester Postponement',
-        'subtitle': 'Defer semester enrollment request',
+        'title': 'تأجيل الفصل الدراسي',
+        'subtitle': 'طلب تأجيل التسجيل للفصل الدراسي',
         'icon': Icons.pause_circle_filled_rounded,
         'color': const Color(0xFFFF9800),
         'requestType': 'semester_postponement',
       },
       {
-        'title': 'Official Transcript',
-        'subtitle': 'Academic records and grade reports',
+        'title': 'كشف الدرجات الرسمي',
+        'subtitle': 'السجلات الأكاديمية وتقارير الدرجات',
         'icon': Icons.description_rounded,
         'color': const Color(0xFF9C27B0),
         'requestType': 'transcript',
       },
       {
-        'title': 'Graduation Certificate',
-        'subtitle': 'Official graduation documentation',
+        'title': 'شهادة التخرج',
+        'subtitle': 'وثائق التخرج الرسمية',
         'icon': Icons.workspace_premium_rounded,
         'color': const Color(0xFFE91E63),
         'requestType': 'graduation_certificate',
       },
       {
-        'title': 'Other Services',
-        'subtitle': 'General inquiries and custom requests',
+        'title': 'خدمات أخرى',
+        'subtitle': 'الاستفسارات العامة والطلبات المخصصة',
         'icon': Icons.support_agent_rounded,
         'color': const Color(0xFF00BCD4),
         'requestType': 'other',
@@ -188,7 +188,7 @@ class ServicesGrid extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            'No services found',
+            'لم يتم العثور على خدمات',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -197,7 +197,7 @@ class ServicesGrid extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Try searching with different keywords\nor browse all available services',
+            'جرب البحث بكلمات مفتاحية مختلفة\nأو تصفح جميع الخدمات المتاحة',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -362,7 +362,7 @@ class ServicesGrid extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      'Request',
+                                      'طلب',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,

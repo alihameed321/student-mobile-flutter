@@ -13,24 +13,24 @@ class ProfileMenuSection extends StatelessWidget {
         // Personal Information Section
         _buildMenuCard(
           context,
-          title: 'Personal Information',
+          title: 'المعلومات الشخصية',
           items: [
             _MenuItem(
               icon: Icons.person_outline,
-              title: 'Edit Profile',
-              subtitle: 'Update your personal details',
+              title: 'تعديل الملف الشخصي',
+          subtitle: 'تحديث بياناتك الشخصية',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.contact_phone_outlined,
-              title: 'Contact Information',
-              subtitle: 'Phone, email, address',
+              title: 'معلومات الاتصال',
+          subtitle: 'الهاتف، البريد الإلكتروني، العنوان',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.family_restroom_outlined,
-              title: 'Emergency Contacts',
-              subtitle: 'Manage emergency contacts',
+              title: 'جهات الاتصال الطارئة',
+          subtitle: 'إدارة جهات الاتصال الطارئة',
               onTap: () {},
             ),
           ],
@@ -41,24 +41,24 @@ class ProfileMenuSection extends StatelessWidget {
         // Academic Section
         _buildMenuCard(
           context,
-          title: 'Academic',
+          title: 'الأكاديمية',
           items: [
             _MenuItem(
               icon: Icons.schedule_outlined,
-              title: 'Class Schedule',
-              subtitle: 'View your current schedule',
+              title: 'الجدول الدراسي',
+          subtitle: 'عرض جدولك الحالي',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.assignment_outlined,
-              title: 'Grades & Transcripts',
-              subtitle: 'Academic performance',
+              title: 'الدرجات والكشوف',
+          subtitle: 'الأداء الأكاديمي',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.school_outlined,
-              title: 'Course Registration',
-              subtitle: 'Register for courses',
+              title: 'تسجيل المقررات',
+          subtitle: 'التسجيل في المقررات',
               onTap: () {},
             ),
           ],
@@ -69,30 +69,30 @@ class ProfileMenuSection extends StatelessWidget {
         // Settings Section
         _buildMenuCard(
           context,
-          title: 'Settings',
+          title: 'الإعدادات',
           items: [
             _MenuItem(
               icon: Icons.notifications_outlined,
-              title: 'Notification Settings',
-              subtitle: 'Manage your notifications',
+              title: 'إعدادات الإشعارات',
+          subtitle: 'إدارة إشعاراتك',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.security_outlined,
-              title: 'Privacy & Security',
-              subtitle: 'Password, privacy settings',
+              title: 'الخصوصية والأمان',
+          subtitle: 'كلمة المرور، إعدادات الخصوصية',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.help_outline,
-              title: 'Help & Support',
-              subtitle: 'Get help and support',
+              title: 'المساعدة والدعم',
+          subtitle: 'احصل على المساعدة والدعم',
               onTap: () {},
             ),
             _MenuItem(
               icon: Icons.logout_outlined,
-              title: 'Sign Out',
-              subtitle: 'Sign out of your account',
+              title: 'تسجيل الخروج',
+          subtitle: 'تسجيل الخروج من حسابك',
               onTap: () => _showSignOutDialog(context),
               isDestructive: true,
             ),
@@ -181,12 +181,12 @@ class ProfileMenuSection extends StatelessWidget {
         }
         
         return AlertDialog(
-          title: const Text('Sign Out'),
-          content: const Text('Are you sure you want to sign out?'),
+          title: const Text('تسجيل الخروج'),
+            content: const Text('هل أنت متأكد من أنك تريد تسجيل الخروج؟'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: const Text('إلغاء'),
             ),
             TextButton(
               onPressed: () {
@@ -212,7 +212,7 @@ class ProfileMenuSection extends StatelessWidget {
                 }
               },
               child: const Text(
-                'Sign Out',
+                'تسجيل الخروج',
                 style: TextStyle(color: Colors.red),
               ),
             ),

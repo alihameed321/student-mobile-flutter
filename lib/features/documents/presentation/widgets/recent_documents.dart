@@ -30,7 +30,7 @@ class RecentDocuments extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'All Documents',
+                  'جميع الوثائق',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -42,7 +42,7 @@ class RecentDocuments extends StatelessWidget {
                     // Navigate to all documents
                   },
                   child: const Text(
-                    'View All',
+                    'عرض الكل',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -92,7 +92,7 @@ class RecentDocuments extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Failed to load documents',
+                          'فشل في تحميل الوثائق',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 14,
@@ -110,7 +110,7 @@ class RecentDocuments extends StatelessWidget {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Downloading document...'),
+                      content: Text('جاري تحميل الوثيقة...'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -126,11 +126,11 @@ class RecentDocuments extends StatelessWidget {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Document downloaded successfully!'),
+                      content: Text('تم تحميل الوثيقة بنجاح!'),
                       duration: const Duration(seconds: 3),
                       backgroundColor: Colors.green,
                       action: SnackBarAction(
-                        label: 'OK',
+                        label: 'موافق',
                         textColor: Colors.white,
                         onPressed: () {},
                       ),
@@ -165,7 +165,7 @@ class RecentDocuments extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'No documents available',
+                            'لا توجد وثائق متاحة',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
@@ -215,25 +215,25 @@ class RecentDocuments extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Share Document'),
+          title: const Text('مشاركة الوثيقة'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Document: ${sharingInfo.title}'),
+              Text('الوثيقة: ${sharingInfo.title}'),
               const SizedBox(height: 8),
-              Text('Type: ${sharingInfo.documentType}'),
+              Text('النوع: ${sharingInfo.documentType}'),
               const SizedBox(height: 16),
               if (sharingInfo.sharingCapabilities.canShare)
-                const Text('This document can be shared.')
+                const Text('يمكن مشاركة هذه الوثيقة.')
               else
-                Text('Cannot share: ${sharingInfo.sharingCapabilities.reason}'),
+                Text('لا يمكن المشاركة: ${sharingInfo.sharingCapabilities.reason}'),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
+              child: const Text('إغلاق'),
             ),
             if (sharingInfo.sharingCapabilities.canShare)
               ElevatedButton(
@@ -242,12 +242,12 @@ class RecentDocuments extends StatelessWidget {
                   // TODO: Implement actual sharing functionality
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Sharing functionality coming soon!'),
+                      content: Text('وظيفة المشاركة قريباً!'),
                       backgroundColor: Colors.blue,
                     ),
                   );
                 },
-                child: const Text('Share'),
+                child: const Text('مشاركة'),
               ),
           ],
         );
@@ -260,22 +260,22 @@ class RecentDocuments extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Document Details'),
+          title: const Text('تفاصيل الوثيقة'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Title: ${document.title}'),
+              Text('العنوان: ${document.title}'),
               const SizedBox(height: 8),
-              Text('Type: ${document.documentType}'),
+              Text('النوع: ${document.documentType}'),
               const SizedBox(height: 8),
-              Text('Size: ${document.fileSizeFormatted}'),
+              Text('الحجم: ${document.fileSizeFormatted}'),
               const SizedBox(height: 8),
-              Text('Issued: ${_formatDate(document.issuedDate)}'),
+              Text('تاريخ الإصدار: ${_formatDate(document.issuedDate)}'),
               const SizedBox(height: 8),
-              Text('Status: ${document.statusBadge.text}'),
+              Text('الحالة: ${document.statusBadge.text}'),
               const SizedBox(height: 8),
-              Text('Official: ${document.isOfficial ? "Yes" : "No"}'),
+              Text('رسمي: ${document.isOfficial ? "نعم" : "لا"}'),
             ],
           ),
           actions: [
@@ -289,7 +289,7 @@ class RecentDocuments extends StatelessWidget {
                   Navigator.of(context).pop();
                   context.read<DocumentsBloc>().add(DownloadDocument(document.id));
                 },
-                child: const Text('Download'),
+                child: const Text('تحميل'),
               ),
           ],
         );

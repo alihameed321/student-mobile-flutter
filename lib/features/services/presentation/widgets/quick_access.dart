@@ -22,7 +22,7 @@ class QuickAccess extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Quick Access',
+            'الوصول السريع',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class QuickAccess extends StatelessWidget {
                 child: _buildQuickAccessItem(
                   context,
                   icon: Icons.schedule,
-                  label: 'Class Schedule',
+                  label: 'الجدول الدراسي',
                   color: Colors.blue,
                   onTap: () {},
                 ),
@@ -46,7 +46,7 @@ class QuickAccess extends StatelessWidget {
                 child: _buildQuickAccessItem(
                   context,
                   icon: Icons.grade,
-                  label: 'Grades',
+                  label: 'الدرجات',
                   color: Colors.green,
                   onTap: () {},
                 ),
@@ -56,7 +56,7 @@ class QuickAccess extends StatelessWidget {
                 child: _buildQuickAccessItem(
                   context,
                   icon: Icons.assignment,
-                  label: 'Assignments',
+                  label: 'الواجبات',
                   color: Colors.orange,
                   onTap: () {},
                 ),
@@ -66,7 +66,7 @@ class QuickAccess extends StatelessWidget {
                 child: _buildQuickAccessItem(
                   context,
                   icon: Icons.event,
-                  label: 'Events',
+                  label: 'الفعاليات',
                   color: Colors.purple,
                   onTap: () {},
                 ),

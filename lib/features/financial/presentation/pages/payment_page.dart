@@ -93,7 +93,7 @@ class _PaymentPageState extends State<PaymentPage> {
     if (_selectedFees.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select at least one fee to pay'),
+          content: Text('يرجى اختيار رسم واحد على الأقل للدفع'),
           backgroundColor: Colors.red,
         ),
       );
@@ -102,7 +102,7 @@ class _PaymentPageState extends State<PaymentPage> {
     if (_selectedProvider == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a payment provider'),
+          content: Text('يرجى اختيار مقدم خدمة الدفع'),
           backgroundColor: Colors.red,
         ),
       );
@@ -113,7 +113,7 @@ class _PaymentPageState extends State<PaymentPage> {
     if (amount <= 0 || amount > _totalSelectedAmount) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please enter a valid payment amount'),
+          content: Text('يرجى إدخال مبلغ دفع صحيح'),
           backgroundColor: Colors.red,
         ),
       );
@@ -151,11 +151,13 @@ class _PaymentPageState extends State<PaymentPage> {
     // Capture the FinancialBloc reference to avoid context issues in callbacks
     _financialBloc = context.read<FinancialBloc>();
     
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
-          'Make Payment',
+          'إجراء دفعة',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -173,7 +175,7 @@ class _PaymentPageState extends State<PaymentPage> {
             });
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Payment submitted successfully! Your payment is being processed.'),
+                content: Text('تم تقديم الدفعة بنجاح! جاري معالجة دفعتك.'),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 4),
               ),
@@ -186,7 +188,7 @@ class _PaymentPageState extends State<PaymentPage> {
             // Always show success message to student even if payment fails
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Payment submitted successfully! Your payment is being processed.'),
+                content: Text('تم تقديم الدفعة بنجاح! جاري معالجة دفعتك.'),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 4),
               ),
@@ -217,6 +219,7 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -241,7 +244,7 @@ class _PaymentPageState extends State<PaymentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Select Fees to Pay',
+                'اختر الرسوم للدفع',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -252,8 +255,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 onPressed: _selectAllFees,
                 child: Text(
                   _selectedFees.length == widget.availableFees.length
-                      ? 'Deselect All'
-                      : 'Select All',
+                      ? 'إلغاء تحديد الكل'
+                      : 'تحديد الكل',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
@@ -311,7 +314,7 @@ class _PaymentPageState extends State<PaymentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Due: ${fee.dueDate?.toString().split(' ')[0] ?? 'No due date'}',
+              'تاريخ الاستحقاق: ${fee.dueDate?.toString().split(' ')[0] ?? 'لا يوجد تاريخ استحقاق'}',
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -326,7 +329,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Text(
-                  'OVERDUE',
+                  'متأخر',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 12,
@@ -350,7 +353,7 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             if (fee.amountPaid > 0)
               Text(
-                'Paid: \$${fee.amountPaid.toStringAsFixed(2)}',
+                'مدفوع: \$${fee.amountPaid.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey[600],
@@ -381,7 +384,7 @@ class _PaymentPageState extends State<PaymentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Payment Amount',
+            'مبلغ الدفع',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -393,7 +396,7 @@ class _PaymentPageState extends State<PaymentPage> {
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: 'Amount to Pay',
+              labelText: 'المبلغ المطلوب دفعه',
               prefixText: '\$',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -408,21 +411,21 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter payment amount';
+                return 'يرجى إدخال مبلغ الدفع';
               }
               final amount = double.tryParse(value);
               if (amount == null || amount <= 0) {
-                return 'Please enter a valid amount';
+                return 'يرجى إدخال مبلغ صحيح';
               }
               if (amount > _totalSelectedAmount) {
-                return 'Amount cannot exceed selected fees total';
+                return 'لا يمكن أن يتجاوز المبلغ إجمالي الرسوم المحددة';
               }
               return null;
             },
           ),
           const SizedBox(height: 8),
           Text(
-            'You can pay the full amount or make a partial payment',
+            'يمكنك دفع المبلغ كاملاً أو دفع جزئي',
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14,
@@ -451,7 +454,7 @@ class _PaymentPageState extends State<PaymentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Select Payment Provider',
+            'اختر مقدم خدمة الدفع',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -532,7 +535,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   if (provider.universityAccountNumber != null)
                     Text(
-                      'Account: ${provider.universityAccountNumber}',
+                      'الحساب: ${provider.universityAccountNumber}',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -614,7 +617,7 @@ class _PaymentPageState extends State<PaymentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Payment Details',
+            'تفاصيل الدفع',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -625,8 +628,8 @@ class _PaymentPageState extends State<PaymentPage> {
           TextFormField(
             controller: _transactionReferenceController,
             decoration: InputDecoration(
-              labelText: 'Transaction Reference (Optional)',
-              hintText: 'Enter your transaction reference',
+              labelText: 'مرجع المعاملة (اختياري)',
+              hintText: 'أدخل مرجع معاملتك',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -643,8 +646,8 @@ class _PaymentPageState extends State<PaymentPage> {
           TextFormField(
             controller: _senderNameController,
             decoration: InputDecoration(
-              labelText: 'Sender Name (Optional)',
-              hintText: 'Name of person making the transfer',
+              labelText: 'اسم المرسل (اختياري)',
+              hintText: 'اسم الشخص الذي يقوم بالتحويل',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -662,8 +665,8 @@ class _PaymentPageState extends State<PaymentPage> {
             controller: _senderPhoneController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-              labelText: 'Sender Phone (Optional)',
-              hintText: 'Phone number of sender',
+              labelText: 'هاتف المرسل (اختياري)',
+              hintText: 'رقم هاتف المرسل',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -681,8 +684,8 @@ class _PaymentPageState extends State<PaymentPage> {
             controller: _transferNotesController,
             maxLines: 3,
             decoration: InputDecoration(
-              labelText: 'Transfer Notes (Optional)',
-              hintText: 'Additional notes about the transfer',
+              labelText: 'ملاحظات التحويل (اختياري)',
+              hintText: 'ملاحظات إضافية حول التحويل',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -712,7 +715,7 @@ class _PaymentPageState extends State<PaymentPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Payment Summary',
+            'ملخص الدفع',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -724,7 +727,7 @@ class _PaymentPageState extends State<PaymentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Selected Fees:',
+                'الرسوم المحددة:',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,
@@ -745,7 +748,7 @@ class _PaymentPageState extends State<PaymentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Total Amount:',
+                'المبلغ الإجمالي:',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,
@@ -767,7 +770,7 @@ class _PaymentPageState extends State<PaymentPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Payment Method:',
+                  'طريقة الدفع:',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black87,
@@ -817,7 +820,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Processing Payment...',
+                    'جاري معالجة الدفع...',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -831,7 +834,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   Icon(Icons.lock, size: 20),
                   SizedBox(width: 8),
                   Text(
-                    'Pay Securely',
+                    'ادفع بأمان',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

@@ -35,7 +35,7 @@ class BalanceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Current Balance',
+                'الرصيد الحالي',
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 16,
@@ -51,7 +51,7 @@ class BalanceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
-                  'Active',
+                  'نشط',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -75,7 +75,7 @@ class BalanceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildBalanceItem(
-                  'Pending Payments',
+                  'المدفوعات المعلقة',
                   '\$${summary?.pendingPayments.toStringAsFixed(2) ?? '0.00'}',
                   Icons.pending_outlined,
                   Colors.orange,
@@ -84,7 +84,7 @@ class BalanceCard extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: _buildBalanceItem(
-                  'Paid This Semester',
+                  'مدفوع هذا الفصل',
                   '\$${summary?.paidThisSemester.toStringAsFixed(2) ?? '0.00'}',
                   Icons.check_circle_outline,
                   Colors.green,

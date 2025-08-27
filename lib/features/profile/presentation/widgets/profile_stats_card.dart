@@ -22,7 +22,7 @@ class ProfileStatsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Academic Overview',
+            'نظرة عامة أكاديمية',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class ProfileStatsCard extends StatelessWidget {
                 child: _buildStatItem(
                   context,
                   icon: Icons.school_outlined,
-                  label: 'Current Semester',
+                  label: 'الفصل الحالي',
                   value: '6th',
                   color: Colors.blue,
                 ),
@@ -45,7 +45,7 @@ class ProfileStatsCard extends StatelessWidget {
                 child: _buildStatItem(
                   context,
                   icon: Icons.grade_outlined,
-                  label: 'GPA',
+                  label: 'المعدل التراكمي',
                   value: '3.85',
                   color: Colors.green,
                 ),
@@ -59,7 +59,7 @@ class ProfileStatsCard extends StatelessWidget {
                 child: _buildStatItem(
                   context,
                   icon: Icons.book_outlined,
-                  label: 'Credits Earned',
+                  label: 'الساعات المكتسبة',
                   value: '120',
                   color: Colors.orange,
                 ),
@@ -68,7 +68,7 @@ class ProfileStatsCard extends StatelessWidget {
                 child: _buildStatItem(
                   context,
                   icon: Icons.calendar_today_outlined,
-                  label: 'Expected Graduation',
+                  label: 'التخرج المتوقع',
                   value: '2025',
                   color: Colors.purple,
                 ),

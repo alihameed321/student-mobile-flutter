@@ -41,7 +41,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Support Tickets'),
+        title: const Text('تذاكر الدعم'),
         backgroundColor: Colors.blue.shade600,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -124,7 +124,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No support tickets found',
+                            'لم يتم العثور على تذاكر دعم',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey.shade600,
@@ -132,7 +132,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Create your first support ticket to get help',
+                            'أنشئ أول تذكرة دعم للحصول على المساعدة',
                             style: TextStyle(
                               color: Colors.grey.shade500,
                             ),
@@ -415,7 +415,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               value: _selectedCategory,
               isExpanded: true,
               items: [
-                const DropdownMenuItem(value: null, child: Text('All Categories')),
+                const DropdownMenuItem(value: null, child: Text('جميع الفئات')),
                 ...['technical', 'academic', 'financial', 'general']
                     .map((category) => DropdownMenuItem(
                           value: category,
@@ -430,7 +430,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               value: _selectedStatus,
               isExpanded: true,
               items: [
-                const DropdownMenuItem(value: null, child: Text('All Statuses')),
+                const DropdownMenuItem(value: null, child: Text('جميع الحالات')),
                 ...['open', 'in_progress', 'resolved', 'closed']
                     .map((status) => DropdownMenuItem(
                           value: status,
@@ -445,7 +445,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               value: _selectedPriority,
               isExpanded: true,
               items: [
-                const DropdownMenuItem(value: null, child: Text('All Priorities')),
+                const DropdownMenuItem(value: null, child: Text('جميع الأولويات')),
                 ...['low', 'medium', 'high', 'urgent']
                     .map((priority) => DropdownMenuItem(
                           value: priority,
@@ -503,13 +503,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
   String _getStatusDisplayName(String status) {
     switch (status) {
       case 'open':
-        return 'Open';
+        return 'مفتوح';
       case 'in_progress':
-        return 'In Progress';
+        return 'قيد التنفيذ';
       case 'resolved':
-        return 'Resolved';
+        return 'محلول';
       case 'closed':
-        return 'Closed';
+        return 'مغلق';
       default:
         return status;
     }

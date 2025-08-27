@@ -35,7 +35,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ticket Details'),
+        title: const Text('تفاصيل التذكرة'),
         backgroundColor: Colors.blue.shade600,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -55,7 +55,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
             setState(() => _isSubmittingResponse = false);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Response added successfully'),
+                content: Text('تم إضافة الرد بنجاح'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -281,7 +281,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Description',
+              'الوصف',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -320,11 +320,11 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
               ),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('Category', ticket.categoryDisplayName),
-            _buildInfoRow('Priority', ticket.priorityDisplayText),
-            _buildInfoRow('Status', ticket.statusDisplayText),
-            _buildInfoRow('Created', _formatDateTime(ticket.createdAt)),
-            _buildInfoRow('Updated', _formatDateTime(ticket.updatedAt)),
+            _buildInfoRow('الفئة', ticket.categoryDisplayName),
+            _buildInfoRow('الأولوية', ticket.priorityDisplayText),
+            _buildInfoRow('الحالة', ticket.statusDisplayText),
+            _buildInfoRow('تاريخ الإنشاء', _formatDateTime(ticket.createdAt)),
+            _buildInfoRow('آخر تحديث', _formatDateTime(ticket.updatedAt)),
             if (ticket.assignedTo != null)
               _buildInfoRow('Assigned To', ticket.assignedTo!),
           ],
@@ -368,7 +368,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Responses',
+          'الرسائل',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -521,7 +521,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
             controller: _responseController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Type your response...',
+              hintText: 'اكتب ردك...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -555,7 +555,7 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text('Send Response'),
+                    : const Text('إرسال الرد'),
               ),
             ],
           ),

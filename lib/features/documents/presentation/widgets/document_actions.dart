@@ -28,7 +28,7 @@ class DocumentActions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Quick Actions',
+            'الإجراءات السريعة',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class DocumentActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.request_page,
-                  label: 'Request Document',
+                  label: 'طلب وثيقة',
                   color: Colors.orange,
                   onTap: () {
                     _showDocumentRequestOptions(context);
@@ -54,7 +54,7 @@ class DocumentActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.list_alt,
-                  label: 'My Requests',
+                  label: 'طلباتي',
                   color: Colors.blue,
                   onTap: () {
                     _navigateToMyRequests(context);
@@ -158,7 +158,7 @@ class DocumentActions extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Request Document',
+                'طلب وثيقة',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -170,7 +170,7 @@ class DocumentActions extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Choose the type of document you need',
+                'اختر نوع الوثيقة التي تحتاجها',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -182,32 +182,32 @@ class DocumentActions extends StatelessWidget {
             _buildDocumentOption(
               context,
               icon: Icons.school_rounded,
-              title: 'Enrollment Certificate',
-              subtitle: 'Official enrollment verification',
+              title: 'شهادة القيد',
+          subtitle: 'التحقق الرسمي من القيد',
               color: const Color(0xFF2196F3),
               requestType: 'enrollment_certificate',
             ),
             _buildDocumentOption(
               context,
               icon: Icons.description_rounded,
-              title: 'Official Transcript',
-              subtitle: 'Academic records and grades',
+              title: 'كشف الدرجات الرسمي',
+          subtitle: 'السجلات الأكاديمية والدرجات',
               color: const Color(0xFF9C27B0),
               requestType: 'transcript',
             ),
             _buildDocumentOption(
               context,
               icon: Icons.workspace_premium_rounded,
-              title: 'Graduation Certificate',
-              subtitle: 'Official graduation documentation',
+              title: 'شهادة التخرج',
+          subtitle: 'وثائق التخرج الرسمية',
               color: const Color(0xFFE91E63),
               requestType: 'graduation_certificate',
             ),
             _buildDocumentOption(
               context,
               icon: Icons.support_agent_rounded,
-              title: 'Other Documents',
-              subtitle: 'Custom document requests',
+              title: 'وثائق أخرى',
+          subtitle: 'طلبات وثائق مخصصة',
               color: const Color(0xFF00BCD4),
               requestType: 'other',
             ),
@@ -307,7 +307,7 @@ class DocumentActions extends StatelessWidget {
         context.read<DocumentsBloc>().add(RefreshDocuments());
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Document request submitted successfully!'),
+            content: Text('تم تقديم طلب الوثيقة بنجاح!'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),

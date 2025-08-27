@@ -61,7 +61,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Service Request'),
+        title: const Text('طلب خدمة جديد'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
@@ -145,7 +145,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
                   // Service Type Section
                   _buildFormSection(
-                    title: 'Service Type',
+                    title: 'نوع الخدمة',
                     required: true,
                     child: Container(
                       decoration: BoxDecoration(
@@ -163,7 +163,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                       child: DropdownButtonFormField<String>(
                         value: _selectedRequestType,
                         decoration: InputDecoration(
-                          hintText: 'Select service type',
+                          hintText: 'اختر نوع الخدمة',
                           hintStyle: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 15,
@@ -236,7 +236,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
                   // Title Section
                   _buildFormSection(
-                    title: 'Title',
+                    title: 'العنوان',
                     required: true,
                     child: Container(
                       decoration: BoxDecoration(
@@ -254,7 +254,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                       child: TextFormField(
                         controller: _titleController,
                         decoration: InputDecoration(
-                          hintText: 'Enter request title',
+                          hintText: 'أدخل عنوان الطلب',
                           hintStyle: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 15,
@@ -317,7 +317,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
                   // Description Section
                   _buildFormSection(
-                    title: 'Description',
+                    title: 'الوصف',
                     required: true,
                     child: Container(
                       decoration: BoxDecoration(
@@ -337,7 +337,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                         maxLines: 5,
                         decoration: InputDecoration(
                           hintText:
-                              'Describe your service request in detail...',
+                              'اوصف طلب الخدمة بالتفصيل...',
                           hintStyle: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 15,
@@ -400,7 +400,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
 
                   // Priority Section
                   _buildFormSection(
-                    title: 'Priority Level',
+                    title: 'مستوى الأولوية',
                     required: true,
                     child: Container(
                       decoration: BoxDecoration(
@@ -418,7 +418,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                       child: DropdownButtonFormField<String>(
                         value: _selectedPriority,
                         decoration: InputDecoration(
-                          hintText: 'Select urgency level',
+                          hintText: 'اختر مستوى الأولوية',
                           hintStyle: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 15,
@@ -540,7 +540,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                                 ),
                                 SizedBox(width: 12),
                                 Text(
-                                  'Submitting...',
+                                  'جاري الإرسال...',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -549,7 +549,7 @@ class _ServiceRequestFormPageState extends State<ServiceRequestFormPage> {
                               ],
                             )
                           : const Text(
-                              'Submit Request',
+                              'إرسال الطلب',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

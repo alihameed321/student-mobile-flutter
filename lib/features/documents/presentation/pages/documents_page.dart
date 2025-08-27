@@ -50,7 +50,9 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
         backgroundColor: Colors.grey[50],
         body: SafeArea(
           child: BlocBuilder<DocumentsBloc, DocumentsState>(
@@ -103,6 +105,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
             },
           ),
         ),
-      );
+    ),
+    );
   }
 }

@@ -35,23 +35,23 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   String? _selectedStatus;
   String? _selectedType;
   final List<String> _statusFilters = [
-    'All',
-    'Pending',
-    'In Review',
-    'Approved',
-    'Rejected',
-    'Completed',
-    'More Info Needed'
+    'الكل',
+    'معلق',
+    'قيد المراجعة',
+    'موافق عليه',
+    'مرفوض',
+    'مكتمل',
+    'يحتاج معلومات إضافية'
   ];
 
   // Mapping from display names to backend values
   final Map<String, String> _statusMapping = {
-    'Pending': 'pending',
-    'In Review': 'in_review',
-    'Approved': 'approved',
-    'Rejected': 'rejected',
-    'Completed': 'completed',
-    'More Info Needed': 'more_info_needed',
+    'معلق': 'pending',
+    'قيد المراجعة': 'in_review',
+    'موافق عليه': 'approved',
+    'مرفوض': 'rejected',
+    'مكتمل': 'completed',
+    'يحتاج معلومات إضافية': 'more_info_needed',
   };
 
   @override
@@ -72,7 +72,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
           title: const Text(
-            'My Requests',
+            'طلبات الخدمة الخاصة بي',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 20,
@@ -788,7 +788,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Service Requests',
+              'لا توجد طلبات خدمة',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -798,7 +798,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
             ),
             const SizedBox(height: 12),
             Text(
-              'You haven\'t submitted any service requests yet.\nTap the + button to create your first request!',
+              'لم تقم بتقديم أي طلبات خدمة بعد.\nاضغط على زر + لإنشاء طلبك الأول!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,

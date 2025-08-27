@@ -79,7 +79,9 @@ class MainNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBloc, NavigationState>(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         return Scaffold(
           body: IndexedStack(
@@ -96,6 +98,8 @@ class MainNavigationView extends StatelessWidget {
           ),
         );
       },
+    ),
     );
+  
   }
 }

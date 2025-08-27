@@ -49,7 +49,7 @@ class DocumentsHeader extends StatelessWidget {
                             fontSize: 16,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Search documents...',
+                            hintText: 'البحث في الوثائق...',
                             hintStyle: TextStyle(
                               color: Colors.white.withOpacity(0.7),
                               fontSize: 16,
@@ -70,7 +70,7 @@ class DocumentsHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Documents',
+                            'الوثائق',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 28,
@@ -79,7 +79,7 @@ class DocumentsHeader extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Access your academic documents',
+                            'الوصول إلى وثائقك الأكاديمية',
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.8),
                               fontSize: 16,
@@ -127,7 +127,7 @@ class DocumentsHeader extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _StatCard(
-                        title: 'Total Documents',
+                        title: 'إجمالي الوثائق',
                         value: '...',
                         icon: Icons.description,
                         color: Colors.blue,
@@ -136,7 +136,7 @@ class DocumentsHeader extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: _StatCard(
-                        title: 'Recent Downloads',
+                        title: 'التحميلات الحديثة',
                         value: '...',
                         icon: Icons.download,
                         color: Colors.green,
@@ -145,7 +145,7 @@ class DocumentsHeader extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: _StatCard(
-                        title: 'Pending Requests',
+                        title: 'الطلبات المعلقة',
                         value: '...',
                         icon: Icons.pending,
                         color: Colors.orange,

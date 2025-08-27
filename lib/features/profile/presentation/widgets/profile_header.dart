@@ -70,7 +70,7 @@ class ProfileHeader extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      user.major ?? 'No Major Specified',
+                      user.major ?? 'لم يتم تحديد التخصص',
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
@@ -87,7 +87,7 @@ class ProfileHeader extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        'ID: ${user.universityId ?? user.studentId ?? 'N/A'}',
+                        'الرقم الجامعي: ${user.universityId ?? user.studentId ?? 'غير متوفر'}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -168,7 +168,7 @@ class ProfileHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Loading...',
+                    'جاري التحميل...',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -177,7 +177,7 @@ class ProfileHeader extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Please wait',
+                    'يرجى الانتظار',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,

@@ -41,8 +41,8 @@ class DocumentCategories extends StatelessWidget {
 
           // Add 'All Documents' option at the top
           categories.add({
-            'title': 'All Documents',
-            'subtitle': 'View all your documents',
+            'title': 'جميع الوثائق',
+        'subtitle': 'عرض جميع وثائقك',
             'icon': Icons.folder_open,
             'color': Colors.indigo,
             'count': totalDocuments,
@@ -70,7 +70,7 @@ class DocumentCategories extends StatelessWidget {
             categories.addAll(state.documentTypes
                 .map((type) => {
                       'title': type.display,
-                      'subtitle': type.description ?? 'Document category',
+                      'subtitle': type.description ?? 'فئة الوثائق',
                       'icon': _getCategoryIcon(type.display),
                       'color': _getCategoryColor(type.display),
                       'count': 0,
@@ -86,7 +86,7 @@ class DocumentCategories extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Document Categories',
+                  'فئات الوثائق',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -228,17 +228,17 @@ class DocumentCategories extends StatelessWidget {
   String _getCategorySubtitle(String categoryName) {
     switch (categoryName.toLowerCase()) {
       case 'enrollment certificate':
-        return 'Student enrollment verification';
+        return 'التحقق من قيد الطالب';
       case 'official transcript':
-        return 'Academic transcripts and grades';
+        return 'كشوف الدرجات الأكاديمية';
       case 'graduation certificate':
-        return 'Graduation and completion certificates';
+        return 'شهادات التخرج والإنجاز';
       case 'payment receipt':
-        return 'Payment receipts and financial records';
+        return 'إيصالات الدفع والسجلات المالية';
       case 'other document':
-        return 'Miscellaneous documents';
+        return 'وثائق متنوعة';
       default:
-        return 'Miscellaneous documents';
+        return 'وثائق متنوعة';
     }
   }
 

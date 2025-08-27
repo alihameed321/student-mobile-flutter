@@ -16,11 +16,11 @@ class PaymentReminders extends StatelessWidget {
       // Determine status based on remaining amount
       String status;
       if (breakdown.remainingAmount <= 0) {
-        status = 'paid';
+        status = 'مدفوع';
       } else if (breakdown.paidAmount > 0) {
-        status = 'partially_paid';
+        status = 'مدفوع جزئياً';
       } else {
-        status = 'pending';
+        status = 'معلق';
       }
       
       return StudentFee(
@@ -72,7 +72,7 @@ class PaymentReminders extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Payment Reminders',
+                  'تذكيرات الدفع',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class PaymentReminders extends StatelessWidget {
                       financialBloc.add(const RefreshFinancialData('student_id_placeholder'));
                     }
                   },
-                  child: const Text('View All'),
+                  child: const Text('عرض الكل'),
                 ),
               ],
             ),
@@ -104,18 +104,18 @@ class PaymentReminders extends StatelessWidget {
           if (summary != null && summary!.overdueCount > 0)
             _buildReminderItem(
               context,
-              title: 'Overdue Payments',
+              title: 'المدفوعات المتأخرة',
               amount: '${summary!.overdueCount} items',
-              dueDate: 'Action required',
+              dueDate: 'مطلوب إجراء',
               priority: ReminderPriority.high,
               icon: Icons.warning,
             )
           else if (summary != null && summary!.pendingPayments > 0)
             _buildReminderItem(
               context,
-              title: 'Pending Payments',
+              title: 'المدفوعات المعلقة',
               amount: '\$${summary!.pendingPayments.toStringAsFixed(2)}',
-              dueDate: 'Payment due soon',
+              dueDate: 'الدفع مستحق قريباً',
               priority: ReminderPriority.medium,
               icon: Icons.pending,
             )
@@ -132,7 +132,7 @@ class PaymentReminders extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'All payments are up to date!',
+                      'جميع المدفوعات محدثة!',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -150,7 +150,7 @@ class PaymentReminders extends StatelessWidget {
                 context,
                 title: '${fee.feeType} (${fee.count} items)',
                 amount: '\$${fee.remainingAmount.toStringAsFixed(2)} remaining',
-                dueDate: 'Total: \$${fee.totalAmount.toStringAsFixed(2)}',
+                dueDate: 'الإجمالي: \$${fee.totalAmount.toStringAsFixed(2)}',
                 priority: fee.remainingAmount > 0 ? ReminderPriority.low : ReminderPriority.low,
                 icon: _getIconForFeeType(fee.feeType),
               ),
@@ -268,7 +268,7 @@ class PaymentReminders extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Pay Now',
+              'ادفع الآن',
               style: TextStyle(
                 color: priorityColor,
                 fontSize: 12,

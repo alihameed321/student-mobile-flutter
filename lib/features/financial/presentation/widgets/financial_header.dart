@@ -21,7 +21,7 @@ class FinancialHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Financial',
+                'المالية',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -30,7 +30,7 @@ class FinancialHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Manage your finances',
+                'إدارة أموالك',
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 16,

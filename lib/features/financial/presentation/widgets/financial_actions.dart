@@ -23,7 +23,7 @@ class FinancialActions extends StatelessWidget {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('No outstanding fees to pay'),
+                content: Text('لا توجد رسوم مستحقة للدفع'),
                 backgroundColor: Colors.orange,
               ),
             );
@@ -45,7 +45,7 @@ class FinancialActions extends StatelessWidget {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Failed to load payment providers: ${providerState.message}'),
+                  content: Text('فشل في تحميل مقدمي الدفع: ${providerState.message}'),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -59,7 +59,7 @@ class FinancialActions extends StatelessWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to load outstanding fees: ${state.message}'),
+              content: Text('فشل في تحميل الرسوم المستحقة: ${state.message}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -116,7 +116,7 @@ class FinancialActions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Quick Actions',
+            'الإجراءات السريعة',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -130,7 +130,7 @@ class FinancialActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.payment,
-                  label: 'Make Payment',
+                  label: 'إجراء دفعة',
                   color: Colors.green,
                   onTap: () => _navigateToPaymentPage(context),
                 ),
@@ -140,7 +140,7 @@ class FinancialActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.receipt_long,
-                  label: 'View Receipts',
+                  label: 'عرض الإيصالات',
                   color: Colors.blue,
                   onTap: () {
                     // Navigate to receipts page
@@ -156,7 +156,7 @@ class FinancialActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.account_balance,
-                  label: 'Financial Aid',
+                  label: 'المساعدة المالية',
                   color: Colors.purple,
                   onTap: () {
                     // Navigate to financial aid page
@@ -168,7 +168,7 @@ class FinancialActions extends StatelessWidget {
                 child: _buildActionButton(
                   context,
                   icon: Icons.schedule,
-                  label: 'Payment Plan',
+                  label: 'خطة الدفع',
                   color: Colors.orange,
                   onTap: () {
                     // Navigate to payment plan page

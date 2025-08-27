@@ -12,8 +12,10 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     
-    return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -77,6 +79,7 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
   
@@ -117,7 +120,7 @@ class LoginPage extends StatelessWidget {
         
         // Title with modern typography
         Text(
-          'Student Services',
+          'خدمات الطلاب',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w700,
@@ -129,7 +132,7 @@ class LoginPage extends StatelessWidget {
         const SizedBox(height: 8),
         
         Text(
-          'Your gateway to academic excellence',
+          'بوابتك نحو التميز الأكاديمي',
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey.shade600,
@@ -164,7 +167,7 @@ class LoginPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Welcome Back',
+            'أهلاً بعودتك',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -176,7 +179,7 @@ class LoginPage extends StatelessWidget {
           const SizedBox(height: 8),
           
           Text(
-            'Sign in to access your student portal',
+            'سجل دخولك للوصول إلى بوابة الطالب',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade600,
@@ -213,7 +216,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Development Mode: Auto-filled credentials',
+                'وضع التطوير: بيانات الاعتماد معبأة تلقائياً',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.blue.shade700,
@@ -231,7 +234,7 @@ class LoginPage extends StatelessWidget {
             // Support contact functionality
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('Contact support at support@university.edu'),
+                content: const Text('تواصل مع الدعم الفني على support@university.edu'),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -246,7 +249,7 @@ class LoginPage extends StatelessWidget {
             color: Colors.grey.shade600,
           ),
           label: Text(
-            'Need help? Contact support',
+            'تحتاج مساعدة؟ تواصل مع الدعم الفني',
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 14,
