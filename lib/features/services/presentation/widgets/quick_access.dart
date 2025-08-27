@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/typography.dart';
 
 class QuickAccess extends StatelessWidget {
   const QuickAccess({super.key});
@@ -25,7 +26,7 @@ class QuickAccess extends StatelessWidget {
             'الوصول السريع',
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: AppTypography.bold,
               color: Colors.black87,
             ),
           ),
@@ -108,7 +109,7 @@ class QuickAccess extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: AppTypography.medium,
               color: Colors.grey[700],
             ),
           ),

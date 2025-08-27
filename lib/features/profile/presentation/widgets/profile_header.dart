@@ -4,6 +4,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../pages/student_details_page.dart';
+import '../../../../core/constants/typography.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -46,7 +47,7 @@ class ProfileHeader extends StatelessWidget {
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: AppTypography.bold,
                           ),
                         )
                       : null,
@@ -65,7 +66,7 @@ class ProfileHeader extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: AppTypography.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -91,7 +92,7 @@ class ProfileHeader extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: AppTypography.medium,
                         ),
                       ),
                     ),
@@ -172,7 +173,7 @@ class ProfileHeader extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: AppTypography.bold,
                     ),
                   ),
                   SizedBox(height: 4),

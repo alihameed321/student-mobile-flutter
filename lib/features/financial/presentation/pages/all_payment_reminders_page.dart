@@ -239,16 +239,21 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          _buildFilterTab('all', 'الكل'),
-          const SizedBox(width: 12),
-          _buildFilterTab('overdue', 'المتأخرة'),
-          const SizedBox(width: 12),
-          _buildFilterTab('pending', 'المعلقة'),
-          const SizedBox(width: 12),
-          _buildFilterTab('paid', 'المدفوعة'),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _buildFilterTab('all', 'الكل'),
+            const SizedBox(width: 12),
+            _buildFilterTab('overdue', 'المتأخرة'),
+            const SizedBox(width: 12),
+            _buildFilterTab('pending', 'المعلقة'),
+            const SizedBox(width: 12),
+            _buildFilterTab('partial', 'جزئية'),
+            const SizedBox(width: 12),
+            _buildFilterTab('paid', 'المدفوعة'),
+          ],
+        ),
       ),
     );
   }
@@ -297,6 +302,11 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
         message = 'لا توجد مدفوعات معلقة';
         icon = Icons.check_circle_outline;
         color = Colors.green;
+        break;
+      case 'partial':
+        message = 'لا توجد مدفوعات جزئية';
+        icon = Icons.pie_chart_outline;
+        color = Colors.blue;
         break;
       case 'paid':
         message = 'لا توجد رسوم مدفوعة للعرض';
@@ -359,8 +369,9 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
 
   Widget _buildStudentFeeItem(StudentFee fee) {
     final isOverdue = _isStudentFeeOverdue(fee);
-    final isPending = fee.status.toLowerCase() == 'pending';
-    final isPaid = fee.status.toLowerCase() == 'paid';
+    final isPending = fee.status.toLowerCase() == 'pending' || fee.status.toLowerCase() == 'معلق';
+    final isPaid = fee.status.toLowerCase() == 'paid' || fee.status.toLowerCase() == 'مدفوع';
+    final isPartial = fee.status.toLowerCase().contains('جزئياً') || fee.status.toLowerCase().contains('partial');
     
     Color priorityColor;
     Color backgroundColor;
@@ -372,6 +383,11 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       backgroundColor = Colors.red.withOpacity(0.1);
       icon = Icons.warning;
       statusText = 'متأخرة';
+    } else if (isPartial) {
+      priorityColor = Colors.blue;
+      backgroundColor = Colors.blue.withOpacity(0.1);
+      icon = Icons.pie_chart;
+      statusText = 'مدفوع جزئياً';
     } else if (isPending) {
       priorityColor = Colors.orange;
       backgroundColor = Colors.orange.withOpacity(0.1);
@@ -498,7 +514,7 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
                     ),
                   ),
                   child: Text(
-                    'ادفع الآن',
+                    isPartial ? 'أكمل الدفع' : 'ادفع الآن',
                     style: TextStyle(
                       color: priorityColor,
                       fontSize: 12,
@@ -518,19 +534,35 @@ class _AllPaymentRemindersPageState extends State<AllPaymentRemindersPage> {
       case 'overdue':
         return fees.where((fee) => _isStudentFeeOverdue(fee)).toList();
       case 'pending':
-        return fees.where((fee) => fee.status.toLowerCase() == 'pending' && !_isStudentFeeOverdue(fee)).toList();
+        return fees.where((fee) => 
+          (fee.status.toLowerCase() == 'pending' || 
+           fee.status.toLowerCase() == 'معلق') && 
+          !_isStudentFeeOverdue(fee) &&
+          !fee.status.toLowerCase().contains('جزئياً') &&
+          !fee.status.toLowerCase().contains('partial')).toList();
+      case 'partial':
+        return fees.where((fee) => 
+          (fee.status.toLowerCase().contains('جزئياً') ||
+           fee.status.toLowerCase().contains('partial')) && 
+          !_isStudentFeeOverdue(fee)).toList();
       case 'paid':
-        return fees.where((fee) => fee.status.toLowerCase() == 'paid').toList();
+        return fees.where((fee) => 
+          fee.status.toLowerCase() == 'paid' || 
+          fee.status.toLowerCase() == 'مدفوع').toList();
       default:
         return fees;
     }
   }
 
   bool _isStudentFeeOverdue(StudentFee fee) {
-    if (fee.dueDate == null || fee.status.toLowerCase() == 'paid') {
+    if (fee.dueDate == null || 
+        fee.status.toLowerCase() == 'paid' || 
+        fee.status.toLowerCase() == 'مدفوع') {
       return false;
     }
-    return fee.dueDate!.isBefore(DateTime.now()) && fee.status.toLowerCase() != 'paid';
+    return fee.dueDate!.isBefore(DateTime.now()) && 
+           fee.status.toLowerCase() != 'paid' && 
+           fee.status.toLowerCase() != 'مدفوع';
   }
 
   String _formatDate(DateTime date) {

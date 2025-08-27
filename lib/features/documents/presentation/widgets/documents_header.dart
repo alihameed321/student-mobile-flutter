@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/documents_bloc.dart';
+import '../../../../core/constants/typography.dart';
 
 class DocumentsHeader extends StatelessWidget {
   final VoidCallback? onSearchTap;
@@ -74,7 +75,7 @@ class DocumentsHeader extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: AppTypography.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -242,10 +243,9 @@ class _StatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 10,
-                  ),
+                  style: AppTypography.labelSmallStyle.copyWith(
+                     color: Colors.white.withOpacity(0.8),
+                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

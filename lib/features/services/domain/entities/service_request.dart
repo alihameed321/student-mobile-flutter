@@ -86,17 +86,17 @@ class ServiceRequest extends Equatable {
   String get statusDisplayText {
     switch (status.toLowerCase()) {
       case 'pending':
-        return 'Pending Review';
+        return 'معلق';
       case 'in_review':
-        return 'In Review';
+        return 'قيد المراجعة';
       case 'approved':
-        return 'Approved';
+        return 'موافق عليه';
       case 'rejected':
-        return 'Rejected';
+        return 'مرفوض';
       case 'completed':
-        return 'Completed';
+        return 'مكتمل';
       case 'more_info_needed':
-        return 'More Information Needed';
+        return 'مطلوب معلومات إضافية';
       default:
         return status;
     }
@@ -106,17 +106,17 @@ class ServiceRequest extends Equatable {
   String get requestTypeDisplayText {
     switch (requestType.toLowerCase()) {
       case 'enrollment_certificate':
-        return 'Enrollment Certificate';
+        return 'شهادة قيد';
       case 'schedule_modification':
-        return 'Schedule Modification';
+        return 'تعديل الجدول';
       case 'semester_postponement':
-        return 'Semester Postponement';
+        return 'تأجيل الفصل الدراسي';
       case 'transcript':
-        return 'Official Transcript';
+        return 'كشف درجات رسمي';
       case 'graduation_certificate':
-        return 'Graduation Certificate';
+        return 'شهادة تخرج';
       case 'other':
-        return 'Other';
+        return 'أخرى';
       default:
         return requestType;
     }

@@ -4,6 +4,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/domain/usecases/download_id_card_usecase.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../../core/constants/typography.dart';
 
 class ProfileMenuSection extends StatelessWidget {
   const ProfileMenuSection({super.key});
@@ -136,7 +137,7 @@ class ProfileMenuSection extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: AppTypography.bold,
                 color: Colors.black87,
               ),
             ),
@@ -373,7 +374,7 @@ class ProfileMenuSection extends StatelessWidget {
                     item.title,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: AppTypography.medium,
                       color: item.isDestructive 
                           ? Colors.red
                           : Colors.black87,

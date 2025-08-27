@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/main/presentation/pages/main_navigation_page.dart';
+import 'core/constants/typography.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +27,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'خدمات الطلاب',
       debugShowCheckedModeBanner: false,
+      locale: const Locale('ar', 'SA'),
+      supportedLocales: const [
+        Locale('ar', 'SA'),
+        Locale('en', 'US'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: const Color(0xFF1976D2),
@@ -31,6 +45,24 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+        fontFamily: GoogleFonts.tajawal().fontFamily,
+        textTheme: TextTheme(
+          displayLarge: AppTypography.displayLargeStyle,
+          displayMedium: AppTypography.displayMediumStyle,
+          displaySmall: AppTypography.displaySmallStyle,
+          headlineLarge: AppTypography.headlineLargeStyle,
+          headlineMedium: AppTypography.headlineMediumStyle,
+          headlineSmall: AppTypography.headlineSmallStyle,
+          titleLarge: AppTypography.titleLargeStyle,
+          titleMedium: AppTypography.titleMediumStyle,
+          titleSmall: AppTypography.titleSmallStyle,
+          bodyLarge: AppTypography.bodyLargeStyle,
+          bodyMedium: AppTypography.bodyMediumStyle,
+          bodySmall: AppTypography.bodySmallStyle,
+          labelLarge: AppTypography.labelLargeStyle,
+          labelMedium: AppTypography.labelMediumStyle,
+          labelSmall: AppTypography.labelSmallStyle,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1976D2),
           foregroundColor: Colors.white,
@@ -44,6 +76,17 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
+            textStyle: AppTypography.buttonMediumStyle,
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            textStyle: AppTypography.buttonMediumStyle,
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            textStyle: AppTypography.buttonMediumStyle,
           ),
         ),
       ),

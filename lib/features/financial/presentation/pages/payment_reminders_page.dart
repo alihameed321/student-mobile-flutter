@@ -97,7 +97,7 @@ class PaymentRemindersPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const Text(
-              'All payments are up to date!',
+              'جميع المدفوعات محدثة!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class PaymentRemindersPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'You have no pending payment reminders.',
+              'ليس لديك تذكيرات دفع معلقة.',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -134,12 +134,12 @@ class PaymentRemindersPage extends StatelessWidget {
     if (summary.overdueCount > 0) {
       reminders.add(PaymentReminderItem(
         title: 'المدفوعات المتأخرة',
-        subtitle: '${summary.overdueCount} payment${summary.overdueCount > 1 ? 's' : ''} overdue',
+        subtitle: '${summary.overdueCount} ${summary.overdueCount > 1 ? 'مدفوعات' : 'دفعة'} متأخرة',
         amount: null,
         dueDate: 'مطلوب إجراء فوري',
         priority: ReminderPriority.high,
         icon: Icons.warning,
-        description: 'These payments are past their due date and require immediate attention to avoid penalties.',
+        description: 'هذه المدفوعات تجاوزت تاريخ الاستحقاق وتتطلب اهتماماً فورياً لتجنب الغرامات.',
       ));
     }
     
@@ -152,7 +152,7 @@ class PaymentRemindersPage extends StatelessWidget {
         dueDate: 'الدفع مستحق قريباً',
         priority: ReminderPriority.medium,
         icon: Icons.pending,
-        description: 'These payments are due soon. Pay now to avoid late fees and maintain good standing.',
+        description: 'هذه المدفوعات مستحقة قريباً. ادفع الآن لتجنب رسوم التأخير والحفاظ على وضعك الجيد.',
       ));
     }
     
@@ -161,12 +161,12 @@ class PaymentRemindersPage extends StatelessWidget {
       if (fee.remainingAmount > 0) {
         reminders.add(PaymentReminderItem(
           title: fee.feeType,
-          subtitle: '${fee.count} item${fee.count > 1 ? 's' : ''} • \$${fee.totalAmount.toStringAsFixed(2)} total',
+          subtitle: '${fee.count} ${fee.count > 1 ? 'عناصر' : 'عنصر'} • \$${fee.totalAmount.toStringAsFixed(2)} إجمالي',
           amount: fee.remainingAmount,
           dueDate: 'الرصيد المتبقي',
           priority: ReminderPriority.low,
           icon: _getIconForFeeType(fee.feeType),
-          description: 'Partial payment made. \$${fee.paidAmount.toStringAsFixed(2)} paid of \$${fee.totalAmount.toStringAsFixed(2)} total.',
+          description: 'تم دفع جزئي. \$${fee.paidAmount.toStringAsFixed(2)} مدفوع من إجمالي \$${fee.totalAmount.toStringAsFixed(2)}.',
         ));
       }
     }
@@ -211,7 +211,7 @@ class PaymentRemindersPage extends StatelessWidget {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Failed to load payment providers: ${providerState.message}'),
+                  content: Text('فشل في تحميل مقدمي الدفع: ${providerState.message}'),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -225,7 +225,7 @@ class PaymentRemindersPage extends StatelessWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to load outstanding fees: ${state.message}'),
+              content: Text('فشل في تحميل الرسوم المستحقة: ${state.message}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -279,7 +279,7 @@ class PaymentRemindersPage extends StatelessWidget {
         feeType: FeeType(
           id: breakdown.feeType.hashCode,
           name: breakdown.feeType,
-          description: '${breakdown.feeType} fee',
+          description: 'رسوم ${breakdown.feeType}',
           category: 'أكاديمي',
           isActive: true,
         ),
@@ -624,11 +624,11 @@ class PaymentRemindersPage extends StatelessWidget {
   String _getPriorityText(ReminderPriority priority) {
     switch (priority) {
       case ReminderPriority.high:
-        return 'High - Immediate action required';
+        return 'عالية - مطلوب إجراء فوري';
       case ReminderPriority.medium:
-        return 'Medium - Due soon';
+        return 'متوسطة - مستحق قريباً';
       case ReminderPriority.low:
-        return 'Low - Partial payment';
+        return 'منخفضة - دفع جزئي';
     }
   }
 

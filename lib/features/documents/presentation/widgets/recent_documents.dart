@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/documents_bloc.dart';
 import '../../domain/entities/document_entity.dart';
+import '../../../../core/constants/typography.dart';
 
 class RecentDocuments extends StatelessWidget {
   const RecentDocuments({super.key});
@@ -33,7 +34,7 @@ class RecentDocuments extends StatelessWidget {
                   'جميع الوثائق',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: AppTypography.semiBold,
                     color: Color(0xFF1A1A1A),
                   ),
                 ),
@@ -45,7 +46,7 @@ class RecentDocuments extends StatelessWidget {
                     'عرض الكل',
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: AppTypography.medium,
                       color: Color(0xFF2196F3),
                     ),
                   ),
@@ -451,9 +452,8 @@ class _DocumentItem extends StatelessWidget {
             ),
             child: Text(
               document.statusBadge.text,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
+              style: AppTypography.labelSmallStyle.copyWith(
+                fontWeight: AppTypography.medium,
                 color: Color(int.parse(
                     document.statusBadge.color.replaceFirst('#', '0xff'))),
               ),
@@ -583,9 +583,8 @@ class _DocumentItemLegacy extends StatelessWidget {
                       ),
                       child: Text(
                         document['type'],
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                        style: AppTypography.labelSmallStyle.copyWith(
+                          fontWeight: AppTypography.medium,
                           color: _getFileTypeColorLegacy(document['type']),
                         ),
                       ),

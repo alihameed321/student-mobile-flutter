@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/service_request_form_page.dart';
 import '../bloc/service_request/service_request_bloc.dart';
+import '../../../../core/constants/typography.dart';
 
 class ServicesGrid extends StatelessWidget {
   final String searchQuery;
@@ -332,9 +333,8 @@ class ServicesGrid extends StatelessWidget {
                                     Text(
                                       subtitle,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
+                                      style: AppTypography.bodySmallStyle.copyWith(
+                                        fontWeight: AppTypography.medium,
                                         color: Colors.grey[600],
                                         height: 1.2,
                                       ),
@@ -363,9 +363,8 @@ class ServicesGrid extends StatelessWidget {
                                   children: [
                                     Text(
                                       'طلب',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
+                                      style: AppTypography.labelSmallStyle.copyWith(
+                                        fontWeight: AppTypography.semiBold,
                                         color: color,
                                       ),
                                     ),

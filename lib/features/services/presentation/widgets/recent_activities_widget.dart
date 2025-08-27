@@ -4,6 +4,7 @@ import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/entities/service_request.dart';
 import '../../domain/entities/student_document.dart';
 import '../../domain/entities/support_ticket.dart';
+import '../../../../core/constants/typography.dart';
 
 // Helper function to convert color strings to Color objects
 Color _getColorFromString(String colorString) {
@@ -111,7 +112,7 @@ class RecentActivitiesWidget extends StatelessWidget {
           ),
         ),
         title: Text(
-          request.requestType,
+          request.requestTypeDisplayText,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Column(
@@ -126,9 +127,8 @@ class RecentActivitiesWidget extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               DateFormat('MMM dd, yyyy').format(request.createdAt),
-              style: TextStyle(
+              style: AppTypography.bodySmallStyle.copyWith(
                 color: Colors.grey[500],
-                fontSize: 12,
               ),
             ),
           ],
@@ -140,11 +140,10 @@ class RecentActivitiesWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            request.status,
-            style: TextStyle(
+            request.statusDisplayText,
+            style: AppTypography.bodySmallStyle.copyWith(
               color: _getColorFromString(request.statusColor),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight: AppTypography.semiBold,
             ),
           ),
         ),
@@ -184,17 +183,15 @@ class RecentActivitiesWidget extends StatelessWidget {
               children: [
                 Text(
                   document.downloadCountText,
-                  style: TextStyle(
+                  style: AppTypography.bodySmallStyle.copyWith(
                     color: Colors.grey[500],
-                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat('MMM dd, yyyy').format(document.issuedDate),
-                  style: TextStyle(
+                  style: AppTypography.bodySmallStyle.copyWith(
                     color: Colors.grey[500],
-                    fontSize: 12,
                   ),
                 ),
               ],
@@ -209,10 +206,9 @@ class RecentActivitiesWidget extends StatelessWidget {
           ),
           child: Text(
             document.officialStatus,
-            style: TextStyle(
+            style: AppTypography.bodySmallStyle.copyWith(
               color: document.officialStatusColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight: AppTypography.semiBold,
             ),
           ),
         ),
@@ -259,19 +255,17 @@ class RecentActivitiesWidget extends StatelessWidget {
                   ),
                   child: Text(
                     ticket.priority,
-                    style: TextStyle(
+                    style: AppTypography.labelSmallStyle.copyWith(
                       color: ticket.priorityColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: AppTypography.semiBold,
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat('MMM dd, yyyy').format(ticket.createdAt),
-                  style: TextStyle(
+                  style: AppTypography.bodySmallStyle.copyWith(
                     color: Colors.grey[500],
-                    fontSize: 12,
                   ),
                 ),
               ],
@@ -286,10 +280,9 @@ class RecentActivitiesWidget extends StatelessWidget {
           ),
           child: Text(
             ticket.status,
-            style: TextStyle(
+            style: AppTypography.bodySmallStyle.copyWith(
               color: ticket.statusColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight: AppTypography.semiBold,
             ),
           ),
         ),

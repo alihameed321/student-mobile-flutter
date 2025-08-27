@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/typography.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/service_requests_page.dart';
 import '../bloc/service_request/service_request_bloc.dart';
@@ -40,7 +41,7 @@ class ServicesHeader extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: AppTypography.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -104,7 +105,7 @@ class ServicesHeader extends StatelessWidget {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 13,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: AppTypography.semiBold,
                                     ),
                                   ),
                                 ],
@@ -139,14 +140,14 @@ class ServicesHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[800],
-                fontWeight: FontWeight.w500,
+                fontWeight: AppTypography.medium,
               ),
               decoration: InputDecoration(
                 hintText: 'البحث عن الخدمات أو الوثائق أو المساعدة...',
                 hintStyle: TextStyle(
                   color: Colors.grey[400],
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: AppTypography.regular,
                 ),
                 prefixIcon: Container(
                   padding: const EdgeInsets.all(12),
@@ -178,10 +179,9 @@ class ServicesHeader extends StatelessWidget {
                           ),
                           child: Text(
                             'Ctrl+K',
-                            style: TextStyle(
+                            style: AppTypography.labelSmallStyle.copyWith(
                               color: Colors.grey[500],
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: AppTypography.medium,
                             ),
                           ),
                         ),

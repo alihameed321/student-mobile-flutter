@@ -38,7 +38,7 @@ class DashboardStatsWidget extends StatelessWidget {
               dashboardStats.totalServiceRequests.toString(),
               Icons.assignment_outlined,
               [const Color(0xFF667EEA), const Color(0xFF764BA2)],
-              '${dashboardStats.pendingServiceRequests} pending',
+              '${dashboardStats.pendingServiceRequests} معلق',
             ),
             _buildModernStatCard(
               context,
@@ -46,7 +46,7 @@ class DashboardStatsWidget extends StatelessWidget {
               dashboardStats.totalDocuments.toString(),
               Icons.description_outlined,
               [const Color(0xFF11998E), const Color(0xFF38EF7D)],
-              '${dashboardStats.verifiedDocuments} verified',
+              '${dashboardStats.verifiedDocuments} موثق',
             ),
             _buildModernStatCard(
               context,
@@ -54,7 +54,7 @@ class DashboardStatsWidget extends StatelessWidget {
               dashboardStats.totalSupportTickets.toString(),
               Icons.support_agent_outlined,
               [const Color(0xFFFF6B6B), const Color(0xFFFFE66D)],
-              '${dashboardStats.openSupportTickets} open',
+              '${dashboardStats.openSupportTickets} مفتوح',
             ),
             if (dashboardStats.totalServiceRequests > 0)
               _buildModernStatCard(

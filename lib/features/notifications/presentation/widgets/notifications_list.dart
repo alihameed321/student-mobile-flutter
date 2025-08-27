@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/notification_model.dart';
 import '../providers/notification_provider.dart';
+import '../../../../core/constants/typography.dart';
 
 class NotificationsList extends StatefulWidget {
   final bool showAll;
@@ -83,17 +84,14 @@ class _NotificationsListState extends State<NotificationsList> {
             children: [
               Text(
                 widget.showAll ? 'جميع الإشعارات' : 'الإشعارات الحديثة',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                style: AppTypography.titleLargeStyle.copyWith(
                   color: Colors.black87,
                 ),
               ),
               if (provider.unreadCount > 0)
                 Text(
                   '${provider.unreadCount} غير مقروء',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: AppTypography.bodyMediumStyle.copyWith(
                     color: Colors.grey[600],
                   ),
                 ),
@@ -153,8 +151,7 @@ class _NotificationsListState extends State<NotificationsList> {
           const SizedBox(height: 16),
           Text(
             'فشل في تحميل الإشعارات',
-            style: TextStyle(
-              fontSize: 16,
+            style: AppTypography.bodyLargeStyle.copyWith(
               fontWeight: FontWeight.w500,
               color: Colors.grey[800],
             ),
@@ -162,8 +159,7 @@ class _NotificationsListState extends State<NotificationsList> {
           const SizedBox(height: 8),
           Text(
             error,
-            style: TextStyle(
-              fontSize: 14,
+            style: AppTypography.bodyMediumStyle.copyWith(
               color: Colors.grey[600],
             ),
             textAlign: TextAlign.center,
@@ -191,8 +187,7 @@ class _NotificationsListState extends State<NotificationsList> {
           const SizedBox(height: 16),
           Text(
             'لا توجد إشعارات بعد',
-            style: TextStyle(
-              fontSize: 16,
+            style: AppTypography.bodyLargeStyle.copyWith(
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
             ),
@@ -200,8 +195,7 @@ class _NotificationsListState extends State<NotificationsList> {
           const SizedBox(height: 8),
           Text(
             'ستظهر إشعاراتك هنا عند استلامها.',
-            style: TextStyle(
-              fontSize: 14,
+            style: AppTypography.bodyMediumStyle.copyWith(
               color: Colors.grey[500],
             ),
             textAlign: TextAlign.center,
@@ -303,8 +297,7 @@ class _NotificationsListState extends State<NotificationsList> {
                       Expanded(
                         child: Text(
                           notification.title,
-                          style: TextStyle(
-                            fontSize: 16,
+                          style: AppTypography.bodyLargeStyle.copyWith(
                             fontWeight: notification.isRead ? FontWeight.w500 : FontWeight.bold,
                             color: notification.isRead ? Colors.black87 : Colors.black,
                           ),
@@ -324,8 +317,7 @@ class _NotificationsListState extends State<NotificationsList> {
                   const SizedBox(height: 4),
                   Text(
                     notification.message,
-                    style: TextStyle(
-                      fontSize: 14,
+                    style: AppTypography.bodyMediumStyle.copyWith(
                       color: Colors.grey[600],
                       height: 1.4,
                     ),
@@ -346,8 +338,7 @@ class _NotificationsListState extends State<NotificationsList> {
                         ),
                         child: Text(
                           _getTypeLabel(notification.notificationType),
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: AppTypography.bodySmallStyle.copyWith(
                             fontWeight: FontWeight.w500,
                             color: _getTypeColor(notification.notificationType),
                           ),
@@ -366,8 +357,7 @@ class _NotificationsListState extends State<NotificationsList> {
                           ),
                           child: Text(
                             notification.priority.toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 10,
+                            style: AppTypography.labelSmallStyle.copyWith(
                               fontWeight: FontWeight.w600,
                               color: _getPriorityColor(notification.priority),
                             ),
@@ -377,8 +367,7 @@ class _NotificationsListState extends State<NotificationsList> {
                       Flexible(
                         child: Text(
                           notification.timeSinceCreated,
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: AppTypography.bodySmallStyle.copyWith(
                             color: Colors.grey[500],
                           ),
                           overflow: TextOverflow.ellipsis,

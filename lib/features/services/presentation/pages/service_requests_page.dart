@@ -304,7 +304,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                       Text(
                                         'الحالة: $_selectedStatus',
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.blue.shade700,
                                         ),
@@ -325,7 +325,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                           ),
                                           child: Icon(
                                             Icons.close,
-                                            size: 12,
+                                            size: 14,
                                             color: Colors.blue.shade700,
                                           ),
                                         ),
@@ -360,7 +360,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                       Text(
                                         'النوع: $_selectedType',
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.green.shade700,
                                         ),
@@ -381,7 +381,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                                           ),
                                           child: Icon(
                                             Icons.close,
-                                            size: 12,
+                                            size: 14,
                                             color: Colors.green.shade700,
                                           ),
                                         ),
@@ -518,7 +518,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              request.requestType,
+                              request.requestTypeDisplayText,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -539,7 +539,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                               child: Text(
                                 'Request #${request.id}',
                                 style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey[600],
                                   letterSpacing: 0.5,
@@ -583,10 +583,10 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              request.status,
+                              request.statusDisplayText,
                               style: TextStyle(
                                 color: statusColor,
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,
                               ),
@@ -652,7 +652,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                             DateFormat('MMM dd, yyyy • HH:mm')
                                 .format(request.createdAt),
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.blue.shade700,
                             ),
@@ -693,7 +693,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                           child: const Text(
                             'إلغاء',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

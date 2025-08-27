@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/financial_summary.dart';
 import '../pages/all_transactions_page.dart';
+import '../../../../core/constants/typography.dart';
 
 class RecentTransactions extends StatelessWidget {
   final List<RecentTransaction>? transactions;
@@ -30,11 +31,9 @@ class RecentTransactions extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'المعاملات الحديثة',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  style: AppTypography.titleLargeStyle.copyWith(
                     color: Colors.black87,
                   ),
                 ),
@@ -60,10 +59,10 @@ class RecentTransactions extends StatelessWidget {
             ...transactions!.take(5).map((transaction) => [
               _buildTransactionItem(
                 context,
-                title: '${transaction.feeType} Payment',
+                title: 'دفع ${transaction.feeType}',
                 subtitle: 'معرف الدفع: ${transaction.paymentId}',
                 amount: '-\$${transaction.amount.toStringAsFixed(2)}',
-                date: DateFormat('MMM dd, yyyy').format(transaction.paymentDate),
+                date: DateFormat('dd/MM/yyyy', 'ar').format(transaction.paymentDate),
                 type: TransactionType.payment,
                 status: transaction.status,
                 icon: _getIconForFeeType(transaction.feeType),
@@ -84,8 +83,7 @@ class RecentTransactions extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'لا توجد معاملات حديثة',
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: AppTypography.bodyLargeStyle.copyWith(
                         color: Colors.grey[600],
                       ),
                     ),
@@ -127,18 +125,22 @@ class RecentTransactions extends StatelessWidget {
     
     switch (status.toLowerCase()) {
       case 'verified':
+      case 'موثق':
         statusColor = Colors.green;
         statusText = 'تم التحقق';
         break;
       case 'pending':
+      case 'معلق':
         statusColor = Colors.orange;
         statusText = 'معلق';
         break;
       case 'rejected':
+      case 'مرفوض':
         statusColor = Colors.red;
         statusText = 'مرفوض';
         break;
       case 'cancelled':
+      case 'ملغي':
         statusColor = Colors.grey;
         statusText = 'ملغي';
         break;
@@ -170,8 +172,7 @@ class RecentTransactions extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: AppTypography.bodyLargeStyle.copyWith(
                     fontWeight: FontWeight.w500,
                     color: Colors.black87,
                   ),
@@ -179,16 +180,14 @@ class RecentTransactions extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: AppTypography.bodyMediumStyle.copyWith(
                     color: Colors.grey[600],
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   date,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: AppTypography.bodySmallStyle.copyWith(
                     color: Colors.grey[500],
                   ),
                 ),
@@ -200,8 +199,7 @@ class RecentTransactions extends StatelessWidget {
             children: [
               Text(
                 amount,
-                style: TextStyle(
-                  fontSize: 16,
+                style: AppTypography.bodyLargeStyle.copyWith(
                   fontWeight: FontWeight.bold,
                   color: amountColor,
                 ),
@@ -218,8 +216,7 @@ class RecentTransactions extends StatelessWidget {
                 ),
                 child: Text(
                   statusText,
-                  style: TextStyle(
-                    fontSize: 10,
+                  style: AppTypography.labelSmallStyle.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.w500,
                   ),

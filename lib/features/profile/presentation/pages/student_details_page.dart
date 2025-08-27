@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -9,7 +10,9 @@ class StudentDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(
+      textDirection: ui.TextDirection.rtl,
+      child: Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
@@ -28,7 +31,7 @@ class StudentDetailsPage extends StatelessWidget {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // Profile Picture and Basic Info
                   _buildProfileSection(context, user),
@@ -98,6 +101,7 @@ class StudentDetailsPage extends StatelessWidget {
           );
         },
       ),
+      ),
     );
   }
 
@@ -116,6 +120,7 @@ class StudentDetailsPage extends StatelessWidget {
         ],
       ),
       child: Row(
+        textDirection: ui.TextDirection.rtl,
         children: [
           // Profile Picture
           Container(
@@ -150,7 +155,7 @@ class StudentDetailsPage extends StatelessWidget {
           // Basic Info
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   user.fullName,
@@ -210,9 +215,10 @@ class StudentDetailsPage extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
+              textDirection: ui.TextDirection.rtl,
               children: [
                 Icon(
                   icon,
@@ -242,6 +248,7 @@ class StudentDetailsPage extends StatelessWidget {
       builder: (context) => Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
+          textDirection: ui.TextDirection.rtl,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(

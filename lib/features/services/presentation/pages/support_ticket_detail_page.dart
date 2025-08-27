@@ -4,6 +4,7 @@ import '../../domain/entities/support_ticket.dart';
 import '../bloc/support_ticket/support_ticket_bloc.dart';
 import '../bloc/support_ticket/support_ticket_event.dart';
 import '../bloc/support_ticket/support_ticket_state.dart';
+import '../../../../core/constants/typography.dart';
 
 
 class SupportTicketDetailPage extends StatefulWidget {
@@ -478,10 +479,9 @@ class _SupportTicketDetailPageState extends State<SupportTicketDetailPage> {
                     const SizedBox(width: 4),
                     Text(
                       'ملاحظة داخلية',
-                      style: TextStyle(
+                      style: AppTypography.labelSmallStyle.copyWith(
                         color: Colors.orange.shade600,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: AppTypography.medium,
                       ),
                     ),
                   ],

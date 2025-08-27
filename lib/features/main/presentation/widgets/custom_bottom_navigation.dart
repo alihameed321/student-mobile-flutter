@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/typography.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -114,20 +115,27 @@ class CustomBottomNavigation extends StatelessWidget {
                 color: isSelected 
                     ? theme.primaryColor 
                     : Colors.grey[600],
-                size: 20,
+                size: 18,
               ),
             ),
-            const SizedBox(height: 2),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected 
-                    ? theme.primaryColor 
-                    : Colors.grey[600],
+            const SizedBox(height: 1),
+            Flexible(
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
+                style: AppTypography.labelSmallStyle.copyWith(
+                  fontWeight: isSelected ? AppTypography.semiBold : AppTypography.regular,
+                  color: isSelected 
+                      ? theme.primaryColor 
+                      : Colors.grey[600],
+                  fontSize: 10,
+                ),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              child: Text(label),
             ),
           ],
         ),

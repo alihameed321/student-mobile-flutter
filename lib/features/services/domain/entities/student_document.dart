@@ -58,15 +58,15 @@ class StudentDocument extends Equatable {
   String get documentTypeDisplayName {
     switch (documentType.toLowerCase()) {
       case 'enrollment_certificate':
-        return 'Enrollment Certificate';
+        return 'شهادة قيد';
       case 'transcript':
-        return 'Official Transcript';
+        return 'كشف درجات رسمي';
       case 'graduation_certificate':
-        return 'Graduation Certificate';
+        return 'شهادة تخرج';
       case 'payment_receipt':
-        return 'Payment Receipt';
+        return 'إيصال دفع';
       case 'other':
-        return 'Other Document';
+        return 'وثيقة أخرى';
       default:
         return documentType.replaceAll('_', ' ').split(' ').map((word) => 
             word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : ''
@@ -75,7 +75,7 @@ class StudentDocument extends Equatable {
   }
 
   String get officialStatus {
-    return isOfficial ? 'Official' : 'Unofficial';
+    return isOfficial ? 'رسمي' : 'غير رسمي';
   }
 
   Color get officialStatusColor {
@@ -101,11 +101,11 @@ class StudentDocument extends Equatable {
 
   String get downloadCountText {
     if (downloadCount == 0) {
-      return 'Not downloaded';
+      return 'لم يتم التحميل';
     } else if (downloadCount == 1) {
-      return 'Downloaded once';
+      return 'تم التحميل مرة واحدة';
     } else {
-      return 'Downloaded $downloadCount times';
+      return 'تم التحميل $downloadCount مرات';
     }
   }
 }
