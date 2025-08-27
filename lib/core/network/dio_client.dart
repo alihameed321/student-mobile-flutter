@@ -8,6 +8,9 @@ class DioClient {
   late final Dio _dio;
   final SharedPreferences _prefs;
   
+  // Public getter to access the Dio instance
+  Dio get dio => _dio;
+  
   DioClient(this._prefs) {
     _dio = Dio(
       BaseOptions(

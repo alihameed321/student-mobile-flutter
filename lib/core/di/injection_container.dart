@@ -1,12 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../network/dio_client.dart';
+import '../services/download_service.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/download_id_card_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/financial/data/datasources/financial_api_service.dart';
 import '../../features/financial/data/repositories/financial_repository_impl.dart';
@@ -50,6 +52,7 @@ Future<void> init() async {
   
   // Core
   sl.registerLazySingleton(() => DioClient(sl()));
+  sl.registerLazySingleton(() => DownloadService(sl<DioClient>().dio));
   
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -89,6 +92,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => DownloadIdCardUseCase(
+    downloadService: sl(),
+    authRepository: sl(),
+    sharedPreferences: sl(),
+  ));
   sl.registerLazySingleton(() => GetFinancialSummary(sl()));
   sl.registerLazySingleton(() => GetStudentFees(sl()));
   sl.registerLazySingleton(() => GetOutstandingFees(sl()));

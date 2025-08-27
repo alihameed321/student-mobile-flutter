@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../../../auth/domain/usecases/download_id_card_usecase.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 class ProfileMenuSection extends StatelessWidget {
   const ProfileMenuSection({super.key});
@@ -32,6 +34,12 @@ class ProfileMenuSection extends StatelessWidget {
               title: 'جهات الاتصال الطارئة',
           subtitle: 'إدارة جهات الاتصال الطارئة',
               onTap: () {},
+            ),
+            _MenuItem(
+              icon: Icons.badge_outlined,
+              title: 'تحميل الهوية الطلابية',
+              subtitle: 'تحميل بطاقة الهوية الطلابية كملف PDF',
+              onTap: () => _downloadStudentId(context),
             ),
           ],
         ),
@@ -152,6 +160,116 @@ class ProfileMenuSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _downloadStudentId(BuildContext context) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text('جاري تحميل الهوية الطلابية...'),
+              ],
+            ),
+          );
+        },
+      );
+
+      // Get the download use case
+      final downloadUseCase = di.sl<DownloadIdCardUseCase>();
+      
+      // Execute download
+      final result = await downloadUseCase.call();
+      
+      // Close loading dialog
+      Navigator.of(context).pop();
+      
+      result.fold(
+        (failure) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.white),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text('فشل في تحميل الهوية الطلابية: ${failure.message}'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              margin: const EdgeInsets.all(16),
+            ),
+          );
+        },
+        (filePath) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+            children: [
+              const Icon(Icons.check_circle_outline, color: Colors.white),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text(
+                  'تم تحميل الهوية الطلابية بنجاح إلى مجلد التحميلات',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            ],
+          ),
+              backgroundColor: Colors.green.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      // Close loading dialog if still open
+      Navigator.of(context).pop();
+      
+      // Show generic error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'حدث خطأ غير متوقع: $e',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red.shade600,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
   }
 
   void _showSignOutDialog(BuildContext context) {
